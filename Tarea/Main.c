@@ -8,7 +8,7 @@
 *
 * Descripcion: Clase Principal (Arreglar)
 *
-* Ultima modificacion: 14/04/2015
+* Ultima modificacion: 16/04/2015
 *
 */
 
@@ -25,10 +25,10 @@ typedef struct pregunta {
 	int codigo; 
 	int nivel;
 	char area;
-	char *pregunta[100];
-	char *opcion1[100];
-	char *opcion2[100];
-	char *opcion3[100];
+	char *pregunta[101];
+	char *opcion1[101];
+	char *opcion2[101];
+	char *opcion3[101];
 	int respuesta;
 	struct pregunta *siguiente;
 
@@ -42,14 +42,13 @@ typedef struct pregunta {
 
 int main(int argc, char *argv[]) {
 
+	char respuesta;
+
+
 	while (1) {
 
-		int respuesta;
-
 		printf("Bienvenido a la base de datos de preguntas: \n");
-
 		printf("Sus opciones son:\n");
-
 		printf("0.- Leer la base de datos.\n");
 		printf("1.- Consultar todas las preguntas que estan en la base de datos.\n");
 		printf("2.- Consultar todas las preguntas de un determinado nivel de complejidad.\n");
@@ -57,90 +56,84 @@ int main(int argc, char *argv[]) {
 		printf("4.- Insertar una pregunta.\n");
 		printf("5.- Salvar la base de datos.\n");
 		printf("6.- Salir.\n");
+	
 
-
-		// Como hacer esto robusto (pendiente)
+		// Entrada de datos:
 		printf("Inserte la opcion que desea ejecutar: ");
-		scanf("%d",&respuesta); 
+		scanf(" %c",&respuesta); // revisar si se puede hacer robusto
 
-		// Leer la base de datos:
-		if (respuesta == 0) {
+		printf("AQUI %c",respuesta);
 
-			FILE *archivo;
-			int codigo,complejidad;
-			char tipo;
-			char pregunta[100];
+		switch (respuesta) {
+
+			// Leer la base de datos:
+			case '0':
+				; // Declaracion despues de label
+				FILE *archivo;
+				int codigo,complejidad;
+				char tipo;
+				char pregunta[100];
 
 
-			if ( (fopen(argv[1],"r")) == NULL) {
-				printf("Error: El archivo no existe\n");
-				printf("El programa finalizara su ejecucion.\n");
-				return 0;
-			}
-
-			else {
-
-				archivo = fopen(argv[1],"r");
-
-				//fscanf(archivo,"%d %d %c %s",&codigo,&complejidad,&tipo,pregunta);
-
-				//printf("%d %d %c %s\n",codigo,complejidad,tipo,pregunta);
-
-				//fclose(archivo);
-
-				int in_char;	
-
-				while((in_char = getc(archivo)) != EOF ) {
-
-					printf("%c",in_char);
-
+				if ( (fopen(argv[1],"r")) == NULL) {
+					printf("El programa finalizara su ejecucion.\n");
+					return 0;
 				}
 
-			}
+				else {
 
-		}
+					archivo = fopen(argv[1],"r");
 
-		// Consultar todas las preguntas que estan en la base de datos:
-		else if (respuesta == 1) {
+					//fscanf(archivo,"%d %d %c %s",&codigo,&complejidad,&tipo,pregunta);
 
+					//printf("%d %d %c %s\n",codigo,complejidad,tipo,pregunta);
 
-		}
+					//fclose(archivo);
 
-		// Consultar todas las preguntas de un determinado nivel de complejidad:
-		else if (respuesta == 2) {
+					int in_char;	
 
-		}
+					while((in_char = getc(archivo)) != EOF ) {
 
-		// Eliminar una pregunta:
-		else if (respuesta == 3) {
+						printf("%c",in_char);
 
-		}
+					}
 
-		// Insertar una pregunta:
-		else if (respuesta == 4) {
+				}
+				
+				break;
 
-		}
+			// Consultar todas las preguntas que estan en la base de datos:
+			case '1':
+			break;
 
-		// Salvar la base de datos:
-		else if (respuesta == 5) {
+			// Consultar todas las preguntas de un determinado nivel de complejidad:
+			case '2':
+			break;
 
+			// Eliminar una pregunta:
+			case '3':
+			break;
 
-		}
+			// Insertar una pregunta:
+			case '4':
+			break;
 
-		// Salir:
-		else if (respuesta == 6) {
+			// Salvar la base de datos:
+			case '5':
+			break;
 
-			// Se tiene que guardar la partida antes de salir
+			// Salir:
+			case '6':
+				// Se tiene que guardar la partida antes de salir
+				printf("El programa finalizara su ejecucion.\n");
+				return 0;
+			break;
 
-			printf("El programa finalizara su ejecucion.\n");
-			return 0;
-
-		}
-
-		// Respuesta invalida: 
-		else {
-			printf("\nError: La respuesta no es valida.\n");
-			printf("Intente de nuevo.\n");
+			// Respuesta invalida: 
+			default:
+				printf("\nError: La respuesta no es valida.\n");
+				printf("Intente de nuevo.\n");
+			break;
 
 		}
 
@@ -148,5 +141,5 @@ int main(int argc, char *argv[]) {
 
 	}
 
-
 }
+
