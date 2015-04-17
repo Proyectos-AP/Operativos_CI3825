@@ -44,7 +44,6 @@ int main(int argc, char *argv[]) {
 
 	char respuesta;
 
-
 	while (1) {
 
 		printf("Bienvenido a la base de datos de preguntas: \n");
@@ -60,9 +59,7 @@ int main(int argc, char *argv[]) {
 
 		// Entrada de datos:
 		printf("Inserte la opcion que desea ejecutar: ");
-		scanf(" %c",&respuesta); // revisar si se puede hacer robusto
-
-		printf("AQUI %c",respuesta);
+		scanf(" %c",&respuesta);
 
 		switch (respuesta) {
 
@@ -76,6 +73,7 @@ int main(int argc, char *argv[]) {
 
 
 				if ( (fopen(argv[1],"r")) == NULL) {
+					printf("\nError: El archivo indicado no fue encontrado\n");
 					printf("El programa finalizara su ejecucion.\n");
 					return 0;
 				}
@@ -84,11 +82,9 @@ int main(int argc, char *argv[]) {
 
 					archivo = fopen(argv[1],"r");
 
-					//fscanf(archivo,"%d %d %c %s",&codigo,&complejidad,&tipo,pregunta);
+					//fscanf(archivo,"%d %d %c \"%s\" ",&codigo,&complejidad,&tipo,pregunta);
 
 					//printf("%d %d %c %s\n",codigo,complejidad,tipo,pregunta);
-
-					//fclose(archivo);
 
 					int in_char;	
 
@@ -98,16 +94,33 @@ int main(int argc, char *argv[]) {
 
 					}
 
+					printf("\nLos datos han sido cargados correctamente a memoria.\n");
+					fclose(archivo);
+
 				}
 				
 				break;
 
 			// Consultar todas las preguntas que estan en la base de datos:
 			case '1':
+
+				printf("\nLas preguntas que se encuentran la base de datos son:\n");
+
+
 			break;
 
 			// Consultar todas las preguntas de un determinado nivel de complejidad:
 			case '2':
+				; // Declaracion despues de label
+				char resp_complejidad;
+
+				printf("\nIntroduzca el nivel de complejidad,\n");
+				printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
+				// Revisar: este scanf no esta funcionando
+				scanf("%c",&resp_complejidad);
+				printf("\n");			
+
+
 			break;
 
 			// Eliminar una pregunta:

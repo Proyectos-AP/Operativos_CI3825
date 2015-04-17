@@ -5,14 +5,34 @@ Nombres:
 	Alejandra Cordero / Carnet: 12-10645
 	Pablo Maldonado   / Carnet: 12-10561
 
-1) int main(int argc, char *argv[])
 
-2) si el nombre del archivo no esta, que pasa?
+////
+
+PENDIENTE:
+
+1) Explicar y entender lo de int main(int argc, char *argv[])
+2) Preguntar, si el nombre del archivo no esta, que pasa?
+
+////
+
+
+- Detalles de implementacion:
+
+	1.-
 
 
 
+- Referencias consultadas:
 
-Referencias consultadas:
+	1.- http://www.tutorialspoint.com/cprogramming/c_command_line_arguments.htm
+		Motivo:
+		Ultima visita realizada: 
 
-* http://www.tutorialspoint.com/cprogramming/c_command_line_arguments.htm
-	Ultima visita realizada: 
+	2.- https://gsamaras.wordpress.com/code/caution-when-reading-char-with-scanf-c/
+		Motivo: 
+		Ultima visita realizada:
+
+	3.- http://stackoverflow.com/questions/18496282/why-do-i-get-a-label-can-only-be-part-of-a-statement-and-a-declaration-is-not-a
+		Motivo:
+		Ultima visita realidaza:
+
