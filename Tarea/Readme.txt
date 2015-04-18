@@ -46,5 +46,11 @@ PENDIENTE:
 
 	8.- http://stackoverflow.com/questions/9935401/c-programming-end-of-file-operation
 
+<<<<<<< HEAD
+	7.- http://stackoverflow.com/questions/9935401/c-programming-end-of-file-operation
+	
+	8.- http://solocodigo.com/46029/c-fgets-y-linea-innecesaria-solucionado/
+=======
+>>>>>>> 71fd2f33a6f2f4ac8b03a2813ca72679353bc7aa
 
 
