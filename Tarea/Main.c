@@ -49,7 +49,6 @@ void CambiarSaltoDeLinea(char *frase) {
 }
 
 
-
 //------------------------------------------------------------//
 
 
@@ -94,6 +93,7 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 
 			char *pregunta1;
 			pregunta1 = (char*)malloc(sizeof(char)*101);
+
 			char *resp_1;
 			resp_1 = (char*)malloc(sizeof(char)*101);
 
@@ -145,7 +145,7 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 
 
 void imprimirPreguntas(PREGUNTA *CabeceraArchivo) {
-
+	// Descripcion de la funcion:
 	PREGUNTA *aux;
 				
 	aux = CabeceraArchivo->siguiente;
@@ -170,7 +170,7 @@ void imprimirPreguntas(PREGUNTA *CabeceraArchivo) {
 //------------------------------------------------------------//
 
 void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
-
+	// Descripcion de la funcion:
 	int num_complejidad = (int)(complejidad-48); 
 	PREGUNTA *aux;				
 	aux = CabeceraArchivo->siguiente;
@@ -200,23 +200,146 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 //------------------------------------------------------------//
 
 
+void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
+	// Descripcion de la funcion:
+	PREGUNTA *aux;				
+	aux = CabeceraArchivo->siguiente;
+
+	FILE *archivoSalida;
+	archivoSalida = fopen(nombre_archivo,"w");
+
+		while (aux != NULL) {
+
+			fprintf(archivoSalida,"%d %d %c \"%s\" \"%s\" \"%s\" \"%s\" %d \n", \
+				aux->codigo,aux->nivel,aux->area,aux->pregunta, \
+				aux->opcion1,aux->opcion2,aux->opcion3,aux->respuesta);
+
+			aux = aux->siguiente;
+
+		}
+
+	fclose(archivoSalida);
+
+	}
+
+
+//------------------------------------------------------------//
+
+
+void insertarPregunta(PREGUNTA *CabeceraArchivo) {
+		// Descripcion de la funcion:
+
+		PREGUNTA *aux;				
+		aux = CabeceraArchivo->siguiente;
+
+
+		// buscar guardar una variable que 
+		// tenga el apuntador al ultimo
+
+		// ver si se puede gastar menos memoria
+		// asignando dee una vez en el scanf
+
+		while (aux->siguiente != NULL) {
+			aux = aux->siguiente;
+		}
+
+		PREGUNTA *nueva_pregunta;
+		nueva_pregunta = (PREGUNTA*)malloc(sizeof(PREGUNTA));
+		nueva_pregunta->siguiente=NULL;
+		aux->siguiente = nueva_pregunta;
+
+		// Declaracion de variables:
+
+		int codigo_nuevo; 
+		int nivel_nuevo;
+		char area_nueva;
+
+		char *pregunta_nueva;
+		pregunta_nueva = (char*)malloc(sizeof(char)*101);
+
+		char *opcion1_nueva;
+		opcion1_nueva = (char*)malloc(sizeof(char)*101);
+
+		char *opcion2_nueva;
+		opcion2_nueva = (char*)malloc(sizeof(char)*101);
+
+		char *opcion3_nueva;
+		opcion3_nueva = (char*)malloc(sizeof(char)*101);
+
+		int respuesta_nueva;
+
+		printf("\nIntroduzca el codigo correspondiente a su pregunta\n");
+		printf("(numero entero): ");
+		scanf(" %d",&codigo_nuevo);
+		// verificar en un arreglo de los codigos de las preguntas
+
+		printf("\nIntroduzca el nivel de complejidad de su pregunta\n");
+		printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
+		scanf(" %d",&nivel_nuevo);
+
+		printf("\nIntroduzca el caracter correspondiente al tema de su pregunta\n");
+		printf("(H - Historia, C - Cine, L - Literatura): ");
+		scanf(" %c",&area_nueva);
+
+		printf("\nIntroduzca su pregunta sin utilizar comillas y sin signo de interrogacion\n");
+		printf("(Ejemplo: Cuál es la capital de Alemania): ");
+		scanf(" %100[^\n]",pregunta_nueva);
+
+		printf("\nIntroduzca su primera opcion de respuesta (Ejemplo: Hamburg): ");
+		scanf(" %100[^\n]",opcion1_nueva);
+
+		// opciones repetidas?? 
+
+		printf("\nIntroduzca su segunda opcion de respuesta (Ejemplo: Stuttgart): ");
+		scanf(" %100[^\n]",opcion2_nueva);
+
+		printf("\nIntroduzca su tercera posible respuesta (Ejemplo: Berlin): ");
+		scanf(" %100[^\n]",opcion3_nueva);
+
+		printf("\nIntroduzca el numero correspondiente a la respuesta correcta\n");
+		printf("(1 - primera opcion, 2 - segunda opcion, 3 - tercera opcion): ");
+		scanf(" %d",&respuesta_nueva);
+
+		printf("\nSu respuesta ha sido agregada a la base de datos.\n");
+
+		// hay que verificar que la pregunta no haya estado, tambien 
+		// que cada valor sea valido
+
+		nueva_pregunta->codigo=codigo_nuevo;
+		nueva_pregunta->nivel=nivel_nuevo;
+		nueva_pregunta->area=area_nueva;
+		nueva_pregunta->pregunta=pregunta_nueva;
+		nueva_pregunta->opcion1=opcion1_nueva;
+		nueva_pregunta->opcion2=opcion2_nueva;
+		nueva_pregunta->opcion3=opcion3_nueva;
+		nueva_pregunta->respuesta=respuesta_nueva;
+		
+
+	}
+
+
+
+//------------------------------------------------------------//
+
+
 // Inicio del codigo principal:
 
 int main(int argc, char *argv[]) {
+
+	printf("Bienvenido a la base de datos de preguntas: \n");
 
 	int archivoLeido = 0;
 	char respuesta;
 	while (1) {
 
-		printf("Bienvenido a la base de datos de preguntas: \n");
-		printf("Sus opciones son:\n");
-		printf("0.- Leer la base de datos.\n");
-		printf("1.- Consultar todas las preguntas que estan en la base de datos.\n");
-		printf("2.- Consultar todas las preguntas de un determinado nivel de complejidad.\n");
-		printf("3.- Eliminar una pregunta.\n");
-		printf("4.- Insertar una pregunta.\n");
-		printf("5.- Salvar la base de datos.\n");
-		printf("6.- Salir.\n");
+		printf("Menu de opciones:\n");
+		printf("  0.- Leer la base de datos.\n");
+		printf("  1.- Consultar todas las preguntas que estan en la base de datos.\n");
+		printf("  2.- Consultar todas las preguntas de un determinado nivel de complejidad.\n");
+		printf("  3.- Eliminar una pregunta.\n");
+		printf("  4.- Insertar una pregunta.\n");
+		printf("  5.- Salvar la base de datos.\n");
+		printf("  6.- Salir.\n");
 	
 		// Entrada de datos:
 		printf("Inserte la opcion que desea ejecutar: ");
@@ -227,32 +350,25 @@ int main(int argc, char *argv[]) {
 			// Leer la base de datos:
 			case '0':
 				; // Declaracion despues de label
-
 				PREGUNTA *CabeceraArchivo; 
 				CabeceraArchivo = LeerBaseDeDatos(argv[1]);			
 				archivoLeido = 1;
 				
-				break;
+			break;
 
 			// Consultar todas las preguntas que estan en la base de datos:
 			case '1':
-				; // Declaracion despues de label
-
-
 				if (archivoLeido == 0) {
 					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
 
 				}
-
 				imprimirPreguntas(CabeceraArchivo);
-
 			break;
 
 			// Consultar todas las preguntas de un determinado nivel de complejidad:
 			case '2':
 				; // Declaracion despues de label
 				char resp_complejidad;
-
 				while(1) {
 
 					printf("\nIntroduzca el nivel de complejidad,\n");
@@ -286,26 +402,25 @@ int main(int argc, char *argv[]) {
 			// Insertar una pregunta:
 			case '4':
 				; // Declaracion despues de label
+				CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
+				insertarPregunta(CabeceraArchivo);
+				imprimirPreguntas(CabeceraArchivo);
 
 			break;
 
 			// Salvar la base de datos:
 			case '5':
 				; // Declaracion despues de label
-
-			/*
-				for () {
-
-				}
-
-			*/
-
-
+				CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
+				escribirArchivo(CabeceraArchivo,argv[1]);
+				printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
 			break;
 
 			// Salir:
 			case '6':
-				// Se tiene que guardar la partida antes de salir
+				//CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
+				escribirArchivo(CabeceraArchivo,"salida.txt");
+				printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
 				printf("El programa finalizara su ejecucion.\n");
 				return 0;
 			break;
