@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Definicion de Tipos:
 
@@ -43,7 +44,6 @@ typedef struct pregunta {
 int main(int argc, char *argv[]) {
 
 	char respuesta;
-
 	while (1) {
 
 		printf("Bienvenido a la base de datos de preguntas: \n");
@@ -74,6 +74,7 @@ int main(int argc, char *argv[]) {
 				char resp_2[101];
 				char resp_3[101];
 				int resp_correcta;
+				char *pch;
 
 
 				if ( (fopen(argv[1],"r")) == NULL) {
@@ -91,11 +92,27 @@ int main(int argc, char *argv[]) {
 
 					// PENDIENTE: hay que revisar como hacer con los strings de la forma
 					// "Romulo \n Gallegos"
-					while (1)  {										  
+					while (1)  {
+						char *pch;										  
 						fscanf(archivo," %d %d %c \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d ", \
 							&codigo,&complejidad,&tipo,pregunta1,resp_1,resp_2,resp_3,&resp_correcta);
+						pch = strchr(resp_2,10);
+						    if (pch != NULL){
+       							 *pch=32;
+    							}
 						printf("\n %d %d %c \n %s \n %s \n %s \n %s \n %d \n ", \
 							codigo,complejidad,tipo,pregunta1,resp_1,resp_2,resp_3,resp_correcta);
+
+
+					//int in_char;	
+
+					//while((in_char = getc(archivo)) != EOF ) {
+
+						//printf("%c",in_char);
+
+					//}
+
+					//printf("\nLos datos han sido cargados correctamente a memoria.\n");
 
 						if (feof(archivo)) {
 							break;
@@ -105,6 +122,7 @@ int main(int argc, char *argv[]) {
 
 					
 					printf("\nLos datos han sido cargados correctamente a memoria.\n");
+
 					fclose(archivo);
 
 				}
