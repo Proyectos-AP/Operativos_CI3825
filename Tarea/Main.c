@@ -197,11 +197,10 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 void Eliminar(PREGUNTA *Cabecera,int clave){
 
 	PREGUNTA *aux;
+	int SeElimino;
 	PREGUNTA *anterior;	
 	anterior=Cabecera;			
 	aux = Cabecera->siguiente;
-
-	
 	while (aux != NULL) {
 
 
@@ -211,12 +210,12 @@ void Eliminar(PREGUNTA *Cabecera,int clave){
 			free(aux);
 			break;
 
-		}
+	}
 		anterior = aux;
 		aux = aux->siguiente;
 
 	}
-
+	printf("Error, la clave introducida es incorrecta\n");
 
 }
 
@@ -310,9 +309,11 @@ int main(int argc, char *argv[]) {
 				; // Declaracion despues de label
 
 				char claveAeliminar;
+
 				printf("\nIntroduzca la clave de la pregunta que desea eliminar: ");
 				scanf(" %d",&claveAeliminar);
 				printf("\n");
+
 
 				if (archivoLeido == 0) {
 					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
