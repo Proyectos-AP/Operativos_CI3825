@@ -8,7 +8,11 @@
 #
 # Descripcion: (Arreglar)
 #
-# Ultima modificacion: 14/04/2015
+# Ultima modificacion: 18/04/2015
 #
 #
 
+all:
+	gcc -o preguntas Main.c
+clean:
+	rm preguntas

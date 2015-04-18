@@ -126,7 +126,6 @@ int main(int argc, char *argv[]) {
 				printf("Respuesta correcta: %d \n",1);
 				printf("\n--------------------\n\n");
 
-
 			break;
 
 			// Consultar todas las preguntas de un determinado nivel de complejidad:
@@ -137,7 +136,7 @@ int main(int argc, char *argv[]) {
 				printf("\nIntroduzca el nivel de complejidad,\n");
 				printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
 				// Revisar: este scanf no esta funcionando
-				scanf(" %c",&resp_complejidad);
+				scanf("%c",&resp_complejidad);
 				printf("\n");			
 
 
@@ -167,7 +166,7 @@ int main(int argc, char *argv[]) {
 			// Salir:
 			case '6':
 				// Se tiene que guardar la partida antes de salir
-				printf("\nEl programa finalizara su ejecucion.\n");
+				printf("El programa finalizara su ejecucion.\n");
 				return 0;
 			break;
 
