@@ -201,15 +201,6 @@ void Eliminar(PREGUNTA *Cabecera,int clave){
 	anterior=Cabecera;			
 	aux = Cabecera->siguiente;
 
-<<<<<<< HEAD
-void Eliminar(PREGUNTA *Cabecera,int clave) {
-
-	PREGUNTA *aux;
-	PREGUNTA *anterior;	
-	anterior=Cabecera;			
-	aux = Cabecera->siguiente;
-
-	
 	while (aux != NULL) {
 
 		if(aux->codigo == clave){
@@ -345,27 +336,6 @@ void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
 
 	}
 
-//------------------------------------------------------------//
-=======
-	
-	while (aux != NULL) {
->>>>>>> bf1129af88e553df89c3fa3c750606207ebce21c
-
-
-		if(aux->codigo == clave){
-			anterior->siguiente=aux->siguiente;
-			aux->siguiente=NULL;
-			free(aux);
-			break;
-
-		}
-		anterior = aux;
-		aux = aux->siguiente;
-
-	}
-
-
-}
 
 //------------------------------------------------------------//
 
@@ -377,15 +347,14 @@ int main(int argc, char *argv[]) {
 	char respuesta;
 	while (1) {
 
-		printf("Bienvenido a la base de datos de preguntas: \n");
-		printf("Sus opciones son:\n");
-		printf("0.- Leer la base de datos.\n");
-		printf("1.- Consultar todas las preguntas que estan en la base de datos.\n");
-		printf("2.- Consultar todas las preguntas de un determinado nivel de complejidad.\n");
-		printf("3.- Eliminar una pregunta.\n");
-		printf("4.- Insertar una pregunta.\n");
-		printf("5.- Salvar la base de datos.\n");
-		printf("6.- Salir.\n");
+		printf("Menu de opciones: \n");
+		printf("  0.- Leer la base de datos.\n");
+		printf("  1.- Consultar todas las preguntas que estan en la base de datos.\n");
+		printf("  2.- Consultar todas las preguntas de un determinado nivel de complejidad.\n");
+		printf("  3.- Eliminar una pregunta.\n");
+		printf("  4.- Insertar una pregunta.\n");
+		printf("  5.- Salvar la base de datos.\n");
+		printf("  6.- Salir.\n");
 	
 		// Entrada de datos:
 		printf("Inserte la opcion que desea ejecutar: ");
@@ -411,13 +380,13 @@ int main(int argc, char *argv[]) {
 			case '1':
 				; // Declaracion despues de label
 
-
 				if (archivoLeido == 0) {
-					PREGUNTA *CabeceraArchivo; 
 					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
-					archivoLeido=1;	
+					archivoLeido = 1;	
 
 				}
+
+				printf("%s",CabeceraArchivo->siguiente->pregunta);
 
 				imprimirPreguntas(CabeceraArchivo);
 
@@ -458,11 +427,8 @@ int main(int argc, char *argv[]) {
 			case '3':
 				; // Declaracion despues de label
 
-<<<<<<< HEAD
 				int claveAeliminar;
-=======
-				char claveAeliminar;
->>>>>>> bf1129af88e553df89c3fa3c750606207ebce21c
+
 				printf("\nIntroduzca la clave de la pregunta que desea eliminar: ");
 				scanf(" %d",&claveAeliminar);
 				printf("\n");
@@ -480,9 +446,8 @@ int main(int argc, char *argv[]) {
 				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
-					PREGUNTA *CabeceraArchivo; 
 					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
-					archivoLeido=1;	
+					archivoLeido = 1;	
 
 				}
 
@@ -496,7 +461,6 @@ int main(int argc, char *argv[]) {
 				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
-					PREGUNTA *CabeceraArchivo; 
 					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
 					archivoLeido=1;	
 
@@ -510,7 +474,6 @@ int main(int argc, char *argv[]) {
 			case '6':
 
 				if (archivoLeido == 0) {
-					PREGUNTA *CabeceraArchivo; 
 					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
 					archivoLeido=1;	
 

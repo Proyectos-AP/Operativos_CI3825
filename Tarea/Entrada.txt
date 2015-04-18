@@ -2,4 +2,4 @@
 2 0 L "Quién es el autor de la novela Doña Bárbara" "Miguel O. Silva" "Rómulo Gallegos" "Joaquin Crespo" 2 
 9 1 G "Cuál es la capital de Alemania" "Munich" "Berlin" "Atenas" 2 
 20 1 G "Dónde queda la Isla Ibiza" "En el Mediterráneo" "En el Pacífico" "En el Caribe" 1 
-21 2 H "Lo que sea" "no se" "no se " "no se" 1 
+13 0 H "Linux es " "as" "as" "as" 1 
