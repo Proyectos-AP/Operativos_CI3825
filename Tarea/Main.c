@@ -86,15 +86,15 @@ int main(int argc, char *argv[]) {
 
 					//printf("%d %d %c %s\n",codigo,complejidad,tipo,pregunta);
 
-					int in_char;	
+					//int in_char;	
 
-					while((in_char = getc(archivo)) != EOF ) {
+					//while((in_char = getc(archivo)) != EOF ) {
 
-						printf("%c",in_char);
+						//printf("%c",in_char);
 
-					}
+					//}
 
-					printf("\nLos datos han sido cargados correctamente a memoria.\n");
+					//printf("\nLos datos han sido cargados correctamente a memoria.\n");
 					fclose(archivo);
 
 				}
