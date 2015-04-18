@@ -12,7 +12,7 @@ PENDIENTE:
 
 1) Explicar y entender lo de int main(int argc, char *argv[])
 2) Preguntar, si el nombre del archivo no esta, que pasa?
-
+3) ptr es pointer
 ////
 
 
