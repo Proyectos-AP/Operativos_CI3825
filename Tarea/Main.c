@@ -8,7 +8,7 @@
 *
 * Descripcion: Clase Principal (Arreglar)
 *
-* Ultima modificacion: 16/04/2015
+* Ultima modificacion: 17/04/2015
 *
 */
 
@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Definicion de Tipos:
 
@@ -43,7 +44,6 @@ typedef struct pregunta {
 int main(int argc, char *argv[]) {
 
 	char respuesta;
-
 	while (1) {
 
 		printf("Bienvenido a la base de datos de preguntas: \n");
@@ -69,7 +69,12 @@ int main(int argc, char *argv[]) {
 				FILE *archivo;
 				int codigo,complejidad;
 				char tipo;
-				char pregunta[100];
+				char pregunta1[101];
+				char resp_1[101];
+				char resp_2[101];
+				char resp_3[101];
+				int resp_correcta;
+				char *pch;
 
 
 				if ( (fopen(argv[1],"r")) == NULL) {
@@ -82,9 +87,22 @@ int main(int argc, char *argv[]) {
 
 					archivo = fopen(argv[1],"r");
 
-					//fscanf(archivo,"%d %d %c \"%s\" ",&codigo,&complejidad,&tipo,pregunta);
+					int result_caracter;
+					int i;
 
-					//printf("%d %d %c %s\n",codigo,complejidad,tipo,pregunta);
+					// PENDIENTE: hay que revisar como hacer con los strings de la forma
+					// "Romulo \n Gallegos"
+					while (1)  {
+						char *pch;										  
+						fscanf(archivo," %d %d %c \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d ", \
+							&codigo,&complejidad,&tipo,pregunta1,resp_1,resp_2,resp_3,&resp_correcta);
+						pch = strchr(resp_2,10);
+						    if (pch != NULL){
+       							 *pch=32;
+    							}
+						printf("\n %d %d %c \n %s \n %s \n %s \n %s \n %d \n ", \
+							codigo,complejidad,tipo,pregunta1,resp_1,resp_2,resp_3,resp_correcta);
+
 
 					//int in_char;	
 
@@ -95,6 +113,16 @@ int main(int argc, char *argv[]) {
 					//}
 
 					//printf("\nLos datos han sido cargados correctamente a memoria.\n");
+
+						if (feof(archivo)) {
+							break;
+						}
+					 	
+					 } 
+
+					
+					printf("\nLos datos han sido cargados correctamente a memoria.\n");
+
 					fclose(archivo);
 
 				}
@@ -104,7 +132,17 @@ int main(int argc, char *argv[]) {
 			// Consultar todas las preguntas que estan en la base de datos:
 			case '1':
 
-				printf("\nLas preguntas que se encuentran la base de datos son:\n");
+				printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
+
+
+				printf("Pregunta: %s? \n","Quién es la actriz principal de la película Los Puentes de Madison");
+				printf("Codigo: %d / Complejidad: %d / Area: %c \n",1,2,'C');
+				printf("Las opciones son: \n");
+				printf("	1.- %s. \n","Meryl Streep");
+				printf("	2.- %s. \n","Penélope Cruz");
+				printf("	3.- %s. \n","Jodie Foster");
+				printf("Respuesta correcta: %d \n",1);
+				printf("\n--------------------\n\n");
 
 
 			break;
@@ -117,7 +155,7 @@ int main(int argc, char *argv[]) {
 				printf("\nIntroduzca el nivel de complejidad,\n");
 				printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
 				// Revisar: este scanf no esta funcionando
-				scanf("%c",&resp_complejidad);
+				scanf(" %c",&resp_complejidad);
 				printf("\n");			
 
 
@@ -133,12 +171,21 @@ int main(int argc, char *argv[]) {
 
 			// Salvar la base de datos:
 			case '5':
+
+			/*
+				for () {
+
+				}
+
+			*/
+
+
 			break;
 
 			// Salir:
 			case '6':
 				// Se tiene que guardar la partida antes de salir
-				printf("El programa finalizara su ejecucion.\n");
+				printf("\nEl programa finalizara su ejecucion.\n");
 				return 0;
 			break;
 

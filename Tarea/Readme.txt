@@ -36,3 +36,13 @@ PENDIENTE:
 		Motivo:
 		Ultima visita realidaza:
 
+	4.- http://stackoverflow.com/questions/1835986/how-to-use-eof-to-run-through-a-text-file-in-c
+
+	5.- http://bytes.com/topic/c/answers/811451-fscanf-read-string-between-mark
+
+	6.- http://stackoverflow.com/questions/797318/how-to-split-a-string-literal-across-multiple-lines-in-c-objective-c
+
+	7.- http://stackoverflow.com/questions/9935401/c-programming-end-of-file-operation
+
+	
+
