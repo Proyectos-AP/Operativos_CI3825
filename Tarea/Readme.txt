@@ -43,6 +43,8 @@ PENDIENTE:
 	6.- http://stackoverflow.com/questions/797318/how-to-split-a-string-literal-across-multiple-lines-in-c-objective-c
 
 	7.- http://stackoverflow.com/questions/9935401/c-programming-end-of-file-operation
+	
+	8.- http://solocodigo.com/46029/c-fgets-y-linea-innecesaria-solucionado/
 
 	
 

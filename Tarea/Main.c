@@ -40,6 +40,14 @@ typedef struct pregunta {
 
 
 // Inicio del codigo principal:
+void CambiarSaltoDeLinea(char *frase){
+	char *pch;
+	pch = strchr(frase,10);
+	if (pch != NULL){
+		//Si hay un caracter nulo se agrega un espacio en blanco
+       	*pch=32;
+    }
+}
 
 int main(int argc, char *argv[]) {
 
@@ -74,7 +82,7 @@ int main(int argc, char *argv[]) {
 				char resp_2[101];
 				char resp_3[101];
 				int resp_correcta;
-				char *pch;
+
 
 
 				if ( (fopen(argv[1],"r")) == NULL) {
@@ -90,19 +98,23 @@ int main(int argc, char *argv[]) {
 					int result_caracter;
 					int i;
 
+
 					// PENDIENTE: hay que revisar como hacer con los strings de la forma
 					// "Romulo \n Gallegos"
 					while (1)  {
 						char *pch;										  
 						fscanf(archivo," %d %d %c \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d ", \
 							&codigo,&complejidad,&tipo,pregunta1,resp_1,resp_2,resp_3,&resp_correcta);
-						pch = strchr(resp_2,10);
-						    if (pch != NULL){
-       							 *pch=32;
-    							}
+
+						//Se verifica si hay un salto de linea
+						CambiarSaltoDeLinea(pregunta1);
+						CambiarSaltoDeLinea(resp_1);
+						CambiarSaltoDeLinea(resp_2);
+						CambiarSaltoDeLinea(resp_3);
+
+
 						printf("\n %d %d %c \n %s \n %s \n %s \n %s \n %d \n ", \
 							codigo,complejidad,tipo,pregunta1,resp_1,resp_2,resp_3,resp_correcta);
-
 
 					//int in_char;	
 
