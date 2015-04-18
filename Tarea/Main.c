@@ -82,10 +82,14 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 			// Verifica si se ha llegado al fin del archivo
 			// o si esta vacio para no reservar espacio
 			// de memoria innecesario
-			if (feof(archivo)) {
-				break;
-			}
+
+    		fseek(archivo,0,SEEK_END);
+
+   			if (ftell(archivo) == 0 )	{
+     			break;
+    		}
 						
+			printf("%s","entre");
 
 			// Se reserva el espacio de memoria para cada
 			// pregunta y sus posibles respuestas:
@@ -126,6 +130,11 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 			temporal->siguiente=NULL;
 			anterior->siguiente=temporal;
 			anterior=temporal;
+
+			if (feof(archivo)) {
+					break;
+				}
+
 		 	
 		}
 
@@ -194,6 +203,9 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 	}
 
 }
+
+//------------------------------------------------------------//
+
 void Eliminar(PREGUNTA *Cabecera,int clave){
 
 	PREGUNTA *aux;
@@ -224,7 +236,7 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 		// Descripcion de la funcion:
 
 		PREGUNTA *aux;				
-		aux = CabeceraArchivo->siguiente;
+		aux = CabeceraArchivo;
 
 
 		// buscar guardar una variable que 
@@ -345,6 +357,7 @@ int main(int argc, char *argv[]) {
 
 	int archivoLeido = 0;
 	char respuesta;
+	PREGUNTA *cabeceraFile;
 	while (1) {
 
 		printf("Menu de opciones: \n");
@@ -366,11 +379,11 @@ int main(int argc, char *argv[]) {
 			case '0':
 				; // Declaracion despues de label
 
-				PREGUNTA *CabeceraArchivo; 
-				if (archivoLeido == 0) {
 
+				PREGUNTA *cabeceraFile; 
+				if (archivoLeido == 0) {
 				
-				CabeceraArchivo = LeerBaseDeDatos(argv[1]);
+					cabeceraFile = LeerBaseDeDatos(argv[1]);
 				}			
 				archivoLeido = 1;
 				
@@ -381,14 +394,12 @@ int main(int argc, char *argv[]) {
 				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
-					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
+					cabeceraFile = LeerBaseDeDatos(argv[1]);	
 					archivoLeido = 1;	
 
 				}
 
-				printf("%s",CabeceraArchivo->siguiente->pregunta);
-
-				imprimirPreguntas(CabeceraArchivo);
+				imprimirPreguntas(cabeceraFile);
 
 			break;
 
@@ -414,12 +425,12 @@ int main(int argc, char *argv[]) {
 				}
 
 				if (archivoLeido == 0) {
-					CabeceraArchivo = LeerBaseDeDatos(argv[1]);
+					cabeceraFile = LeerBaseDeDatos(argv[1]);
 					archivoLeido=1;	
 
 				}
 
-				imprimirPreguntasComplejidad(CabeceraArchivo,resp_complejidad);
+				imprimirPreguntasComplejidad(cabeceraFile,resp_complejidad);
 
 			break;
 
@@ -434,10 +445,10 @@ int main(int argc, char *argv[]) {
 				printf("\n");
 
 				if (archivoLeido == 0) {
-					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
+					cabeceraFile = LeerBaseDeDatos(argv[1]);	
 					archivoLeido=1;
 				}
-				Eliminar(CabeceraArchivo,claveAeliminar);
+				Eliminar(cabeceraFile,claveAeliminar);
 				
 			break;
 
@@ -446,12 +457,12 @@ int main(int argc, char *argv[]) {
 				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
-					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
+					cabeceraFile = LeerBaseDeDatos(argv[1]);	
 					archivoLeido = 1;	
 
 				}
 
-				insertarPregunta(CabeceraArchivo);
+				insertarPregunta(cabeceraFile);
 
 
 			break;
@@ -461,12 +472,12 @@ int main(int argc, char *argv[]) {
 				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
-					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
+					cabeceraFile = LeerBaseDeDatos(argv[1]);	
 					archivoLeido=1;	
 
 				}
 
-				escribirArchivo(CabeceraArchivo,argv[1]);
+				escribirArchivo(cabeceraFile,argv[1]);
 				printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
 			break;
 
@@ -474,12 +485,12 @@ int main(int argc, char *argv[]) {
 			case '6':
 
 				if (archivoLeido == 0) {
-					CabeceraArchivo = LeerBaseDeDatos(argv[1]);	
+					cabeceraFile = LeerBaseDeDatos(argv[1]);	
 					archivoLeido=1;	
 
 				}
 
-				escribirArchivo(CabeceraArchivo,argv[1]);
+				escribirArchivo(cabeceraFile,argv[1]);
 				printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
 				printf("El programa finalizara su ejecucion.\n");
 				return 0;
