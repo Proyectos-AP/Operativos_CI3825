@@ -26,10 +26,10 @@ typedef struct pregunta {
 	int codigo; 
 	int nivel;
 	char area;
-	char *pregunta[101];
-	char *opcion1[101];
-	char *opcion2[101];
-	char *opcion3[101];
+	char *pregunta;
+	char *opcion1;
+	char *opcion2;
+	char *opcion3;
 	int respuesta;
 	struct pregunta *siguiente;
 
@@ -37,6 +37,16 @@ typedef struct pregunta {
 
 
 // Definicion de funciones: 
+
+void CambiarSaltoDeLinea(char *frase){
+	char *pch;
+	pch = strchr(frase,10);
+	if (pch != NULL){
+		//Si hay un caracter nulo se agrega un espacio en blanco
+       	*pch=32;
+    }
+}
+
 
 
 // Inicio del codigo principal:
@@ -69,10 +79,6 @@ int main(int argc, char *argv[]) {
 				FILE *archivo;
 				int codigo,complejidad;
 				char tipo;
-				char pregunta1[101];
-				char resp_1[101];
-				char resp_2[101];
-				char resp_3[101];
 				int resp_correcta;
 				char *pch;
 
@@ -90,35 +96,91 @@ int main(int argc, char *argv[]) {
 					int result_caracter;
 					int i;
 
-					// PENDIENTE: hay que revisar como hacer con los strings de la forma
-					// "Romulo \n Gallegos"
+					PREGUNTA *primeraPregunta;
+					PREGUNTA *temporal;
+					PREGUNTA *anterior;
+
+
+					//Se crea la cabecera
+					primeraPregunta=(PREGUNTA*)malloc(sizeof(PREGUNTA));
+					primeraPregunta->siguiente=NULL;
+					anterior=primeraPregunta;
+
 					while (1)  {
-						char *pch;										  
-						fscanf(archivo," %d %d %c \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d ", \
-							&codigo,&complejidad,&tipo,pregunta1,resp_1,resp_2,resp_3,&resp_correcta);
-						pch = strchr(resp_2,10);
-						    if (pch != NULL){
-       							 *pch=32;
-    							}
-						printf("\n %d %d %c \n %s \n %s \n %s \n %s \n %d \n ", \
-							codigo,complejidad,tipo,pregunta1,resp_1,resp_2,resp_3,resp_correcta);
 
-
-					//int in_char;	
-
-					//while((in_char = getc(archivo)) != EOF ) {
-
-						//printf("%c",in_char);
-
-					//}
-
-					//printf("\nLos datos han sido cargados correctamente a memoria.\n");
-
+						// Verifica si se ha llegado al fin del archivo
+						// o si esta vacio para no reservar espacio
+						// de memoria innecesario
 						if (feof(archivo)) {
 							break;
 						}
+
+						// Se reserva el espacio de memoria para cada
+						// pregunta y sus posibles respuestas:
+
+						char *pregunta1;
+						pregunta1 = (char*)malloc(sizeof(char)*101);
+
+						char *resp_1;
+						resp_1 = (char*)malloc(sizeof(char)*101);
+
+						char *resp_2;
+						resp_2 = (char*)malloc(sizeof(char)*101);
+
+						char *resp_3;
+						resp_3 = (char*)malloc(sizeof(char)*101);
+
+						char *pch;										  
+						fscanf(archivo," %d %d %c \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d ", \
+							&codigo,&complejidad,&tipo,pregunta1,resp_1,resp_2,resp_3,&resp_correcta);
+
+						//Se verifica si hay un salto de linea
+						CambiarSaltoDeLinea(pregunta1);
+						CambiarSaltoDeLinea(resp_1);
+						CambiarSaltoDeLinea(resp_2);
+						CambiarSaltoDeLinea(resp_3);
+
+						printf("\n %d %d %c \n %s \n %s \n %s \n %s \n %d \n ", \
+							codigo,complejidad,tipo,pregunta1,resp_1,resp_2,resp_3,resp_correcta);
+
+						temporal=(PREGUNTA*)malloc(sizeof(PREGUNTA));
+						temporal->codigo=codigo;
+						temporal->nivel=complejidad;
+						temporal->area=tipo;
+						temporal->pregunta=pregunta1;
+						temporal->opcion1=resp_1;
+						temporal->opcion2=resp_2;
+						temporal->opcion3=resp_3;
+						temporal->respuesta=resp_correcta;
+						temporal->siguiente=NULL;
+						anterior->siguiente=temporal;
+						anterior=temporal;
 					 	
-					 } 
+					 }
+
+					PREGUNTA *aux;
+					
+					aux = primeraPregunta->siguiente;
+
+					printf("Pregunta 1: %s? \n",primeraPregunta->siguiente->pregunta);
+					printf("Pregunta 2: %s? \n",primeraPregunta->siguiente->siguiente->pregunta);
+
+
+					while (aux != NULL) {
+
+					 	printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
+						printf("Pregunta: %s? \n",aux->pregunta);
+						printf("Codigo: %d / Complejidad: %d / Area: %c \n",aux->codigo,aux->nivel,aux->area);
+						printf("Las opciones son: \n");
+						printf("	1.- %s. \n",aux->opcion1);
+						printf("	2.- %s. \n",aux->opcion2);
+						printf("	3.- %s. \n",aux->opcion3);
+						printf("Respuesta correcta: %d \n",aux->respuesta);
+						printf("\n--------------------\n\n");
+						aux = aux->siguiente;
+
+					 }
+					 
 
 					
 					printf("\nLos datos han sido cargados correctamente a memoria.\n");
@@ -131,18 +193,8 @@ int main(int argc, char *argv[]) {
 
 			// Consultar todas las preguntas que estan en la base de datos:
 			case '1':
+				;
 
-				printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
-
-
-				printf("Pregunta: %s? \n","Quién es la actriz principal de la película Los Puentes de Madison");
-				printf("Codigo: %d / Complejidad: %d / Area: %c \n",1,2,'C');
-				printf("Las opciones son: \n");
-				printf("	1.- %s. \n","Meryl Streep");
-				printf("	2.- %s. \n","Penélope Cruz");
-				printf("	3.- %s. \n","Jodie Foster");
-				printf("Respuesta correcta: %d \n",1);
-				printf("\n--------------------\n\n");
 
 			break;
 
