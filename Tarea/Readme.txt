@@ -39,3 +39,10 @@ Nombres:
 		Tema: Cambio de caracter en un string.
 		Última visita realizada: 18/04/2015
 
+	8.- http://stackoverflow.com/questions/7259238/how-to-forward-typedefd-struct-in-h
+		Tema: Definición de un header en C
+		Última visita realizada: 18/04/2015
+
+	9.- http://www.tutorialspoint.com/c_standard_library/c_function_fseek.htm
+		Tema: Formato de la función fseek().
+		Última visita realizada: 18/04/2015
