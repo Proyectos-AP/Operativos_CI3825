@@ -111,7 +111,9 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 		fseek(archivo,0,SEEK_END);
 
    		if (ftell(archivo) == 0 )	{
-   			printf("El archivo esta vacio");
+   			//printf("\n--------------------\n");
+   			printf("  \n* El archivo esta vacio\n");
+   			//printf("\n--------------------\n\n");
     	}
 
     	else {
