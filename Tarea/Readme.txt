@@ -14,6 +14,8 @@ PENDIENTE:
 2) Preguntar, si el nombre del archivo no esta, que pasa?
 3) ptr es pointer
 4) preguntar lo de la declaracion de CabeceraFile
+5) explicar lo de la cabecera del archivo 
+6) salvar  
 ////
 
 
