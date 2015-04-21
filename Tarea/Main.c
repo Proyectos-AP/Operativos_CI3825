@@ -12,9 +12,10 @@
 * de datos de preguntas almacenadas en un
 * archivo de texto plano.
 *
-* Ultima modificacion: 18/04/2015
+* Ultima modificacion: 17/04/2015
 *
 */
+
 
 // Directivas de Preprocesador:
 
@@ -27,7 +28,12 @@ int main(int argc, char *argv[]) {
 
 	printf("Bienvenido a la base de datos de preguntas: \n");
 
+	// archivoLeido es 0 si no se ha leido la base de 
+	// datos y es 1 si se ha leido.
 	int archivoLeido = 0;
+
+	//archivoSalvado es 0 si no se ha salvado la 
+	//base de datos y 1 si se ha salvado.
 	int archivoSalvado = 0;
 	char respuesta;
 	PREGUNTA *cabeceraFile;
@@ -53,20 +59,17 @@ int main(int argc, char *argv[]) {
 			case '0':
 				; // Declaracion despues de label
 
-
-				PREGUNTA *cabeceraFile; 
 				if (archivoLeido == 0) {
-				
 					cabeceraFile = LeerBaseDeDatos(argv[1]);
 					archivoLeido = 1;
 				}
 
 				else {
+					printf("\n--------------------\n");
 					printf("\nLas preguntas ya se encuentran cargadas en memoria.\n");
+					printf("\n--------------------\n\n");
 
 				}
-
-				
 				
 				break;
 
@@ -74,9 +77,11 @@ int main(int argc, char *argv[]) {
 			case '1':
 				; // Declaracion despues de label
 
-				if (archivoLeido == 0) {
 
+				if (archivoLeido == 0) {
+					printf("\n--------------------\n");
 					printf("\nError: Las preguntas no han sido cargadas en memoria.\n");
+					printf("\n--------------------\n\n");
 
 				}
 
@@ -92,12 +97,14 @@ int main(int argc, char *argv[]) {
 			// Consultar todas las preguntas de un determinado nivel de complejidad:
 			case '2':
 				; // Declaracion despues de label
+				char resp_complejidad;
 
+				
 
 				if (archivoLeido == 0) {
-
+					printf("\n--------------------\n");
 					printf("\nError: Las preguntas no han sido cargadas en memoria.\n");
-
+					printf("\n--------------------\n\n");
 				}
 
 				else {
@@ -133,8 +140,9 @@ int main(int argc, char *argv[]) {
 				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
-
+					printf("\n--------------------\n");
 					printf("\nError: Las preguntas no han sido cargadas en memoria.\n");
+					printf("\n--------------------\n\n");
 				}
 
 				else {
@@ -179,7 +187,9 @@ int main(int argc, char *argv[]) {
 
 				escribirArchivo(cabeceraFile,argv[1]);
 				archivoSalvado = 1;
+				printf("\n--------------------\n");
 				printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
+				printf("\n--------------------\n\n");
 			break;
 
 			// Salir:
@@ -195,24 +205,28 @@ int main(int argc, char *argv[]) {
 
 					printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
 					escribirArchivo(cabeceraFile,argv[1]);
-
-
+					
 				}
 
+				EliminarLista(cabeceraFile);
 				printf("El programa finalizara su ejecucion.\n");
 				exit(0);
 			break;
 
 			// Respuesta invalida: 
 			default:
+				printf("\n--------------------\n");
 				printf("\nError: La respuesta no es valida.\n");
 				printf("Intente de nuevo.\n");
+				printf("\n--------------------\n\n");
 			break;
 
-		}
-
+	
 		printf("\n");
 
 	}
 
 }
+
+}
+

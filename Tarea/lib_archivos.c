@@ -40,9 +40,19 @@ typedef struct pregunta {
 // Definicion de funciones: 
 
 void CambiarSaltoDeLinea(char *frase) {
-	// Descripcion de la funcion:
+
+	/* Descripcion de la funcion:
+		Esta funcion dada una frase verifica si esta 
+	contiene un salto de linea, de ser asi, este salto 
+	de linea es remplzado por un espacio en blanco
+	*/
+
+	// Declaracion de variables:
 	char *ptr_Caracter;
+
+	// Se verifica si la frase contiene un espacio en blanco
 	ptr_Caracter = strchr(frase,10);
+
 	if (ptr_Caracter != NULL){
 		//Si hay un caracter nulo se agrega un espacio en blanco
        	*ptr_Caracter=32;
@@ -53,7 +63,27 @@ void CambiarSaltoDeLinea(char *frase) {
 
 
 PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
-	// Descripcion de la funcion:
+	/*  Descripcion de la funcion:
+		Esta funcion dado el nombre de un archivo lee todo su 
+	contenido.Si el archivo no esta vacio se crea una estructura 
+	de datos PREGUNTA que contiene los siguientes (componentes):
+	 		-codigo:   Entero que representa el codigo de una 
+	 				 pregunta
+	 		-nivel:    Entero que representa el nivel de dificultad 
+	 				de una pregunta
+	 		-area: 	   Char que representa el area de conocimiento
+	 				a la que pertenece una pregunta
+	 		-pregunta: String que representa la pregunta
+	 		-opcion1:  String que representa una posible respuesta 1
+	 		-opcion2:  String que representa una posible respuesta 2
+	 		-opcion3:  String que representa una posible respuesta 3
+	 		-respuesta: Entero que representa cual es el numero
+	 					de la opcion con la respuesta correcta.
+	 		-siguiente: Apuntador al siguiente elemento de tipo 
+	 					PREGUNTA
+	 Si el archivo esta vacio la funcion solo creara la cabecera de 
+	 la estructuctura descrita anteriormente. 
+	*/
 
 	if ( (fopen(nombre_archivo,"r")) == NULL) {
 		printf("\nError: El archivo indicado no fue encontrado\n");
@@ -81,7 +111,9 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 		fseek(archivo,0,SEEK_END);
 
    		if (ftell(archivo) == 0 )	{
-   			printf("El archivo esta vacio");
+   			//printf("\n--------------------\n");
+   			printf("  \n* El archivo esta vacio\n");
+   			//printf("\n--------------------\n\n");
     	}
 
     	else {
@@ -90,7 +122,6 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 
 			while (1)  {
 
-				
 				// Se reserva el espacio de memoria para cada
 				// pregunta y sus posibles respuestas:
 
@@ -109,7 +140,8 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 				fscanf(archivo," %d %d %c \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d ", \
 				&codigo,&complejidad,&tipo,pregunta1,resp_1,resp_2,resp_3,&resp_correcta);
 
-				//Se verifica si hay un salto de linea
+				//Se verifica si hay un salto de linea para ser cambiado 
+				// por un espacio en blanco
 				CambiarSaltoDeLinea(pregunta1);
 				CambiarSaltoDeLinea(resp_1);
 				CambiarSaltoDeLinea(resp_2);
@@ -135,27 +167,62 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 				if (feof(archivo)) {
 						break;
 					}
-
-		 	
 			}
 
 		}
 
+		printf("\n--------------------\n");
 		printf("\nLos datos han sido cargados correctamente a memoria.\n");
+		printf("\n--------------------\n\n");
 		fclose(archivo);
 
 		return primeraPregunta;
 
 	}
+}
 
+//------------------------------------------------------------//
 
+void EliminarLista(PREGUNTA *CabeceraData){
+
+	/*  Descripcion de la funcion:
+		Esta funcion destruye una lista enlazada de una 
+	estructura de datos de tipo PREGUNTA.
+
+	*/
+
+	// Caso en donde la estructura no tiene elementos
+	if(CabeceraData->siguiente==NULL){
+		free(CabeceraData);
+	}
+
+	// Caso en donde la estructura tiene al menos un elemento
+	else{
+
+		PREGUNTA *aux;
+		while(CabeceraData->siguiente!=NULL){
+
+			aux=CabeceraData->siguiente;
+			CabeceraData->siguiente=aux->siguiente;
+			free(aux);
+		}
+
+		// Se elimina la cabecera de la estructura de datos
+		free(CabeceraData);
+	}
 }
 
 //------------------------------------------------------------//
 
 
 void imprimirPreguntas(PREGUNTA *CabeceraArchivo) {
-	// Descripcion de la funcion:
+
+	/*  Descripcion de la funcion:
+		Esta funcion imprime todas la preguntas presentes en 
+	una estructura de datos llamada PREGUNTA.
+	*/
+
+	// Declaracion de variables:
 	PREGUNTA *aux;
 				
 	aux = CabeceraArchivo->siguiente;
@@ -180,7 +247,13 @@ void imprimirPreguntas(PREGUNTA *CabeceraArchivo) {
 //------------------------------------------------------------//
 
 void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
-	// Descripcion de la funcion:
+	/*  Descripcion de la funcion:
+		Esta funcion imprime las preguntas almacenadas en una 
+	estructura de datos llamada PREGUNTAS que poseen un cierto nivel
+	de complejidad.
+	*/
+
+	// Declaracion de variables:
 	int num_complejidad = (int)(complejidad-48); 
 	PREGUNTA *aux;				
 	aux = CabeceraArchivo->siguiente;
@@ -211,6 +284,14 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 
 void Eliminar(PREGUNTA *Cabecera,int clave) {
 
+	/*  Descripcion de la funcion:
+		Esta funcion dada una clave, elimina una pregunta 
+	almacenada en una estructura de datos llamada PREGUNTAS 
+	que posea dicha clave.
+
+	*/
+
+	// Declaracion de variables:
 	PREGUNTA *aux;
 	PREGUNTA *anterior;	
 	anterior=Cabecera;			
@@ -222,6 +303,10 @@ void Eliminar(PREGUNTA *Cabecera,int clave) {
 			anterior->siguiente=aux->siguiente;
 			aux->siguiente=NULL;
 			free(aux);
+			printf("\n--------------------\n");
+			printf("\nLa pregunta %d",clave);
+			printf(" ha sido eliminada\n");
+			printf("\n--------------------\n\n"); 
 			return;
 
 		}
@@ -229,18 +314,22 @@ void Eliminar(PREGUNTA *Cabecera,int clave) {
 		aux = aux->siguiente;
 
 	}
-
-	printf("Error: La clave introducida no corresponde a ");
+	printf("\n--------------------\n");
+	printf("\nError: La clave introducida no corresponde a ");
 	printf("ninguna \npregunta de la base de datos.\n");
-
-
+	printf("\n--------------------\n\n");
 }
 
 //------------------------------------------------------------//
 
 void insertarPregunta(PREGUNTA *CabeceraArchivo) {
-		// Descripcion de la funcion:
+	/*  Descripcion de la funcion:
 
+		Esta funcion inserta una nueva pregunta en una lista
+	enlazada de una estructura de datos llamada PREGUNTA.
+	*/
+
+	// Declaracion de variables:
 		PREGUNTA *aux;				
 		aux = CabeceraArchivo;
 
@@ -280,11 +369,13 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 
 		int respuesta_nueva;
 
+		//Se pide el codigo de la pregunta al usuario
+
 		printf("\nIntroduzca el codigo correspondiente a su pregunta\n");
 		printf("(numero entero): ");
 		scanf(" %d",&codigo_nuevo);
 
-		// verificar en un arreglo de los codigos de las preguntas:
+		// Se pide el nivel de complejidad al usuarioi
 
 		while(1) {
 
@@ -304,7 +395,8 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 
 		}
 
-
+		// Se pide el tema correspondiente de la pregunta 
+		// ingresada por el usuario
 		while(1) {
 
 
@@ -324,32 +416,26 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 
 		}
 
-
-
-
-
-
-
-
-
-
-
-
-
+		// Se pide la pregunta 
 		printf("\nIntroduzca su pregunta sin utilizar comillas y sin signo de interrogacion\n");
 		printf("(Ejemplo: Cuál es la capital de Alemania): ");
 		scanf(" %100[^\n]",pregunta_nueva);
 
+		// Se pide la opcion 1
 		printf("\nIntroduzca su primera opcion de respuesta (Ejemplo: Hamburg): ");
 		scanf(" %100[^\n]",opcion1_nueva);
 
+		// Se pide la opcion 2
 		printf("\nIntroduzca su segunda opcion de respuesta (Ejemplo: Stuttgart): ");
 		scanf(" %100[^\n]",opcion2_nueva);
 
+		// Se pide la opcion 3
 		printf("\nIntroduzca su tercera posible respuesta (Ejemplo: Berlin): ");
 		scanf(" %100[^\n]",opcion3_nueva);
 
 
+		// Se solicita el numero de la opcion que sera marcada como
+		// respuesta correcta
 		while(1) {
 
 
@@ -368,6 +454,8 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 
 		}
 
+		// Se almacena en la estructura de datos toda la 
+		// informacion suministrada por el usuario
 		nueva_pregunta->codigo=codigo_nuevo;
 		nueva_pregunta->nivel=nivel_nuevo;
 		nueva_pregunta->area=area_nueva;
@@ -377,7 +465,9 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 		nueva_pregunta->opcion3=opcion3_nueva;
 		nueva_pregunta->respuesta=respuesta_nueva;
 		
+		printf("\n--------------------\n");
 		printf("\nSu pregunta ha sido agregada a la base de datos.\n");
+		printf("\n--------------------\n\n");
 
 	}
 
@@ -385,7 +475,14 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 
 
 void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
-	// Descripcion de la funcion:
+	/*  Descripcion de la funcion:
+		Dada una estructura de datos de tipo PREGUNTA 
+	y el nombre de un archivo esta funcion creara un archivo
+	con el nombre dado y escribira en el archivo toda la 
+	informacion almacenada en la estructura de datos suministrada.
+	*/
+
+	// Declaracion de variables:
 	PREGUNTA *aux;				
 	aux = CabeceraArchivo->siguiente;
 

@@ -8,8 +8,9 @@
 # Ultima modificacion: 18/04/2015
 #
 #
-
-all:
-	gcc -o preguntas *.c
+Main: Main.o  
+	gcc Main.c lib_archivos.c -o pregunta
+pregunta.o: Main.c lib_archivos.h
+	gcc -c Main.c
 clean:
-	rm preguntas
+	rm pregunta

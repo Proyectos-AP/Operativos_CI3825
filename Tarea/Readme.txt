@@ -43,6 +43,3 @@ Nombres:
 		Tema: Definición de un header en C.
 		Última visita realizada: 18/04/2015
 
-	9.- http://www.tutorialspoint.com/c_standard_library/c_function_fseek.htm
-		Tema: Formato de la función fseek().
-		Última visita realizada: 18/04/2015
