@@ -24,6 +24,8 @@ void CambiarSaltoDeLinea(char *frase);
 
 PREGUNTA* LeerBaseDeDatos(char *nombre_archivo);
 
+//void EliminarLista(PREGUNTA *CabeceraData);
+
 void imprimirPreguntas(PREGUNTA *CabeceraArchivo);
 
 void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad);

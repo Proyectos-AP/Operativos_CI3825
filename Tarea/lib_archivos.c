@@ -183,6 +183,37 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 
 //------------------------------------------------------------//
 
+void EliminarLista(PREGUNTA *CabeceraData){
+
+	/*  Descripcion de la funcion:
+		Esta funcion destruye una lista enlazada de una 
+	estructura de datos de tipo PREGUNTA.
+
+	*/
+
+	// Caso en donde la estructura no tiene elementos
+	if(CabeceraData->siguiente==NULL){
+		free(CabeceraData);
+	}
+
+	// Caso en donde la estructura tiene al menos un elemento
+	else{
+
+		PREGUNTA *aux;
+		while(CabeceraData->siguiente!=NULL){
+
+			aux=CabeceraData->siguiente;
+			CabeceraData->siguiente=aux->siguiente;
+			free(aux);
+		}
+
+		// Se elimina la cabecera de la estructura de datos
+		free(CabeceraData);
+	}
+}
+
+//------------------------------------------------------------//
+
 
 void imprimirPreguntas(PREGUNTA *CabeceraArchivo) {
 
