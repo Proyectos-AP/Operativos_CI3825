@@ -24,15 +24,6 @@
 #include <string.h>
 #include "lib_archivos.h"
 
-
-//void EliminarLista(PREGUNTA *CabeceraData){
-
-	//if(Cabecera->siguiente==NULL){
-	//	free(Cabecera);
-	//}
-//	printf("Eliminada");
-//}
-
 int main(int argc, char *argv[]) {
 
 	printf("Bienvenido a la base de datos de preguntas: \n");
@@ -216,7 +207,7 @@ int main(int argc, char *argv[]) {
 					escribirArchivo(cabeceraFile,argv[1]);
 					
 				}
-				
+
 				EliminarLista(cabeceraFile);
 				printf("El programa finalizara su ejecucion.\n");
 				exit(0);

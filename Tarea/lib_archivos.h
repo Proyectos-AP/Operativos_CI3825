@@ -24,7 +24,7 @@ void CambiarSaltoDeLinea(char *frase);
 
 PREGUNTA* LeerBaseDeDatos(char *nombre_archivo);
 
-//void EliminarLista(PREGUNTA *CabeceraData);
+void EliminarLista(PREGUNTA *CabeceraData);
 
 void imprimirPreguntas(PREGUNTA *CabeceraArchivo);
 
