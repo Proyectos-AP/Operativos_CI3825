@@ -12,7 +12,7 @@
 * de datos de preguntas almacenadas en un
 * archivo de texto plano.
 *
-* Ultima modificacion: 17/04/2015
+* Ultima modificacion: 21/04/2015
 *
 */
 
@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+#include <ctype.h>
 #include "lib_archivos.h"
 
 int main(int argc, char *argv[]) {
@@ -208,6 +210,7 @@ int main(int argc, char *argv[]) {
 					
 				}
 
+				// Se elimina la lista enlazada de las preguntas:
 				EliminarLista(cabeceraFile);
 				printf("El programa finalizara su ejecucion.\n");
 				exit(0);

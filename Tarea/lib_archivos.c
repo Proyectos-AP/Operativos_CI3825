@@ -10,7 +10,7 @@
 * el manejo de una base de datos de preguntas
 * almacenadas en un archivo de texto plano.
 * 
-* Ultima modificacion: 18/04/2015
+* Ultima modificacion: 21/04/2015
 *
 */
 
@@ -19,6 +19,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+#include <ctype.h>
 
 // Definicion de tipos:
 
@@ -86,9 +88,11 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 	*/
 
 	if ( (fopen(nombre_archivo,"r")) == NULL) {
-		printf("\nError: El archivo indicado no fue encontrado\n");
-		printf("El programa finalizara su ejecucion.\n");
+
+		perror("Error: El archivo indicado no fue encontrado ");
+		printf("errno = %d. \n",errno);
 		exit(1);
+
 	}
 
 	else {
@@ -324,7 +328,6 @@ void Eliminar(PREGUNTA *Cabecera,int clave) {
 
 void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 	/*  Descripcion de la funcion:
-
 		Esta funcion inserta una nueva pregunta en una lista
 	enlazada de una estructura de datos llamada PREGUNTA.
 	*/
@@ -368,89 +371,183 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 		opcion3_nueva = (char*)malloc(sizeof(char)*101);
 
 		int respuesta_nueva;
-
-		//Se pide el codigo de la pregunta al usuario
-
-		printf("\nIntroduzca el codigo correspondiente a su pregunta\n");
-		printf("(numero entero): ");
-		scanf(" %d",&codigo_nuevo);
-
-		// Se pide el nivel de complejidad al usuarioi
+		int codigoValido;
+		char confirmacion;
+		int guardarPregunta;
 
 		while(1) {
 
+			//Se pide el codigo de la pregunta al usuario
 
-			printf("\nIntroduzca el nivel de complejidad de su pregunta\n");
-			printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
+			while(1) {
 
-			scanf(" %d",&nivel_nuevo);
-			printf("\n");	
+				printf("\nIntroduzca el codigo correspondiente a su pregunta\n");
+				printf("(numero entero): ");
 
-			if ( nivel_nuevo >= 0 && nivel_nuevo <= 2) {
-				break;
+				if (scanf(" %d",&codigo_nuevo) == 0) {
+					printf("\nError: No ha ingresado un entero. \n");
+					printf("El programa finalizara su ejecucion\n");
+					exit(1);
+
 				}
 
-			printf("\nError: La respuesta no es valida.\n");
-			printf("Intente de nuevo.\n");
+				else {
+
+					codigoValido = verificarCodigo(CabeceraArchivo,codigo_nuevo);
+
+					if (codigoValido == 1) {
+						break;
+					}
+
+					printf("\nError: El codigo de la pregunta ya existe.");
+					printf(" Intente de nuevo.\n");
+					
+				}
+
+
+			}
+		
+
+			// Se pide el nivel de complejidad al usuarioi
+
+			while(1) {
+
+
+				printf("\nIntroduzca el nivel de complejidad de su pregunta\n");
+				printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
+
+				
+				if (scanf(" %d",&nivel_nuevo) == 0) {
+
+					printf("\nError: No ha ingresado un entero. \n");
+					printf("El programa finalizara su ejecucion\n");
+					exit(1);
+
+				}
+
+				else {
+
+					if ( nivel_nuevo >= 0 && nivel_nuevo <= 2) {
+						break;
+						}
+
+					printf("\nError: La respuesta no es valida.\n");
+					printf("Intente de nuevo.\n");
+					
+				}
+
 
 		}
 
 		// Se pide el tema correspondiente de la pregunta 
 		// ingresada por el usuario
-		while(1) {
 
 
-			printf("\nIntroduzca el caracter correspondiente al tema de su pregunta\n");
-			printf("(H - Historia, C - Cine, L - Literatura, G - Geografia\n");
-			printf("M - Matematicas, T - Tecnologia e Informatica): ");
-			scanf(" %c",&area_nueva);
-			printf("\n");	
-
-			if ( area_nueva == 72 || area_nueva == 84 || area_nueva == 67 || \
-				area_nueva == 76 || area_nueva == 71 || area_nueva == 77) {
-					break;
-			}
-
-			printf("\nError: La respuesta no es valida.\n");
-			printf("Intente de nuevo.\n");
-
-		}
-
-		// Se pide la pregunta 
-		printf("\nIntroduzca su pregunta sin utilizar comillas y sin signo de interrogacion\n");
-		printf("(Ejemplo: Cuál es la capital de Alemania): ");
-		scanf(" %100[^\n]",pregunta_nueva);
-
-		// Se pide la opcion 1
-		printf("\nIntroduzca su primera opcion de respuesta (Ejemplo: Hamburg): ");
-		scanf(" %100[^\n]",opcion1_nueva);
-
-		// Se pide la opcion 2
-		printf("\nIntroduzca su segunda opcion de respuesta (Ejemplo: Stuttgart): ");
-		scanf(" %100[^\n]",opcion2_nueva);
-
-		// Se pide la opcion 3
-		printf("\nIntroduzca su tercera posible respuesta (Ejemplo: Berlin): ");
-		scanf(" %100[^\n]",opcion3_nueva);
+			while(1) {
 
 
-		// Se solicita el numero de la opcion que sera marcada como
-		// respuesta correcta
-		while(1) {
+				printf("\nIntroduzca el caracter correspondiente al tema de su pregunta\n");
+				printf("(H - Historia, C - Cine, L - Literatura, G - Geografia\n");
+				printf("M - Matematicas, T - Tecnologia e Informatica): ");
+				scanf(" %c",&area_nueva);	
 
-
-			printf("\nIntroduzca el numero correspondiente a la respuesta correcta\n");
-			printf("(1 - primera opcion, 2 - segunda opcion, 3 - tercera opcion): ");
-
-			scanf(" %d",&respuesta_nueva);
-			printf("\n");	
-
-			if ( respuesta_nueva >= 1 && respuesta_nueva <= 3) {
-				break;
+				if ( area_nueva == 'H' || area_nueva == 'C' || area_nueva == 'L' || \
+					area_nueva == 'G' || area_nueva == 'M' || area_nueva == 'T') {
+						break;
 				}
 
-			printf("\nError: La respuesta no es valida.\n");
-			printf("Intente de nuevo.\n");
+				printf("\nError: La respuesta no es valida.\n");
+				printf("Intente de nuevo.\n");
+
+			}
+
+			// Se pide la pregunta 
+			printf("\nIntroduzca su pregunta entre comillas y sin signo de interrogacion\n");
+			printf("(Ejemplo: \"Cuál es la capital de Alemania\"): ");
+			scanf(" \"%100[^\"]\"",pregunta_nueva);
+
+			// Se pide la opcion 1
+			printf("\nIntroduzca su primera opcion de respuesta entre comillas \n(Ejemplo: \"Hamburg\"): ");
+			scanf(" \"%100[^\"]\"",opcion1_nueva);
+
+			// Se pide la opcion 2
+			printf("\nIntroduzca su segunda opcion de respuesta entre comillas \n(Ejemplo: \"Stuttgart\"): ");
+			scanf(" \"%100[^\"]\"",opcion2_nueva);
+
+			// Se pide la opcion 3
+			printf("\nIntroduzca su tercera posible respuesta entre comillas \n(Ejemplo: \"Berlin\"): ");
+			scanf(" \"%100[^\"]\"",opcion3_nueva);
+
+
+			// Se solicita el numero de la opcion que sera marcada como
+			// respuesta correcta
+			while(1) {
+
+
+				printf("\nIntroduzca el numero correspondiente a la respuesta correcta\n");
+				printf("(1 - primera opcion, 2 - segunda opcion, 3 - tercera opcion): ");
+
+				if (scanf(" %d",&respuesta_nueva) == 0) {
+
+					printf("\nError: No ha ingresado un entero. \n");
+					printf("El programa finalizara su ejecucion\n");
+					exit(1);
+
+				}
+
+
+				else {
+
+					if ( respuesta_nueva >= 1 && respuesta_nueva <= 3) {
+						break;
+
+						}
+
+					printf("\nError: La respuesta no es valida.\n");
+					printf("Intente de nuevo.\n");
+					
+				}
+
+			}
+
+
+			printf("Los datos introducidos son:\n");
+			printf("  - Codigo: %d \n",codigo_nuevo);
+			printf("  - Complejidad: %d\n",nivel_nuevo);
+			printf("  - Area: %c \n",area_nueva);
+			printf("  - Pregunta: %s \n",pregunta_nueva);
+			printf("  - Opcion 1: %s \n",opcion1_nueva);
+			printf("  - Opcion 2: %s \n",opcion2_nueva);
+			printf("  - Opcion 3: %s \n",opcion3_nueva);
+			printf("  - Respuesta: %d \n",respuesta_nueva);
+
+
+			guardarPregunta = 0;
+
+			while(1) {
+
+				printf("Desea guardar la siguiente informacion? [Y/n]: ");
+				scanf(" %c",&confirmacion);
+
+				if (confirmacion == 'y' | confirmacion == 'Y') {
+					guardarPregunta = 1;
+					break;
+				}
+
+				else if (confirmacion == 'n' | confirmacion == 'N') {
+					// El usuario desea introducir los datos de nuevo
+					break;
+					;
+
+				}
+
+				
+			}
+
+			// Se guardara la pregunta en memoria
+			if (guardarPregunta == 1) {
+				break;
+			}
 
 		}
 
@@ -505,3 +602,40 @@ void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
 
 
 //------------------------------------------------------------//
+
+int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo) {
+	/* Descripcion de la funcion: 
+		Dado un entero, la funcion verifica si este corresponde 
+	al codigo de alguna de las preguntas que se encuentran 
+	en la lista enlazada dada.
+	*/
+
+	int respuesta = 1;
+
+	if (CabeceraArchivo->siguiente == NULL) {
+		return respuesta;
+	}
+
+	else {
+
+		PREGUNTA *aux = CabeceraArchivo->siguiente;
+
+		while (aux->siguiente != NULL) {
+
+			if (aux->codigo == codigo) {
+				respuesta = 0;
+				return respuesta;
+
+			}
+
+			aux = aux->siguiente;
+
+			
+		}
+
+		return respuesta;
+
+	}
+
+
+}

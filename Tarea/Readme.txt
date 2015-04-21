@@ -5,8 +5,29 @@ Nombres:
 	Alejandra Cordero / Carnet: 12-10645
 	Pablo Maldonado   / Carnet: 12-10561
 
+
+(Pendiente):
+
+	- scanf con enteros (problema);
+	- success con el fallo del scanf
+	- donde usar perror
+
+
 - Detalles de implementación:
 
+	1.- La lectura de datos por consola se implemento de forma robusta para evitar tanto
+	fallos en el codigo, como para evitar que el programa tuviera que ejecutarse de nuevo
+	al introducir un dato erroneo.
+
+	2.- Al momento de insertar, la base de datos se leerá de forma implícita para crear
+	la estructura de lista enlazada que almacenará las preguntas durante la ejecucion del
+	programa.
+
+	3.- La lista enlazada posee una "Cabecera" que no almacena información de ninguna pregunta.
+	A partir del segundo elemento se encontrarán las mismas.
+
+	4.- La memoria reservada para las preguntas es liberada al momento de finalizar
+	la ejecución del programa.
 		
 
 - Referencias consultadas:

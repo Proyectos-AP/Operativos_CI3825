@@ -36,4 +36,6 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo);
 
 void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo);
 
+int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo);
+
 #endif
