@@ -208,6 +208,10 @@ void EliminarLista(PREGUNTA *CabeceraData){
 
 			aux=CabeceraData->siguiente;
 			CabeceraData->siguiente=aux->siguiente;
+			free(aux->pregunta);
+			free(aux->opcion1);
+			free(aux->opcion2);
+			free(aux->opcion3);
 			free(aux);
 		}
 
