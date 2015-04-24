@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
 
 				else {
 					printf("\n--------------------\n");
-					printf("\nLas preguntas ya se encuentran cargadas en memoria.\n");
+					printf("\nAviso: Las preguntas ya se encuentran cargadas en memoria.\n");
 					printf("\n--------------------\n\n");
 
 				}
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
 
 				if (archivoLeido == 0) {
 					printf("\n--------------------\n");
-					printf("\nError: Las preguntas no han sido cargadas en memoria.\n");
+					printf("\nAviso: Las preguntas no han sido cargadas en memoria.\n");
 					printf("\n--------------------\n\n");
 
 				}
@@ -111,26 +111,36 @@ int main(int argc, char *argv[]) {
 
 				else {
 
-					char resp_complejidad;
 
-					while(1) {
-
-						printf("\nIntroduzca el nivel de complejidad,\n");
-						printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
-						scanf(" %c",&resp_complejidad);
-						printf("\n");	
-
-						if ( resp_complejidad >= 48 && resp_complejidad <= 50) {
-							break;
-						}
-
-						printf("\nError: La respuesta no es valida.\n");
-						printf("Intente de nuevo.\n");
-
+					if (cabeceraFile == NULL) {
+						printf("\n--------------------\n");
+						printf("\nAviso: No hay preguntas para mostrar.\n");
+						printf("\n--------------------\n\n");
 					}
 
-					imprimirPreguntasComplejidad(cabeceraFile,resp_complejidad);
+					else {
 
+						char resp_complejidad;
+
+						while(1) {
+
+							printf("\nIntroduzca el nivel de complejidad,\n");
+							printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
+							scanf(" %c",&resp_complejidad);
+							printf("\n");	
+
+							if ( resp_complejidad >= 48 && resp_complejidad <= 50) {
+								break;
+							}
+
+							printf("\nError: La respuesta no es valida.\n");
+							printf("Intente de nuevo.\n");
+
+						}
+
+						imprimirPreguntasComplejidad(cabeceraFile,resp_complejidad);
+
+					}
 				}
 
 				
@@ -143,20 +153,31 @@ int main(int argc, char *argv[]) {
 
 				if (archivoLeido == 0) {
 					printf("\n--------------------\n");
-					printf("\nError: Las preguntas no han sido cargadas en memoria.\n");
+					printf("\nAviso: Las preguntas no han sido cargadas en memoria.\n");
 					printf("\n--------------------\n\n");
 				}
 
 				else {
 
-					int claveAeliminar;
 
-					printf("\nIntroduzca la clave de la pregunta que desea eliminar: ");
-					scanf(" %d",&claveAeliminar);
-					printf("\n");
-					Eliminar(cabeceraFile,claveAeliminar);
-					archivoSalvado = 0;
+					if (cabeceraFile == NULL) {
+						printf("\n--------------------\n");
+						printf("\nAviso: No hay preguntas para eliminar.\n");
+						printf("\n--------------------\n\n");
+					}
+
+					else {
+
+
+						int claveAeliminar;
+
+						printf("\nIntroduzca la clave de la pregunta que desea eliminar: ");
+						scanf(" %d",&claveAeliminar);
+						printf("\n");
+						Eliminar(&cabeceraFile,claveAeliminar);
+						archivoSalvado = 0;
 					
+					}
 				}
 				
 			break;
@@ -171,7 +192,7 @@ int main(int argc, char *argv[]) {
 
 				}
 
-				insertarPregunta(cabeceraFile);
+				insertarPregunta(&cabeceraFile);
 				archivoSalvado = 0;
 
 
@@ -205,6 +226,9 @@ int main(int argc, char *argv[]) {
 
 					}
 
+
+
+					printf("\n--------------------\n");
 					printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
 					escribirArchivo(cabeceraFile,argv[1]);
 					
@@ -213,6 +237,7 @@ int main(int argc, char *argv[]) {
 				// Se elimina la lista enlazada de las preguntas:
 				EliminarLista(cabeceraFile);
 				printf("El programa finalizara su ejecucion.\n");
+				printf("\n--------------------\n\n");
 				exit(0);
 			break;
 

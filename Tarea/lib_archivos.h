@@ -9,7 +9,7 @@
 * Descripcion: Encabezado del archivo
 * lib_archivos.c
 *
-* Ultima modificacion: 18/04/2015
+* Ultima modificacion: 21/04/2015
 *
 */
 
@@ -30,9 +30,9 @@ void imprimirPreguntas(PREGUNTA *CabeceraArchivo);
 
 void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad);
 
-void Eliminar(PREGUNTA *Cabecera,int clave);
+void Eliminar(PREGUNTA** Cabecera,int clave);
 
-void insertarPregunta(PREGUNTA *CabeceraArchivo);
+void  insertarPregunta(PREGUNTA** CabeceraArchivo);
 
 void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo);
 

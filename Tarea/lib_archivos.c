@@ -94,30 +94,30 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 		exit(1);
 
 	}
-
+	
 	else {
 
+		PREGUNTA *primeraPregunta;
+		primeraPregunta = NULL;
 		FILE *archivo;
 		archivo = fopen(nombre_archivo,"r");
 		int codigo,complejidad;
 		char tipo;
 		int resp_correcta;
-		PREGUNTA *primeraPregunta;
 		PREGUNTA *temporal;
 		PREGUNTA *anterior;
 
 		//Se crea la cabecera
-		primeraPregunta=(PREGUNTA*)malloc(sizeof(PREGUNTA));
-		primeraPregunta->siguiente=NULL;
 		anterior=primeraPregunta;
 
 		// Se verifica si el archivo esta vacio
 		fseek(archivo,0,SEEK_END);
 
    		if (ftell(archivo) == 0 )	{
-   			//printf("\n--------------------\n");
-   			printf("  \n* El archivo esta vacio\n");
-   			//printf("\n--------------------\n\n");
+   			printf("\n--------------------\n");
+   			printf("\nAviso: El archivo esta vacio.\n");
+   			printf("\n--------------------\n\n");
+
     	}
 
     	else {
@@ -164,8 +164,19 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 				temporal->opcion3=resp_3;
 				temporal->respuesta=resp_correcta;
 				temporal->siguiente=NULL;
-				anterior->siguiente=temporal;
-				anterior=temporal;
+
+				if (anterior == NULL) {
+
+					primeraPregunta = temporal;
+					anterior = temporal;
+
+				}
+
+				else {
+					anterior->siguiente=temporal;	
+					anterior=temporal;
+				}
+				
 
 				// Verifica si se ha llegado al fin del archivo
 				if (feof(archivo)) {
@@ -173,16 +184,17 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 					}
 			}
 
+			printf("\n--------------------\n");
+			printf("\nLos datos han sido cargados correctamente a memoria.\n");
+			printf("\n--------------------\n\n");
+			fclose(archivo);
 		}
 
-		printf("\n--------------------\n");
-		printf("\nLos datos han sido cargados correctamente a memoria.\n");
-		printf("\n--------------------\n\n");
-		fclose(archivo);
 
 		return primeraPregunta;
 
 	}
+	
 }
 
 //------------------------------------------------------------//
@@ -196,8 +208,8 @@ void EliminarLista(PREGUNTA *CabeceraData){
 	*/
 
 	// Caso en donde la estructura no tiene elementos
-	if(CabeceraData->siguiente==NULL){
-		free(CabeceraData);
+	if(CabeceraData==NULL){
+		;
 	}
 
 	// Caso en donde la estructura tiene al menos un elemento
@@ -233,22 +245,35 @@ void imprimirPreguntas(PREGUNTA *CabeceraArchivo) {
 	// Declaracion de variables:
 	PREGUNTA *aux;
 				
-	aux = CabeceraArchivo->siguiente;
+	aux = CabeceraArchivo;
 
-	printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
-	while (aux != NULL) {
+	if (aux == NULL) {
 
-		printf("Pregunta: %s? \n",aux->pregunta);
-		printf("Codigo: %d / Complejidad: %d / Area: %c \n",aux->codigo,aux->nivel,aux->area);
-		printf("Las opciones son: \n");
-		printf("	1.- %s. \n",aux->opcion1);
-		printf("	2.- %s. \n",aux->opcion2);
-		printf("	3.- %s. \n",aux->opcion3);
-		printf("Respuesta correcta: %d \n",aux->respuesta);
+		printf("\n--------------------\n");
+		printf("\nAviso: No hay preguntas cargadas en memoria.\n");
 		printf("\n--------------------\n\n");
-		aux = aux->siguiente;
 
 	}
+
+	else { 
+
+		printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
+		while (aux != NULL) {
+
+			printf("Pregunta: %s? \n",aux->pregunta);
+			printf("Codigo: %d / Complejidad: %d / Area: %c \n",aux->codigo,aux->nivel,aux->area);
+			printf("Las opciones son: \n");
+			printf("	1.- %s. \n",aux->opcion1);
+			printf("	2.- %s. \n",aux->opcion2);
+			printf("	3.- %s. \n",aux->opcion3);
+			printf("Respuesta correcta: %d \n",aux->respuesta);
+			printf("\n--------------------\n\n");
+			aux = aux->siguiente;
+
+		}
+
+	}
+
 
 }
 
@@ -264,25 +289,35 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 	// Declaracion de variables:
 	int num_complejidad = (int)(complejidad-48); 
 	PREGUNTA *aux;				
-	aux = CabeceraArchivo->siguiente;
+	aux = CabeceraArchivo;
 
-	printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
-	while (aux != NULL) {
+	if (aux == NULL) {
 
-		if (aux->nivel==num_complejidad) {
+		;
 
-			printf("Pregunta: %s? \n",aux->pregunta);
-			printf("Codigo: %d / Complejidad: %d / Area: %c \n",aux->codigo,aux->nivel,aux->area);
-			printf("Las opciones son: \n");
-			printf("	1.- %s. \n",aux->opcion1);
-			printf("	2.- %s. \n",aux->opcion2);
-			printf("	3.- %s. \n",aux->opcion3);
-			printf("Respuesta correcta: %d \n",aux->respuesta);
-			printf("\n--------------------\n\n");
+	}
+
+	else {
+
+		printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
+		while (aux != NULL) {
+
+			if (aux->nivel==num_complejidad) {
+
+				printf("Pregunta: %s? \n",aux->pregunta);
+				printf("Codigo: %d / Complejidad: %d / Area: %c \n",aux->codigo,aux->nivel,aux->area);
+				printf("Las opciones son: \n");
+				printf("	1.- %s. \n",aux->opcion1);
+				printf("	2.- %s. \n",aux->opcion2);
+				printf("	3.- %s. \n",aux->opcion3);
+				printf("Respuesta correcta: %d \n",aux->respuesta);
+				printf("\n--------------------\n\n");
+
+			}
+
+			aux = aux->siguiente;
 
 		}
-
-		aux = aux->siguiente;
 
 	}
 
@@ -290,7 +325,7 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 
 //------------------------------------------------------------//
 
-void Eliminar(PREGUNTA *Cabecera,int clave) {
+void Eliminar(PREGUNTA** Cabecera,int clave) {
 
 	/*  Descripcion de la funcion:
 		Esta funcion dada una clave, elimina una pregunta 
@@ -302,35 +337,92 @@ void Eliminar(PREGUNTA *Cabecera,int clave) {
 	// Declaracion de variables:
 	PREGUNTA *aux;
 	PREGUNTA *anterior;	
-	anterior=Cabecera;			
-	aux = Cabecera->siguiente;
+	anterior= *Cabecera;			
+	aux = *Cabecera;
 
-	while (aux != NULL) {
+	if (aux == NULL) {
+		;
+	}
 
-		if(aux->codigo == clave){
-			anterior->siguiente=aux->siguiente;
-			aux->siguiente=NULL;
+	else {
+
+
+		if (aux->siguiente == NULL) {
+
+			free(aux->pregunta);
+			free(aux->opcion1);
+			free(aux->opcion2);
+			free(aux->opcion3);
 			free(aux);
+			*Cabecera = NULL;
+
 			printf("\n--------------------\n");
 			printf("\nLa pregunta %d",clave);
 			printf(" ha sido eliminada\n");
 			printf("\n--------------------\n\n"); 
-			return;
+
 
 		}
-		anterior = aux;
-		aux = aux->siguiente;
 
+		else {
+
+			if (aux->codigo == clave) {
+				*Cabecera = aux->siguiente;
+				free(aux->pregunta);
+				free(aux->opcion1);
+				free(aux->opcion2);
+				free(aux->opcion3);
+				free(aux);
+
+				printf("\n--------------------\n");
+				printf("\nLa pregunta %d",clave);
+				printf(" ha sido eliminada\n");
+				printf("\n--------------------\n\n"); 
+
+			}
+
+			else {
+
+
+				while (aux != NULL) {
+
+					if (aux->codigo == clave) {
+						anterior->siguiente=aux->siguiente;
+						aux->siguiente=NULL;
+
+						free(aux->pregunta);
+						free(aux->opcion1);
+						free(aux->opcion2);
+						free(aux->opcion3);
+						free(aux);
+
+						printf("\n--------------------\n");
+						printf("\nLa pregunta %d",clave);
+						printf(" ha sido eliminada\n");
+						printf("\n--------------------\n\n"); 
+						return;
+
+					}
+					anterior = aux;
+					aux = aux->siguiente;
+
+				}
+
+				printf("\n--------------------\n");
+				printf("\nError: La clave introducida no corresponde a ");
+				printf("ninguna \npregunta de la base de datos.\n");
+				printf("\n--------------------\n\n");
+
+			}
+			
+
+		}
 	}
-	printf("\n--------------------\n");
-	printf("\nError: La clave introducida no corresponde a ");
-	printf("ninguna \npregunta de la base de datos.\n");
-	printf("\n--------------------\n\n");
 }
 
 //------------------------------------------------------------//
 
-void insertarPregunta(PREGUNTA *CabeceraArchivo) {
+void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 	/*  Descripcion de la funcion:
 		Esta funcion inserta una nueva pregunta en una lista
 	enlazada de una estructura de datos llamada PREGUNTA.
@@ -338,7 +430,7 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 
 	// Declaracion de variables:
 		PREGUNTA *aux;				
-		aux = CabeceraArchivo;
+		aux = *CabeceraArchivo;
 
 
 		// buscar guardar una variable que 
@@ -347,14 +439,24 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 		// ver si se puede gastar menos memoria
 		// asignando de una vez en el scanf
 
-		while (aux->siguiente != NULL) {
-			aux = aux->siguiente;
-		}
-
 		PREGUNTA *nueva_pregunta;
 		nueva_pregunta = (PREGUNTA*)malloc(sizeof(PREGUNTA));
 		nueva_pregunta->siguiente=NULL;
-		aux->siguiente = nueva_pregunta;
+
+		if (aux == NULL) {
+			*CabeceraArchivo = nueva_pregunta;	
+		}
+
+		else {
+
+			while (aux->siguiente != NULL) {
+				aux = aux->siguiente;
+			}
+
+			aux->siguiente = nueva_pregunta;
+			
+		}
+
 
 		// Declaracion de variables:
 
@@ -456,7 +558,7 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 				scanf(" %c",&area_nueva);	
 
 				if ( area_nueva == 'H' || area_nueva == 'C' || area_nueva == 'L' || \
-					area_nueva == 'G' || area_nueva == 'M' || area_nueva == 'T') {
+					area_nueva == 'G' || area_nueva == 'M' || area_nueva == 'T')  {
 						break;
 				}
 
@@ -493,7 +595,7 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 
 				if (scanf(" %d",&respuesta_nueva) == 0) {
 
-					printf("\nError: No ha ingresado un entero. \n");
+					printf("\nError: No ha ingresado un entero.\n");
 					printf("El programa finalizara su ejecucion\n");
 					exit(1);
 
@@ -569,6 +671,7 @@ void insertarPregunta(PREGUNTA *CabeceraArchivo) {
 		printf("\n--------------------\n");
 		printf("\nSu pregunta ha sido agregada a la base de datos.\n");
 		printf("\n--------------------\n\n");
+		//return CabeceraArchivo;
 
 	}
 
@@ -585,7 +688,7 @@ void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
 
 	// Declaracion de variables:
 	PREGUNTA *aux;				
-	aux = CabeceraArchivo->siguiente;
+	aux = CabeceraArchivo;
 
 	FILE *archivoSalida;
 	archivoSalida = fopen(nombre_archivo,"w");
@@ -616,13 +719,13 @@ int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo) {
 
 	int respuesta = 1;
 
-	if (CabeceraArchivo->siguiente == NULL) {
+	if (CabeceraArchivo == NULL) {
 		return respuesta;
 	}
 
 	else {
 
-		PREGUNTA *aux = CabeceraArchivo->siguiente;
+		PREGUNTA *aux = CabeceraArchivo;
 
 		while (aux->siguiente != NULL) {
 
