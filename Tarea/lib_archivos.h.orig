@@ -1,4 +1,18 @@
 /*
+<<<<<<< HEAD
+
+  Archivo: lib_archivos.h
+ 
+  Nombres:
+ 	Alejandra Cordero / Carnet: 12-10645
+ 	Pablo Maldonado   / Carnet: 12-10561
+ 
+  Descripcion: Encabezado del archivo
+  lib_archivos.c
+ 
+  Ultima modificacion: 18/04/2015
+
+=======
 *
 * Archivo: lib_archivos.h
 *
@@ -9,8 +23,9 @@
 * Descripcion: Encabezado del archivo
 * lib_archivos.c
 *
-* Ultima modificacion: 18/04/2015
+* Ultima modificacion: 21/04/2015
 *
+>>>>>>> f487e1f5be6ea3809fc8d0e2d58d5a97efb6f1d1
 */
 
 #ifndef FUNCIONES_H

@@ -5,33 +5,9 @@ Nombres:
 	Alejandra Cordero / Carnet: 12-10645
 	Pablo Maldonado   / Carnet: 12-10561
 
-
-(Pendiente):
-
-	- scanf con enteros (problema);
-	- success con el fallo del scanf
-	- donde usar perror
-
-
 - Detalles de implementación:
 
-	1.- La lectura de datos por consola se implemento de forma robusta para evitar tanto
-	fallos en el codigo, como para evitar que el programa tuviera que ejecutarse de nuevo
-	al introducir un dato erroneo a excepcion de cuando se pide el codigo de la nueva pregunta
-	a insertar
-
-	2.- Al momento de insertar, la base de datos se leerá de forma implícita para crear
-	la estructura de lista enlazada que almacenará las preguntas durante la ejecucion del
-	programa.
-
-	3.- La lista enlazada posee una "Cabecera" que consiste en un apuntador a la primera pregunta.
-
-	4.- La memoria reservada para las preguntas es liberada al momento de finalizar
-	la ejecución del programa.
-
-	5.- Se implemento una funcion que sustituye los posibles saltos de linea por 
-	un espacio en blanco para el momento de realizar la lectura de las preguntas
-	en el archivo de entrada.
+		
 
 - Referencias consultadas:
 
@@ -55,6 +31,11 @@ Nombres:
 		Tema: Leer un string según un formato específico.
 		Última visita realizada: 18/04/2015
 
+<<<<<<< HEAD
+	9.- http://solocodigo.com/46029/c-fgets-y-linea-innecesaria-solucionado/
+	
+	10.- http://foro.elhacker.net/programacion_cc/programa_para_saber_si_un_archivo_esta_vacio_en_c-t416260.0.html
+=======
 	6.- http://stackoverflow.com/questions/797318/how-to-split-a-string-literal-across-multiple-lines-in-c-objective-c
 		Tema: Dividir una instrucción en varias líneas.
 		Última visita realizada: 18/04/2015
@@ -64,6 +45,10 @@ Nombres:
 		Última visita realizada: 18/04/2015
 
 	8.- http://stackoverflow.com/questions/7259238/how-to-forward-typedefd-struct-in-h
-		Tema: Definición de un header en C.
+		Tema: Definición de un header en C
 		Última visita realizada: 18/04/2015
+>>>>>>> e2664b05c2073b4bfbdc88ba91d0f8861ba497b4
 
+	9.- http://www.tutorialspoint.com/c_standard_library/c_function_fseek.htm
+		Tema: Formato de la función fseek().
+		Última visita realizada: 18/04/2015

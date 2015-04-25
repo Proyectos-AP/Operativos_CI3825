@@ -1,4 +1,19 @@
 /*
+<<<<<<< HEAD
+
+  Archivo: lib_archivos.c
+ 
+  Nombres:
+ 	Alejandra Cordero / Carnet: 12-10645
+ 	Pablo Maldonado   / Carnet: 12-10561
+ 
+  Descripcion: Libreria de funciones para
+  el manejo de una base de datos de preguntas
+  almacenadas en un archivo de texto plano.
+  
+  Ultima modificacion: 18/04/2015
+ 
+=======
 *
 * Archivo: lib_archivos.c
 *
@@ -12,6 +27,7 @@
 * 
 * Ultima modificacion: 21/04/2015
 *
+>>>>>>> f487e1f5be6ea3809fc8d0e2d58d5a97efb6f1d1
 */
 
 // Directivas de preprocesador:
@@ -107,7 +123,7 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 		PREGUNTA *temporal;
 		PREGUNTA *anterior;
 
-
+		//Se crea la cabecera
 		anterior=primeraPregunta;
 
 		// Se verifica si el archivo esta vacio
@@ -189,7 +205,6 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 			printf("\n--------------------\n\n");
 			fclose(archivo);
 		}
-
 
 
 		return primeraPregunta;
@@ -320,7 +335,6 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 
 		}
 
-
 	}
 
 }
@@ -349,14 +363,14 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 	else {
 
 
-		if (aux->codigo == clave) {
+		if (aux->siguiente == NULL) {
 
-			*Cabecera = aux->siguiente;
 			free(aux->pregunta);
 			free(aux->opcion1);
 			free(aux->opcion2);
 			free(aux->opcion3);
 			free(aux);
+			*Cabecera = NULL;
 
 			printf("\n--------------------\n");
 			printf("\nLa pregunta %d",clave);
@@ -368,67 +382,64 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 
 		else {
 
-			//if (aux->codigo == clave) {
+			if (aux->codigo == clave) {
+				*Cabecera = aux->siguiente;
+				free(aux->pregunta);
+				free(aux->opcion1);
+				free(aux->opcion2);
+				free(aux->opcion3);
+				free(aux);
 
-		//		*Cabecera = aux->siguiente;
-		//		free(aux->pregunta);
-		//		free(aux->opcion1);
-		//		free(aux->opcion2);
-		//		free(aux->opcion3);
-		//		free(aux);
+				printf("\n--------------------\n");
+				printf("\nLa pregunta %d",clave);
+				printf(" ha sido eliminada\n");
+				printf("\n--------------------\n\n"); 
 
-		//		printf("\n--------------------\n");
-		//		printf("\nLa pregunta %d",clave);
-		//		printf(" ha sido eliminada\n");
-		//		printf("\n--------------------\n\n"); 
+			}
 
-		//		}
+			else {
 
-		//		else{
 
-					while (aux != NULL) {
+				while (aux != NULL) {
 
-						if (aux->codigo == clave) {
-							anterior->siguiente=aux->siguiente;
-							aux->siguiente=NULL;
+					if (aux->codigo == clave) {
+						anterior->siguiente=aux->siguiente;
+						aux->siguiente=NULL;
 
-							free(aux->pregunta);
-							free(aux->opcion1);
-							free(aux->opcion2);
-							free(aux->opcion3);
-							free(aux);
+						free(aux->pregunta);
+						free(aux->opcion1);
+						free(aux->opcion2);
+						free(aux->opcion3);
+						free(aux);
 
-							printf("\n--------------------\n");
-							printf("\nLa pregunta %d",clave);
-							printf(" ha sido eliminada\n");
-							printf("\n--------------------\n\n"); 
-							return;
-
-						}
-						anterior = aux;
-						aux = aux->siguiente;
+						printf("\n--------------------\n");
+						printf("\nLa pregunta %d",clave);
+						printf(" ha sido eliminada\n");
+						printf("\n--------------------\n\n"); 
+						return;
 
 					}
-					
+					anterior = aux;
+					aux = aux->siguiente;
 
-					printf("\n--------------------\n");
-					printf("\nError: La clave introducida no corresponde a ");
-					printf("ninguna \npregunta de la base de datos.\n");
-					printf("\n--------------------\n\n");
+				}
 
-		//	}
+				printf("\n--------------------\n");
+				printf("\nError: La clave introducida no corresponde a ");
+				printf("ninguna \npregunta de la base de datos.\n");
+				printf("\n--------------------\n\n");
+
+			}
 			
 
 		}
 	}
-
 }
 
 //------------------------------------------------------------//
 
 void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 	/*  Descripcion de la funcion:
-
 		Esta funcion inserta una nueva pregunta en una lista
 	enlazada de una estructura de datos llamada PREGUNTA.
 	*/
@@ -552,7 +563,6 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 
 		// Se pide el tema correspondiente de la pregunta 
 		// ingresada por el usuario
-	
 
 
 			while(1) {
@@ -589,7 +599,6 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 			// Se pide la opcion 3
 			printf("\nIntroduzca su tercera posible respuesta entre comillas \n(Ejemplo: \"Berlin\"): ");
 			scanf(" \"%100[^\"]\"",opcion3_nueva);
-
 
 
 			// Se solicita el numero de la opcion que sera marcada como
@@ -716,26 +725,40 @@ void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
 
 
 //------------------------------------------------------------//
-//------------------------------------------------------------//
+
 int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo) {
-/* Descripcion de la funcion:
-Dado un entero, la funcion verifica si este corresponde
-al codigo de alguna de las preguntas que se encuentran
-en la lista enlazada dada.
-*/
-int respuesta = 1;
-if (CabeceraArchivo == NULL) {
-return respuesta;
-}
-else {
-PREGUNTA *aux = CabeceraArchivo;
-while (aux->siguiente != NULL) {
-if (aux->codigo == codigo) {
-respuesta = 0;
-return respuesta;
-}
-aux = aux->siguiente;
-}
-return respuesta;
-}
+	/* Descripcion de la funcion: 
+		Dado un entero, la funcion verifica si este corresponde 
+	al codigo de alguna de las preguntas que se encuentran 
+	en la lista enlazada dada.
+	*/
+
+	int respuesta = 1;
+
+	if (CabeceraArchivo == NULL) {
+		return respuesta;
+	}
+
+	else {
+
+		PREGUNTA *aux = CabeceraArchivo;
+
+		while (aux->siguiente != NULL) {
+
+			if (aux->codigo == codigo) {
+				respuesta = 0;
+				return respuesta;
+
+			}
+
+			aux = aux->siguiente;
+
+			
+		}
+
+		return respuesta;
+
+	}
+
+
 }

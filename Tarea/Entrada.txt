@@ -1,5 +1,0 @@
-1 1 C "Quién es la actriz principal de la película Los Puentes de Madison" "Meryl Streep" "Penélope Cruz" "Jodie Foster" 1 
-2 0 L "Quién es el autor de la novela Doña Bárbara" "Miguel O. Silva" "Rómulo Gallegos" "Joaquin Crespo" 2 
-13 0 T "Linux es" "Un compilador" "Un navegador" "Un sistema de operación" 3 
-9 1 G "Cuál es la capital de Alemania" "Munich" "Berlin" "Atenas" 2 
-20 1 G "Dónde queda la Isla Ibiza" "En el Mediterráneo" "En el Pacífico" "En el Caribe" 1 

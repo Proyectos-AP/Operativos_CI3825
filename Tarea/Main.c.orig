@@ -1,4 +1,21 @@
 /*
+<<<<<<< HEAD
+
+  Archivo: Main.c 
+
+  Nombres:
+ 	Alejandra Cordero / Carnet: 12-10645
+	Pablo Maldonado   / Carnet: 12-10561
+
+  Descripcion: Interfaz por consola
+  que presenta al usuario un conjunto
+  de opciones para el manejo de una base
+  de datos de preguntas almacenadas en un
+  archivo de texto plano.
+ 
+  Ultima modificacion: 17/04/2015
+
+=======
 *
 * Archivo: Main.c 
 *
@@ -12,8 +29,9 @@
 * de datos de preguntas almacenadas en un
 * archivo de texto plano.
 *
-* Ultima modificacion: 17/04/2015
+* Ultima modificacion: 21/04/2015
 *
+>>>>>>> f487e1f5be6ea3809fc8d0e2d58d5a97efb6f1d1
 */
 
 
@@ -111,7 +129,6 @@ int main(int argc, char *argv[]) {
 
 				else {
 
-					char resp_complejidad;
 
 					if (cabeceraFile == NULL) {
 						printf("\n--------------------\n");
@@ -142,9 +159,6 @@ int main(int argc, char *argv[]) {
 						imprimirPreguntasComplejidad(cabeceraFile,resp_complejidad);
 
 					}
-
-					
-
 				}
 
 				
@@ -163,7 +177,6 @@ int main(int argc, char *argv[]) {
 
 				else {
 
-	
 
 					if (cabeceraFile == NULL) {
 						printf("\n--------------------\n");
@@ -239,7 +252,11 @@ int main(int argc, char *argv[]) {
 					
 				}
 
+<<<<<<< HEAD
+				// Se destruye la estructura creada anteriormente
+=======
 				// Se elimina la lista enlazada de las preguntas:
+>>>>>>> f487e1f5be6ea3809fc8d0e2d58d5a97efb6f1d1
 				EliminarLista(cabeceraFile);
 				printf("El programa finalizara su ejecucion.\n");
 				printf("\n--------------------\n\n");
