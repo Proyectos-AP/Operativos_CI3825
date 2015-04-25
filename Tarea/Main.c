@@ -1,19 +1,19 @@
 /*
-*
-* Archivo: Main.c 
-*
-* Nombres:
-*	Alejandra Cordero / Carnet: 12-10645
-*	Pablo Maldonado   / Carnet: 12-10561
-*
-* Descripcion: Interfaz por consola
-* que presenta al usuario un conjunto
-* de opciones para el manejo de una base
-* de datos de preguntas almacenadas en un
-* archivo de texto plano.
-*
-* Ultima modificacion: 17/04/2015
-*
+
+  Archivo: Main.c 
+
+  Nombres:
+ 	Alejandra Cordero / Carnet: 12-10645
+	Pablo Maldonado   / Carnet: 12-10561
+
+  Descripcion: Interfaz por consola
+  que presenta al usuario un conjunto
+  de opciones para el manejo de una base
+  de datos de preguntas almacenadas en un
+  archivo de texto plano.
+ 
+  Ultima modificacion: 17/04/2015
+
 */
 
 
@@ -208,6 +208,7 @@ int main(int argc, char *argv[]) {
 					
 				}
 
+				// Se destruye la estructura creada anteriormente
 				EliminarLista(cabeceraFile);
 				printf("El programa finalizara su ejecucion.\n");
 				exit(0);

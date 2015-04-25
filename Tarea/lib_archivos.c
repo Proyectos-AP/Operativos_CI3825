@@ -1,17 +1,17 @@
 /*
-*
-* Archivo: lib_archivos.c
-*
-* Nombres:
-*	Alejandra Cordero / Carnet: 12-10645
-*	Pablo Maldonado   / Carnet: 12-10561
-*
-* Descripcion: Libreria de funciones para
-* el manejo de una base de datos de preguntas
-* almacenadas en un archivo de texto plano.
-* 
-* Ultima modificacion: 18/04/2015
-*
+
+  Archivo: lib_archivos.c
+ 
+  Nombres:
+ 	Alejandra Cordero / Carnet: 12-10645
+ 	Pablo Maldonado   / Carnet: 12-10561
+ 
+  Descripcion: Libreria de funciones para
+  el manejo de una base de datos de preguntas
+  almacenadas en un archivo de texto plano.
+  
+  Ultima modificacion: 18/04/2015
+ 
 */
 
 // Directivas de preprocesador:
