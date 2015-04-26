@@ -10,7 +10,7 @@
 * el manejo de una base de datos de preguntas
 * almacenadas en un archivo de texto plano.
 * 
-* Ultima modificacion: 21/04/2015
+* Ultima modificacion: 26/04/2015
 *
 */
 
@@ -42,7 +42,6 @@ typedef struct pregunta {
 // Definicion de funciones: 
 
 void CambiarSaltoDeLinea(char *frase) {
-
 	/* Descripcion de la funcion:
 		Esta funcion dada una frase verifica si esta 
 	contiene un salto de linea, de ser asi, este salto 
@@ -56,7 +55,7 @@ void CambiarSaltoDeLinea(char *frase) {
 	ptr_Caracter = strchr(frase,10);
 
 	if (ptr_Caracter != NULL){
-		//Si hay un caracter nulo se agrega un espacio en blanco
+		// Si hay un caracter nulo se agrega un espacio en blanco
        	*ptr_Caracter=32;
     }
 }
@@ -67,14 +66,15 @@ void CambiarSaltoDeLinea(char *frase) {
 PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 	/*  Descripcion de la funcion:
 		Esta funcion dado el nombre de un archivo lee todo su 
-	contenido.Si el archivo no esta vacio se crea una estructura 
-	de datos PREGUNTA que contiene los siguientes (componentes):
-	 		-codigo:   Entero que representa el codigo de una 
-	 				 pregunta
-	 		-nivel:    Entero que representa el nivel de dificultad 
-	 				de una pregunta
-	 		-area: 	   Char que representa el area de conocimiento
-	 				a la que pertenece una pregunta
+	contenido.Si el archivo no esta vacio se crea una lista enlazada 
+	de elementos de tipo PREGUNTA, este contiene los siguientes 
+	(componentes):
+	 		-codigo: Entero que representa el codigo de una 
+	 				 pregunta.
+	 		-nivel:  Entero que representa el nivel de dificultad 
+	 				 de una pregunta.
+	 		-area:   Char que representa el area de conocimiento
+	 				 a la que pertenece una pregunta.
 	 		-pregunta: String que representa la pregunta
 	 		-opcion1:  String que representa una posible respuesta 1
 	 		-opcion2:  String que representa una posible respuesta 2
@@ -83,9 +83,18 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 	 					de la opcion con la respuesta correcta.
 	 		-siguiente: Apuntador al siguiente elemento de tipo 
 	 					PREGUNTA
-	 Si el archivo esta vacio la funcion solo creara la cabecera de 
-	 la estructuctura descrita anteriormente. 
+	 Si el archivo esta vacio la funcion solo creara un apuntador a 
+	 null. 
 	*/
+
+	// Declaracion de variables a utilizar:
+	PREGUNTA *primeraPregunta;
+	PREGUNTA *temporal;
+	PREGUNTA *anterior;
+	FILE *archivo;
+	int codigo,complejidad,resp_correcta;
+	char tipo; // Variable que almacenara el area de la pregunta
+		   // ingresada por el usuario.
 
 	if ( (fopen(nombre_archivo,"r")) == NULL) {
 
@@ -96,19 +105,10 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 	}
 	
 	else {
-
-		PREGUNTA *primeraPregunta;
-		primeraPregunta = NULL;
-		FILE *archivo;
 		archivo = fopen(nombre_archivo,"r");
-		int codigo,complejidad;
-		char tipo;
-		int resp_correcta;
-		PREGUNTA *temporal;
-		PREGUNTA *anterior;
 
-
-		anterior=primeraPregunta;
+		primeraPregunta = NULL;
+		anterior = primeraPregunta;
 
 		// Se verifica si el archivo esta vacio
 		fseek(archivo,0,SEEK_END);
@@ -131,6 +131,7 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 
 				char *pregunta1;
 				pregunta1 = (char*)malloc(sizeof(char)*101);
+
 				char *resp_1;
 				resp_1 = (char*)malloc(sizeof(char)*101);
 
@@ -139,12 +140,11 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 
 				char *resp_3;
 				resp_3 = (char*)malloc(sizeof(char)*101);
-
-				char *pch;										  
+										  
 				fscanf(archivo," %d %d %c \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" \"%[^\"]\" %d ", \
 				&codigo,&complejidad,&tipo,pregunta1,resp_1,resp_2,resp_3,&resp_correcta);
 
-				//Se verifica si hay un salto de linea para ser cambiado 
+				// Se verifica si hay un salto de linea para ser cambiado 
 				// por un espacio en blanco
 				CambiarSaltoDeLinea(pregunta1);
 				CambiarSaltoDeLinea(resp_1);
@@ -152,8 +152,7 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 				CambiarSaltoDeLinea(resp_3);
 
 
-				// Hay que verificar si el codigo de la pregunta ya existe
-				// tambien hay que verificar el tema
+				// Se asigna la informacion leida al espacio de una nueva pregunta:
 				temporal=(PREGUNTA*)malloc(sizeof(PREGUNTA));
 				temporal->codigo=codigo;
 				temporal->nivel=complejidad;
@@ -165,6 +164,7 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 				temporal->respuesta=resp_correcta;
 				temporal->siguiente=NULL;
 
+				// Caso en el que temporal es el primer elemento de la lista
 				if (anterior == NULL) {
 
 					primeraPregunta = temporal;
@@ -172,13 +172,14 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 
 				}
 
+				// Caso en el que temporal no es el primer elemento de la lista
 				else {
 					anterior->siguiente=temporal;	
 					anterior=temporal;
 				}
 				
 
-				// Verifica si se ha llegado al fin del archivo
+				// Se verifica si se ha llegado al fin del archivo
 				if (feof(archivo)) {
 						break;
 					}
@@ -189,8 +190,6 @@ PREGUNTA* LeerBaseDeDatos(char *nombre_archivo) {
 			printf("\n--------------------\n\n");
 			fclose(archivo);
 		}
-
-
 
 		return primeraPregunta;
 
@@ -208,15 +207,17 @@ void EliminarLista(PREGUNTA *CabeceraData){
 
 	*/
 
+	//Declaracion de variables:
+	PREGUNTA *aux;
+
 	// Caso en donde la estructura no tiene elementos
-	if(CabeceraData==NULL){
+	if(CabeceraData == NULL) {
 		;
 	}
 
 	// Caso en donde la estructura tiene al menos un elemento
-	else{
+	else {
 
-		PREGUNTA *aux;
 		while(CabeceraData->siguiente!=NULL){
 
 			aux=CabeceraData->siguiente;
@@ -228,8 +229,13 @@ void EliminarLista(PREGUNTA *CabeceraData){
 			free(aux);
 		}
 
-		// Se elimina la cabecera de la estructura de datos
+		// Se elimina la primera pregunta de la lista enlazada:
+		free(CabeceraData->pregunta);
+		free(CabeceraData->opcion1);
+		free(CabeceraData->opcion2);
+		free(CabeceraData->opcion3);
 		free(CabeceraData);
+
 	}
 }
 
@@ -239,21 +245,21 @@ void EliminarLista(PREGUNTA *CabeceraData){
 void imprimirPreguntas(PREGUNTA *CabeceraArchivo) {
 
 	/*  Descripcion de la funcion:
-		Esta funcion imprime todas la preguntas presentes en 
-	una estructura de datos llamada PREGUNTA.
+			Esta funcion dado un apuntador a una lista 
+			enlazada de preguntas, imprime todas los 
+			elementos que se encuentran en ella.
 	*/
 
 	// Declaracion de variables:
 	PREGUNTA *aux;
-				
+	
+	// Inicializacion de variables:			
 	aux = CabeceraArchivo;
 
 	if (aux == NULL) {
-
 		printf("\n--------------------\n");
-		printf("\nAviso: No hay preguntas cargadas en memoria.\n");
+		printf("\nAviso: No hay preguntas para mostrar.\n");
 		printf("\n--------------------\n\n");
-
 	}
 
 	else { 
@@ -288,10 +294,12 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 	*/
 
 	// Declaracion de variables:
-	int num_complejidad = (int)(complejidad-48); 
-	int existePregunta = 0;
 	PREGUNTA *aux;				
 	aux = CabeceraArchivo;
+
+	// Inicializacion de variables:
+	int num_complejidad = (int)(complejidad-48); 
+	int existePregunta = 0;
 
 	while (aux != NULL) {
 
@@ -328,9 +336,6 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 
 	}
 
-
-
-
 }
 
 //------------------------------------------------------------//
@@ -338,16 +343,17 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 int Eliminar(PREGUNTA** Cabecera,int clave) {
 
 	/*  Descripcion de la funcion:
-		Esta funcion dada una clave, elimina una pregunta 
-	almacenada en una estructura de datos llamada PREGUNTAS 
-	que posea dicha clave.
-
+		Esta funcion dada una clave y la direccion de memoria
+		del apuntador al primer elemento de la lista enlazada, 
+		elimina al elemento de la misma que posea dicha clave.
+		Devuelve un entero que indica si la eliminacion fue 
+		exitosa o no.
 	*/
 
 	// Declaracion de variables:
-	int SeElimino = 0;
 	PREGUNTA *aux;
 	PREGUNTA *anterior;	
+	int SeElimino = 0;
 	anterior= *Cabecera;			
 	aux = *Cabecera;
 
@@ -356,10 +362,9 @@ int Eliminar(PREGUNTA** Cabecera,int clave) {
 	}
 
 	else {
-
-
+		// Caso en donde se elimina el primer elemento de la lista.
 		if (aux->codigo == clave) {
-
+	
 			*Cabecera = aux->siguiente;
 			free(aux->pregunta);
 			free(aux->opcion1);
@@ -374,37 +379,37 @@ int Eliminar(PREGUNTA** Cabecera,int clave) {
 			printf("\n--------------------\n\n"); 
 
 
-		}
-
+	}
+		// Caso en donde se elimina un elemento de la lista
+		// (Este elemento no es el primero de la lista).
 		else {
 
-					while (aux != NULL) {
+			while (aux != NULL) {
 
-						if (aux->codigo == clave) {
-							anterior->siguiente=aux->siguiente;
-							aux->siguiente=NULL;
+				if (aux->codigo == clave) {
+					anterior->siguiente=aux->siguiente;
+					aux->siguiente=NULL;
+					free(aux->pregunta);
+					free(aux->opcion1);
+					free(aux->opcion2);
+					free(aux->opcion3);
+					free(aux);
 
-							free(aux->pregunta);
-							free(aux->opcion1);
-							free(aux->opcion2);
-							free(aux->opcion3);
-							free(aux);
+					printf("\n--------------------\n");
+					printf("\nLa pregunta %d",clave);
+					printf(" ha sido eliminada\n");
+					printf("\n--------------------\n\n"); 
+					SeElimino = 1;
+					return SeElimino;
 
-							printf("\n--------------------\n");
-							printf("\nLa pregunta %d",clave);
-							printf(" ha sido eliminada\n");
-							printf("\n--------------------\n\n"); 
-							SeElimino = 1;
-							return SeElimino;
-
-						}
-						anterior = aux;
-						aux = aux->siguiente;
-
-					}		
+				}
+				anterior = aux;
+				aux = aux->siguiente;
+			}		
 		}
-	}
 
+	}
+	
 	return SeElimino;
 
 }
@@ -413,63 +418,36 @@ int Eliminar(PREGUNTA** Cabecera,int clave) {
 
 void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 	/*  Descripcion de la funcion:
-
 		Esta funcion inserta una nueva pregunta en una lista
-	enlazada de una estructura de datos llamada PREGUNTA.
+	enlazada de elementos de tipo PREGUNTA.
 	*/
 
 	// Declaracion de variables:
-		PREGUNTA *aux;				
-		aux = *CabeceraArchivo;
+	PREGUNTA *aux;				
+	PREGUNTA *nueva_pregunta;
+	int codigo_nuevo; 
+	int nivel_nuevo;
+	char area_nueva;
+	int respuesta_nueva;
+	int codigoEsta;
+	char confirmacion;
+	int guardarPregunta;
 
+	// Inicializacion de variables:
+	aux = *CabeceraArchivo;
+	guardarPregunta = 0;
 
-		// buscar guardar una variable que 
-		// tenga el apuntador al ultimo
+	char *pregunta_nueva;
+	pregunta_nueva = (char*)malloc(sizeof(char)*101);
 
-		// ver si se puede gastar menos memoria
-		// asignando de una vez en el scanf
+	char *opcion1_nueva;
+	opcion1_nueva = (char*)malloc(sizeof(char)*101);
 
-		PREGUNTA *nueva_pregunta;
-		nueva_pregunta = (PREGUNTA*)malloc(sizeof(PREGUNTA));
-		nueva_pregunta->siguiente=NULL;
+	char *opcion2_nueva;
+	opcion2_nueva = (char*)malloc(sizeof(char)*101);
 
-		if (aux == NULL) {
-			*CabeceraArchivo = nueva_pregunta;	
-		}
-
-		else {
-
-			while (aux->siguiente != NULL) {
-				aux = aux->siguiente;
-			}
-
-			aux->siguiente = nueva_pregunta;
-			
-		}
-
-
-		// Declaracion de variables:
-
-		int codigo_nuevo; 
-		int nivel_nuevo;
-		char area_nueva;
-
-		char *pregunta_nueva;
-		pregunta_nueva = (char*)malloc(sizeof(char)*101);
-
-		char *opcion1_nueva;
-		opcion1_nueva = (char*)malloc(sizeof(char)*101);
-
-		char *opcion2_nueva;
-		opcion2_nueva = (char*)malloc(sizeof(char)*101);
-
-		char *opcion3_nueva;
-		opcion3_nueva = (char*)malloc(sizeof(char)*101);
-
-		int respuesta_nueva;
-		int codigoEsta;
-		char confirmacion;
-		int guardarPregunta;
+	char *opcion3_nueva;
+	opcion3_nueva = (char*)malloc(sizeof(char)*101);
 
 		while(1) {
 
@@ -477,8 +455,7 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 
 			while(1) {
 
-				printf("\nIntroduzca el codigo correspondiente a su pregunta\n");
-				printf("(numero entero): ");
+				printf("\nIntroduzca el codigo correspondiente a su pregunta: ");
 
 				if (scanf(" %d",&codigo_nuevo) == 0) {
 					printf("\nError: No ha ingresado un entero. \n");
@@ -490,21 +467,20 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 				else {
 
 					codigoEsta = verificarCodigo(*CabeceraArchivo,codigo_nuevo);
-					printf("Codigo esta %d :\n",codigoEsta);
 
 					if (codigoEsta == 0) {
 						break;
 					}
 
+					printf("\n--------------------\n");
 					printf("\nError: El codigo de la pregunta ya existe.");
 					printf(" Intente de nuevo.\n");
+					printf("\n--------------------\n");
 					
 				}
 
-
 			}
 		
-
 			// Se pide el nivel de complejidad al usuario
 
 			while(1) {
@@ -532,7 +508,6 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 					printf("Intente de nuevo.\n");
 					
 				}
-
 
 		}
 
@@ -617,9 +592,7 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 			printf("  - Opcion 3: %s \n",opcion3_nueva);
 			printf("  - Respuesta: %d \n",respuesta_nueva);
 
-
-			guardarPregunta = 0;
-
+			// Se solicita confirmacion al usuario.
 			while(1) {
 
 				printf("Desea guardar la siguiente informacion? [Y/n]: ");
@@ -633,36 +606,64 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 				else if (confirmacion == 'n' | confirmacion == 'N') {
 					// El usuario desea introducir los datos de nuevo
 					break;
-					;
 
 				}
 
 				
 			}
 
-			// Se guardara la pregunta en memoria
-			if (guardarPregunta == 1) {
-				break;
-			}
+			break;
 
 		}
 
-		// Se almacena en la estructura de datos toda la 
-		// informacion suministrada por el usuario
-		nueva_pregunta->codigo=codigo_nuevo;
-		nueva_pregunta->nivel=nivel_nuevo;
-		nueva_pregunta->area=area_nueva;
-		nueva_pregunta->pregunta=pregunta_nueva;
-		nueva_pregunta->opcion1=opcion1_nueva;
-		nueva_pregunta->opcion2=opcion2_nueva;
-		nueva_pregunta->opcion3=opcion3_nueva;
-		nueva_pregunta->respuesta=respuesta_nueva;
-		
-		printf("\n--------------------\n");
-		printf("\nSu pregunta ha sido agregada a la base de datos.\n");
-		printf("\n--------------------\n\n");
-		//return CabeceraArchivo;
+		// Se guarda la pregunta en memoria.
+		if (guardarPregunta == 1) {
 
+			nueva_pregunta = (PREGUNTA*)malloc(sizeof(PREGUNTA));
+
+			// Se almacena en la estructura de datos toda la 
+			// informacion suministrada por el usuario
+			nueva_pregunta->codigo=codigo_nuevo;
+			nueva_pregunta->nivel=nivel_nuevo;
+			nueva_pregunta->area=area_nueva;
+			nueva_pregunta->pregunta=pregunta_nueva;
+			nueva_pregunta->opcion1=opcion1_nueva;
+			nueva_pregunta->opcion2=opcion2_nueva;
+			nueva_pregunta->opcion3=opcion3_nueva;
+			nueva_pregunta->respuesta=respuesta_nueva;
+			nueva_pregunta->siguiente=NULL;
+
+			// Se agrega la nueva pregunta a la lista enlazada
+			if (aux == NULL) {
+				*CabeceraArchivo = nueva_pregunta;	
+			}
+
+			else {
+
+				while (aux->siguiente != NULL) {
+					aux = aux->siguiente;
+				}
+
+				aux->siguiente = nueva_pregunta;
+			
+			}
+		
+			printf("\n--------------------\n");
+			printf("\nSu pregunta ha sido agregada a la base de datos.\n");
+			printf("\n--------------------\n\n");
+				
+		}
+
+		// No se guardara la pregunta en la estructura
+		else {
+
+			// Se liberan los espacios de memoria reservados
+			free(pregunta_nueva);
+			free(opcion1_nueva);
+			free(opcion2_nueva);
+			free(opcion3_nueva);		
+
+		}
 	}
 
 //------------------------------------------------------------//
@@ -679,8 +680,8 @@ void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
 	// Declaracion de variables:
 	PREGUNTA *aux;				
 	aux = CabeceraArchivo;
-
 	FILE *archivoSalida;
+
 	archivoSalida = fopen(nombre_archivo,"w");
 
 		while (aux != NULL) {
@@ -704,23 +705,23 @@ int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo) {
 	Dado un entero, la funcion verifica si este corresponde
 	al codigo de alguna de las preguntas que se encuentran
 	en la lista enlazada dada.
-	Si el codigo de la pregunta no se encuentra en alguna de las
+	Si el codigo de la pregunta se encuentra en alguna de las
 	preguntas almacenadas en la estructura la funcion devuelve 1
-	(True) por otra parte, si el codigo de la pregunta se encuentra 
-	en la estructura la funcion devuelve 0 (false)
+	(True).Por otra parte, si el codigo de la pregunta no se encuentra 
+	en la estructura la funcion devuelve 0 (False).
 */
+	//Declaracion de variables:
 	int EstaCodigo = 0;
+
 	if (CabeceraArchivo == NULL) {
 		return EstaCodigo;
 	}
 
 	else {
-
 		PREGUNTA *aux = CabeceraArchivo;
 		while (aux->siguiente != NULL) {
-			printf("%d ",1);
-			if (aux->codigo == codigo) {
 
+			if (aux->codigo == codigo) {
 				EstaCodigo = 1;
 				return EstaCodigo;
 			}

@@ -9,7 +9,7 @@
 * Descripcion: Encabezado del archivo
 * lib_archivos.c
 *
-* Ultima modificacion: 18/04/2015
+* Ultima modificacion: 26/04/2015
 *
 */
 

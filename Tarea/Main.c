@@ -12,10 +12,9 @@
 * de datos de preguntas almacenadas en un
 * archivo de texto plano.
 *
-* Ultima modificacion: 17/04/2015
+* Ultima modificacion: 26/04/2015
 *
 */
-
 
 // Directivas de Preprocesador:
 
@@ -59,7 +58,6 @@ int main(int argc, char *argv[]) {
 
 			// Leer la base de datos:
 			case '0':
-				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
 					cabeceraFile = LeerBaseDeDatos(argv[1]);
@@ -77,7 +75,6 @@ int main(int argc, char *argv[]) {
 
 			// Consultar todas las preguntas que estan en la base de datos:
 			case '1':
-				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
 					printf("\n--------------------\n");
@@ -119,7 +116,6 @@ int main(int argc, char *argv[]) {
 							printf("\nIntroduzca el nivel de complejidad,\n");
 							printf("(0 Basico, 1 Intermedio, 2 Avanzado): ");
 							scanf(" %c",&resp_complejidad);
-							printf("\n");	
 
 							if ( resp_complejidad >= 48 && resp_complejidad <= 50) {
 								break;
@@ -160,24 +156,24 @@ int main(int argc, char *argv[]) {
 						int CodigoExiste;
 
 						printf("\nIntroduzca la clave de la pregunta que desea eliminar: ");
-						if (scanf(" %d",&claveAeliminar)==0) {
+						if (scanf(" %d",&claveAeliminar) == 0) {
 
 							printf("\n--------------------\n");
 							printf("\nError: No ha ingresado un entero. \n");
 							printf("El programa finalizara su ejecucion\n");
-							exit(1);
 							printf("\n--------------------\n\n");
+							exit(1);
 
 						}
 
 						preguntaEliminada = Eliminar(&cabeceraFile,claveAeliminar);
 
-						if(preguntaEliminada == 1){
+						if (preguntaEliminada == 1) {
 							
 							archivoSalvado = 0;
 						}
 
-						else{
+						else {
 
 							printf("\n--------------------\n");
 							printf("\nError: La clave introducida no corresponde a ");
@@ -191,7 +187,6 @@ int main(int argc, char *argv[]) {
 
 			// Insertar una pregunta:
 			case '4':
-				; // Declaracion despues de label
 
 				if (archivoLeido == 0) {
 					cabeceraFile = LeerBaseDeDatos(argv[1]);	
@@ -207,16 +202,8 @@ int main(int argc, char *argv[]) {
 
 			// Salvar la base de datos:
 			case '5':
-				; // Declaracion despues de label
 
-				//if (archivoLeido == 0) {
-
-				//	cabeceraFile = LeerBaseDeDatos(argv[1]);	
-				//	archivoLeido = 1;	
-
-				//}
-
-				if (archivoSalvado == 0 ){
+				if (archivoSalvado == 0) {
 
 					escribirArchivo(cabeceraFile,argv[1]);
 					archivoSalvado = 1;
@@ -241,12 +228,12 @@ int main(int argc, char *argv[]) {
 					
 				}
 
-				else{
+				else {
 
 					if (archivoLeido==0){
 						;
 					}
-					else{
+					else {
 						// Se elimina la lista enlazada de las preguntas:
 						EliminarLista(cabeceraFile);
 					}
@@ -267,7 +254,6 @@ int main(int argc, char *argv[]) {
 				printf("\n--------------------\n\n");
 			break;
 
-	
 		printf("\n");
 
 	}
