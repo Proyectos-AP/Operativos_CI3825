@@ -467,6 +467,7 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 				else {
 
 					codigoEsta = verificarCodigo(*CabeceraArchivo,codigo_nuevo);
+					//printf("cCodigo esta %d ",codigoEsta);
 
 					if (codigoEsta == 0) {
 						break;
@@ -719,7 +720,7 @@ int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo) {
 
 	else {
 		PREGUNTA *aux = CabeceraArchivo;
-		while (aux->siguiente != NULL) {
+		while (aux != NULL) {
 
 			if (aux->codigo == codigo) {
 				EstaCodigo = 1;
