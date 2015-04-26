@@ -289,39 +289,47 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 
 	// Declaracion de variables:
 	int num_complejidad = (int)(complejidad-48); 
+	int existePregunta = 0;
 	PREGUNTA *aux;				
 	aux = CabeceraArchivo;
 
-	if (aux == NULL) {
+	while (aux != NULL) {
 
-		;
+		if (aux->nivel==num_complejidad) {
 
-	}
+			existePregunta = existePregunta + 1;
 
-	else {
-
-		printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
-		while (aux != NULL) {
-
-			if (aux->nivel==num_complejidad) {
-
-				printf("Pregunta: %s? \n",aux->pregunta);
-				printf("Codigo: %d / Complejidad: %d / Area: %c \n",aux->codigo,aux->nivel,aux->area);
-				printf("Las opciones son: \n");
-				printf("	1.- %s. \n",aux->opcion1);
-				printf("	2.- %s. \n",aux->opcion2);
-				printf("	3.- %s. \n",aux->opcion3);
-				printf("Respuesta correcta: %d \n",aux->respuesta);
-				printf("\n--------------------\n\n");
-
+			if (existePregunta == 1) {
+				
+				printf("\nLas preguntas que se encuentran la base de datos son:\n\n");
 			}
 
-			aux = aux->siguiente;
+			printf("Pregunta: %s? \n",aux->pregunta);
+			printf("Codigo: %d / Complejidad: %d / Area: %c \n",aux->codigo,aux->nivel,aux->area);
+			printf("Las opciones son: \n");
+			printf("	1.- %s. \n",aux->opcion1);
+			printf("	2.- %s. \n",aux->opcion2);
+			printf("	3.- %s. \n",aux->opcion3);
+			printf("Respuesta correcta: %d \n",aux->respuesta);
+			printf("\n--------------------\n\n");
 
 		}
 
+		aux = aux->siguiente;
 
 	}
+
+	if (existePregunta == 0) {
+
+		printf("\n--------------------\n");
+		printf("\nAviso: No hay preguntas cargadas en memoria ");
+		printf("con la complejidad dada.\n");
+		printf("\n--------------------\n\n");
+
+	}
+
+
+
 
 }
 
