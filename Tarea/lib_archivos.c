@@ -368,24 +368,6 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 
 		else {
 
-			//if (aux->codigo == clave) {
-
-		//		*Cabecera = aux->siguiente;
-		//		free(aux->pregunta);
-		//		free(aux->opcion1);
-		//		free(aux->opcion2);
-		//		free(aux->opcion3);
-		//		free(aux);
-
-		//		printf("\n--------------------\n");
-		//		printf("\nLa pregunta %d",clave);
-		//		printf(" ha sido eliminada\n");
-		//		printf("\n--------------------\n\n"); 
-
-		//		}
-
-		//		else{
-
 					while (aux != NULL) {
 
 						if (aux->codigo == clave) {
@@ -415,10 +397,6 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 					printf("\nError: La clave introducida no corresponde a ");
 					printf("ninguna \npregunta de la base de datos.\n");
 					printf("\n--------------------\n\n");
-
-		//	}
-			
-
 		}
 	}
 
@@ -504,7 +482,7 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 
 				else {
 
-					codigoValido = verificarCodigo(CabeceraArchivo,codigo_nuevo);
+					codigoValido = verificarCodigo(*CabeceraArchivo,codigo_nuevo);
 
 					if (codigoValido == 1) {
 						break;
@@ -552,9 +530,6 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 
 		// Se pide el tema correspondiente de la pregunta 
 		// ingresada por el usuario
-	
-
-
 			while(1) {
 
 
@@ -716,26 +691,27 @@ void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
 
 
 //------------------------------------------------------------//
-//------------------------------------------------------------//
 int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo) {
 /* Descripcion de la funcion:
 Dado un entero, la funcion verifica si este corresponde
 al codigo de alguna de las preguntas que se encuentran
 en la lista enlazada dada.
 */
-int respuesta = 1;
-if (CabeceraArchivo == NULL) {
-return respuesta;
-}
-else {
-PREGUNTA *aux = CabeceraArchivo;
-while (aux->siguiente != NULL) {
-if (aux->codigo == codigo) {
-respuesta = 0;
-return respuesta;
-}
-aux = aux->siguiente;
-}
-return respuesta;
-}
+	int respuesta = 1;
+	if (CabeceraArchivo == NULL) {
+		return respuesta;
+	}
+
+	else {
+
+		PREGUNTA *aux = CabeceraArchivo;
+		while (aux->siguiente != NULL) {
+		if (aux->codigo == codigo) {
+			respuesta = 0;
+			return respuesta;
+		}
+			aux = aux->siguiente;
+		}
+	return respuesta;
+	}
 }
