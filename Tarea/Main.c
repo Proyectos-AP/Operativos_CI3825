@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
 
 	//archivoSalvado es 0 si no se ha salvado la 
 	//base de datos y 1 si se ha salvado.
-	int archivoSalvado = 0;
+	int archivoSalvado = 1;
 	char respuesta;
 	PREGUNTA *cabeceraFile;
 
@@ -79,7 +79,6 @@ int main(int argc, char *argv[]) {
 			case '1':
 				; // Declaracion despues de label
 
-
 				if (archivoLeido == 0) {
 					printf("\n--------------------\n");
 					printf("\nAviso: Las preguntas no han sido cargadas en memoria.\n");
@@ -90,7 +89,6 @@ int main(int argc, char *argv[]) {
 				else {
 
 					imprimirPreguntas(cabeceraFile);
-
 				}
 
 
@@ -100,18 +98,13 @@ int main(int argc, char *argv[]) {
 			case '2':
 				; // Declaracion despues de label
 				char resp_complejidad;
-
-				
-
 				if (archivoLeido == 0) {
 					printf("\n--------------------\n");
-					printf("\nError: Las preguntas no han sido cargadas en memoria.\n");
+					printf("\nAviso: Las preguntas no han sido cargadas en memoria.\n");
 					printf("\n--------------------\n\n");
 				}
 
 				else {
-
-					char resp_complejidad;
 
 					if (cabeceraFile == NULL) {
 						printf("\n--------------------\n");
@@ -120,8 +113,6 @@ int main(int argc, char *argv[]) {
 					}
 
 					else {
-
-						char resp_complejidad;
 
 						while(1) {
 
@@ -140,15 +131,8 @@ int main(int argc, char *argv[]) {
 						}
 
 						imprimirPreguntasComplejidad(cabeceraFile,resp_complejidad);
-
 					}
-
-					
-
 				}
-
-				
-
 			break;
 
 			// Eliminar una pregunta:
@@ -163,8 +147,6 @@ int main(int argc, char *argv[]) {
 
 				else {
 
-	
-
 					if (cabeceraFile == NULL) {
 						printf("\n--------------------\n");
 						printf("\nAviso: No hay preguntas para eliminar.\n");
@@ -173,15 +155,36 @@ int main(int argc, char *argv[]) {
 
 					else {
 
-
 						int claveAeliminar;
+						int CodigoExiste;
 
 						printf("\nIntroduzca la clave de la pregunta que desea eliminar: ");
-						scanf(" %d",&claveAeliminar);
-						printf("\n");
-						Eliminar(&cabeceraFile,claveAeliminar);
-						archivoSalvado = 0;
-					
+						if (scanf(" %d",&claveAeliminar)==0) {
+
+							printf("\n--------------------\n");
+							printf("\nError: No ha ingresado un entero. \n");
+							printf("El programa finalizara su ejecucion\n");
+							exit(1);
+							printf("\n--------------------\n\n");
+
+						}
+						printf("Clave a eliminar %d :\n",claveAeliminar);
+						CodigoExiste=verificarCodigo(cabeceraFile,claveAeliminar);
+						printf("Codigo existe %d :\n",CodigoExiste);
+
+						if(CodigoExiste == 1){
+
+							Eliminar(&cabeceraFile,claveAeliminar);
+							archivoSalvado = 0;
+						}
+
+						else{
+
+							printf("\n--------------------\n");
+							printf("\nError: La clave introducida no corresponde a ");
+							printf("ninguna \npregunta de la base de datos.\n");
+							printf("\n--------------------\n\n");
+						}
 					}
 				}
 				
@@ -207,17 +210,23 @@ int main(int argc, char *argv[]) {
 			case '5':
 				; // Declaracion despues de label
 
-				if (archivoLeido == 0) {
-					cabeceraFile = LeerBaseDeDatos(argv[1]);	
-					archivoLeido = 1;	
+				//if (archivoLeido == 0) {
+
+				//	cabeceraFile = LeerBaseDeDatos(argv[1]);	
+				//	archivoLeido = 1;	
+
+				//}
+
+				if (archivoSalvado == 0 ){
+
+					escribirArchivo(cabeceraFile,argv[1]);
+					archivoSalvado = 1;
 
 				}
-
-				escribirArchivo(cabeceraFile,argv[1]);
-				archivoSalvado = 1;
 				printf("\n--------------------\n");
 				printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
 				printf("\n--------------------\n\n");
+
 			break;
 
 			// Salir:
@@ -225,25 +234,30 @@ int main(int argc, char *argv[]) {
 
 				if (archivoSalvado == 0) {
 
-					if (archivoLeido == 0) {
-						cabeceraFile = LeerBaseDeDatos(argv[1]);	
-						archivoLeido=1;	
-
-					}
-
-
-
 					printf("\n--------------------\n");
 					printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
 					escribirArchivo(cabeceraFile,argv[1]);
+					// Se elimina la lista enlazada de las preguntas:
+					EliminarLista(cabeceraFile);
 					
 				}
 
-				// Se elimina la lista enlazada de las preguntas:
-				EliminarLista(cabeceraFile);
+				else{
+
+					if (archivoLeido==0){
+						;
+					}
+					else{
+						// Se elimina la lista enlazada de las preguntas:
+						EliminarLista(cabeceraFile);
+					}
+
+				}
+
 				printf("El programa finalizara su ejecucion.\n");
 				printf("\n--------------------\n\n");
 				exit(0);
+
 			break;
 
 			// Respuesta invalida: 

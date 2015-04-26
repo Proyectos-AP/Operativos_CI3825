@@ -390,13 +390,7 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 						anterior = aux;
 						aux = aux->siguiente;
 
-					}
-					
-
-					printf("\n--------------------\n");
-					printf("\nError: La clave introducida no corresponde a ");
-					printf("ninguna \npregunta de la base de datos.\n");
-					printf("\n--------------------\n\n");
+					}		
 		}
 	}
 
@@ -460,7 +454,7 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 		opcion3_nueva = (char*)malloc(sizeof(char)*101);
 
 		int respuesta_nueva;
-		int codigoValido;
+		int codigoEsta;
 		char confirmacion;
 		int guardarPregunta;
 
@@ -482,9 +476,10 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 
 				else {
 
-					codigoValido = verificarCodigo(*CabeceraArchivo,codigo_nuevo);
+					codigoEsta = verificarCodigo(*CabeceraArchivo,codigo_nuevo);
+					printf("Codigo esta %d :\n",codigoEsta);
 
-					if (codigoValido == 1) {
+					if (codigoEsta == 0) {
 						break;
 					}
 
@@ -497,7 +492,7 @@ void insertarPregunta(PREGUNTA** CabeceraArchivo) {
 			}
 		
 
-			// Se pide el nivel de complejidad al usuarioi
+			// Se pide el nivel de complejidad al usuario
 
 			while(1) {
 
@@ -693,13 +688,17 @@ void escribirArchivo(PREGUNTA *CabeceraArchivo,char *nombre_archivo) {
 //------------------------------------------------------------//
 int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo) {
 /* Descripcion de la funcion:
-Dado un entero, la funcion verifica si este corresponde
-al codigo de alguna de las preguntas que se encuentran
-en la lista enlazada dada.
+	Dado un entero, la funcion verifica si este corresponde
+	al codigo de alguna de las preguntas que se encuentran
+	en la lista enlazada dada.
+	Si el codigo de la pregunta no se encuentra en alguna de las
+	preguntas almacenadas en la estructura la funcion devuelve 1
+	(True) por otra parte, si el codigo de la pregunta se encuentra 
+	en la estructura la funcion devuelve 0 (false)
 */
-	int respuesta = 1;
+	int EstaCodigo = 0;
 	if (CabeceraArchivo == NULL) {
-		return respuesta;
+		return EstaCodigo;
 	}
 
 	else {
@@ -707,11 +706,11 @@ en la lista enlazada dada.
 		PREGUNTA *aux = CabeceraArchivo;
 		while (aux->siguiente != NULL) {
 		if (aux->codigo == codigo) {
-			respuesta = 0;
-			return respuesta;
+			EstaCodigo = 1;
+			return EstaCodigo;
 		}
 			aux = aux->siguiente;
 		}
-	return respuesta;
+	return EstaCodigo;
 	}
 }
