@@ -1,0 +1,3 @@
+2 0 L "Quién es el autor de la novela Doña Bárbara" "Miguel O. Silva" "Rómulo Gallegos" "Joaquin Crespo" 2 
+13 0 T "Linux es" "Un compilador" "Un navegador" "Un sistema de operación" 3 
+22 1 H "h" "g" "l" "m" 1 
