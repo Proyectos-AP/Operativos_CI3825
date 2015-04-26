@@ -138,6 +138,7 @@ int main(int argc, char *argv[]) {
 			// Eliminar una pregunta:
 			case '3':
 				; // Declaracion despues de label
+				int preguntaEliminada;
 
 				if (archivoLeido == 0) {
 					printf("\n--------------------\n");
@@ -168,13 +169,11 @@ int main(int argc, char *argv[]) {
 							printf("\n--------------------\n\n");
 
 						}
-						printf("Clave a eliminar %d :\n",claveAeliminar);
-						CodigoExiste=verificarCodigo(cabeceraFile,claveAeliminar);
-						printf("Codigo existe %d :\n",CodigoExiste);
 
-						if(CodigoExiste == 1){
+						preguntaEliminada = Eliminar(&cabeceraFile,claveAeliminar);
 
-							Eliminar(&cabeceraFile,claveAeliminar);
+						if(preguntaEliminada == 1){
+							
 							archivoSalvado = 0;
 						}
 

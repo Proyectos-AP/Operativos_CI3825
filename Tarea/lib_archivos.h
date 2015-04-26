@@ -30,7 +30,7 @@ void imprimirPreguntas(PREGUNTA *CabeceraArchivo);
 
 void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad);
 
-void Eliminar(PREGUNTA** Cabecera,int clave);
+int Eliminar(PREGUNTA** Cabecera,int clave);
 
 void  insertarPregunta(PREGUNTA** CabeceraArchivo);
 

@@ -335,7 +335,7 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 
 //------------------------------------------------------------//
 
-void Eliminar(PREGUNTA** Cabecera,int clave) {
+int Eliminar(PREGUNTA** Cabecera,int clave) {
 
 	/*  Descripcion de la funcion:
 		Esta funcion dada una clave, elimina una pregunta 
@@ -345,6 +345,7 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 	*/
 
 	// Declaracion de variables:
+	int SeElimino = 0;
 	PREGUNTA *aux;
 	PREGUNTA *anterior;	
 	anterior= *Cabecera;			
@@ -365,6 +366,7 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 			free(aux->opcion2);
 			free(aux->opcion3);
 			free(aux);
+			SeElimino = 1;
 
 			printf("\n--------------------\n");
 			printf("\nLa pregunta %d",clave);
@@ -392,7 +394,8 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 							printf("\nLa pregunta %d",clave);
 							printf(" ha sido eliminada\n");
 							printf("\n--------------------\n\n"); 
-							return;
+							SeElimino = 1;
+							return SeElimino;
 
 						}
 						anterior = aux;
@@ -401,6 +404,8 @@ void Eliminar(PREGUNTA** Cabecera,int clave) {
 					}		
 		}
 	}
+
+	return SeElimino;
 
 }
 
@@ -713,10 +718,12 @@ int verificarCodigo(PREGUNTA *CabeceraArchivo, int codigo) {
 
 		PREGUNTA *aux = CabeceraArchivo;
 		while (aux->siguiente != NULL) {
-		if (aux->codigo == codigo) {
-			EstaCodigo = 1;
-			return EstaCodigo;
-		}
+			printf("%d ",1);
+			if (aux->codigo == codigo) {
+
+				EstaCodigo = 1;
+				return EstaCodigo;
+			}
 			aux = aux->siguiente;
 		}
 	return EstaCodigo;
