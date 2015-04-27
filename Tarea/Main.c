@@ -203,15 +203,32 @@ int main(int argc, char *argv[]) {
 			// Salvar la base de datos:
 			case '5':
 
-				if (archivoSalvado == 0) {
+				if (archivoLeido == 1) {
 
-					escribirArchivo(cabeceraFile,argv[1]);
-					archivoSalvado = 1;
+					if (archivoSalvado == 0) {
+
+						escribirArchivo(cabeceraFile,argv[1]);
+						archivoSalvado = 1;
+
+					}
+
+					printf("\n--------------------\n");
+					printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
+					printf("\n--------------------\n\n");
+					
+				}
+
+				else {
+
+
+					printf("\n--------------------\n");
+					printf("\nAviso: Las preguntas no han sido cargadas en memoria.\n");
+					printf("\n--------------------\n\n");
+
+
 
 				}
-				printf("\n--------------------\n");
-				printf("\nSe ha guardado la base de datos de preguntas en %s \n",argv[1]);
-				printf("\n--------------------\n\n");
+				
 
 			break;
 

@@ -218,23 +218,16 @@ void EliminarLista(PREGUNTA *CabeceraData){
 	// Caso en donde la estructura tiene al menos un elemento
 	else {
 
-		while(CabeceraData->siguiente!=NULL){
+		while(CabeceraData!=NULL){
 
-			aux=CabeceraData->siguiente;
-			CabeceraData->siguiente=aux->siguiente;
+			aux=CabeceraData;
+			CabeceraData=aux->siguiente;
 			free(aux->pregunta);
 			free(aux->opcion1);
 			free(aux->opcion2);
 			free(aux->opcion3);
 			free(aux);
 		}
-
-		// Se elimina la primera pregunta de la lista enlazada:
-		free(CabeceraData->pregunta);
-		free(CabeceraData->opcion1);
-		free(CabeceraData->opcion2);
-		free(CabeceraData->opcion3);
-		free(CabeceraData);
 
 	}
 }
@@ -325,17 +318,19 @@ void imprimirPreguntasComplejidad(PREGUNTA *CabeceraArchivo,char complejidad) {
 
 		aux = aux->siguiente;
 
+
 	}
 
 	if (existePregunta == 0) {
 
 		printf("\n--------------------\n");
 		printf("\nAviso: No hay preguntas cargadas en memoria ");
-		printf("con la complejidad dada.\n");
-		printf("\n--------------------\n\n");
+		printf("con la complejidad dada\n");			
+		printf("\n--------------------\n");
+
 
 	}
-
+	
 }
 
 //------------------------------------------------------------//
