@@ -19,6 +19,24 @@
 #include <pthread.h>
 #include <stdlib.h>
 
+// Definicion de Tipos:
+
+typedef struct lista {
+
+	char *nombre;
+	struct lista *siguiente;
+
+} LISTA;
+
+typedef struct listaAmigos {
+
+	char *personas;
+	LISTA *amigos1;
+	LISTA *amigos2;
+	struct listaAmigos *siguiente;
+
+} LISTAAMIGOS;
+
 // Definicion de hilos:
 
 void *hiloMap(void *arg) {
