@@ -25,7 +25,7 @@
 
 typedef struct lista {
 
-	char *nombre;
+	char *elem;
 	struct lista *siguiente;
 
 } LISTA;
@@ -40,50 +40,6 @@ typedef struct listaAmigos {
 } LISTAAMIGOS;
 
 // Definicion de funciones:
-
-
-int lineasArchivo(char *nombre_archivo) {
-
-	/*
-	*
-	* Definicion de la funcion:	
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
-	*/
-
-	FILE *archivo;
-	char caracter;
-	int lineas = 0;
-
-	if ( (fopen(nombre_archivo,"r")) == NULL) {
-
-		perror("Error: El archivo indicado no fue encontrado ");
-		printf("errno = %d. \n",errno);
-		exit(1);
-	}
-
-	else { 
-
-		archivo = fopen(nombre_archivo,"r");
-
-		while(!feof(archivo)) {
-
-			caracter = fgetc(archivo);
-
-			if (caracter == '\n') {
-				lineas++;
-			}
-
-		}
-
-	}
-
-	return lineas; 
-
-}
 
 
 // Inicio del codigo principal:
@@ -137,21 +93,13 @@ void  main(int argc, char *argv[]) {
 
 	}
 
-
-
-	int numeroLineas = lineasArchivo(archivoEntrada);
-
-	printf("numero lineas es %d\n",numeroLineas);
-
-
-
 	LISTA *apuntador; 
 
 	apuntador = (LISTA*) malloc(sizeof(LISTA));
 
 	char* nombre = (char*) malloc(sizeof(char)*10);
 
-	apuntador->nombre = "que poco creativo soy";
+	apuntador->elem = "que poco creativo soy";
 
 	pid_t childpid;
 
@@ -163,13 +111,21 @@ void  main(int argc, char *argv[]) {
 
 	if (childpid == 0) {
 
-		execlp("./map",apuntador->nombre,NULL);
+		execlp("./map",apuntador->elem,NULL);
 
 	} 
 
 	else {
+
+		LISTA* listaArchivo;
+
+		printf("aux1 %s \n",listaArchivo->elem);
+		printf("aux2 %s \n",listaArchivo->siguiente->elem);
+
+
+
+
 		wait();
-		printf("mi hijo termino\n");
 	}
 
 
