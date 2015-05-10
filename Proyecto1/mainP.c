@@ -82,11 +82,10 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo,int num
 		// Empiezo a leer el archivo:
 		
 		while(1){
-			
 			// Se reserva el espacio de memoria para la nueva linea
 			Linea = (char*)malloc(sizeof(char)*101);
 			fscanf(archivo, " %[^\n]\n" ,Linea);
-			printf("%s\n",Linea);
+			//printf("%s\n",Linea);
 			temporal =(LISTA*)malloc(sizeof(LISTA));
 			
 			temporal->nombre = Linea;
@@ -167,17 +166,18 @@ void ListaEnlazadaArreglo(LISTA *listaEnlazada,int size,char *Array[]){
 		int Contador=0;
 		LISTA *temp;
 		temp = listaEnlazada;
-		char *Arreglo[10];
+		char *Arreglo[size+1];
 						
 		while(temp!=NULL){
 			
-			Arreglo[Contador]=temp->nombre;
+			//Arreglo[Contador]=temp->nombre;
 			Array[Contador]=temp->nombre;
 			//printf("Estoy en la funcion %s \n",Array[Contador]);
 			temp=temp->siguiente;
 			Contador++;
 				
 			}
+		Array[size]=NULL;
 	}
 	
 
@@ -245,26 +245,24 @@ void  main(int argc, char *argv[]) {
 	int numElementos[numeroProcesos];
 	LISTA *Cabecera[numeroProcesos];
 	LeerArchivo(archivoEntrada,numeroProcesos,Cabecera,numElementos);
-	
 	int i;
 	int j;
 	
 	for(i=0;i<numeroProcesos;i++){
-		//printf("Soy el numero %d  \n",i);
-		char *Array[numElementos[i]];
+		
+		char *Array[numElementos[i]*1];
 		ListaEnlazadaArreglo(Cabecera[i],numElementos[i],Array);
-	
 		
 		// Imprimo los elementos de la cabecera:
 		for(j =0; j<numElementos[i];j++){
 			
 			//LISTA *temp;
 			//temp = Cabecera[i];
-			//printf("Soy el arreglo %s \n",Array[j]);				
-			//printf("Soy el numero %d  \n",i);
+			printf("Soy el arreglo %s \n",Array[j]);				
+			printf("Soy el numero %d  \n",i);
 			//printf("El numero de elementos de mi arreglo es %d  \n",numElementos[i]);
 			//while(temp!=NULL){
-			//	printf("%s \n",temp->nombre);
+			//	printf("%s \n",temp->nombre)
 			//	temp=temp->siguiente;
 			
 			}
@@ -276,17 +274,22 @@ void  main(int argc, char *argv[]) {
 		childpid = fork();
 
 		if (childpid == 0) {
-
-			execvp("./map",Array);
-			exit(0);
-
-		} 
-
-		else {
-				wait();
-				printf("mi hijo termino\n");
-		}
-
 			
+			if (execvp("./map",Array) < 0) {
+				perror("Fallo en la ejecucion de exec");
+				exit(1);	
+			}
+			
+		}
+		//else{
+		//		wait();	
+		//		} 
+		
 	}
+		
+	for(i=0;i<numeroProcesos;i++){
+		wait();
+		printf("Mi hijo termino \n");
+		
+		}
 }
