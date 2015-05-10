@@ -31,7 +31,8 @@ typedef struct lista {
 
 typedef struct listaAmigos {
 
-	char *personas;
+	char *personas1;
+	char *personas2;
 	LISTA *amigos1;
 	LISTA *amigos2;
 	struct listaAmigos *siguiente;
@@ -40,7 +41,7 @@ typedef struct listaAmigos {
 
 // Definicion de hilos:
 
-void *hiloMap(void *arg) {
+void *hiloMap() {
 	/*
 	*
 	* Definicion del hilo:	
@@ -50,11 +51,11 @@ void *hiloMap(void *arg) {
 	* Parametros de salida:
 	*
 	*/
-	printf("Soy el hilo map");
+	printf("Soy el hilo map\n");
 
 
 }
-
+void *hiloMap();
 //----------------------------------------------------------------------------//
 
 void *hiloReduce(void *arg) {
@@ -72,6 +73,33 @@ void *hiloReduce(void *arg) {
 
 
 
+}
+//----------------------------------------------------------------------------//
+void EliminarEstructuraLista(LISTA **Cabecera,int num){
+
+	LISTA *aux;
+	int i;
+	for (i = 0; i < num; ++i){
+
+		aux = Cabecera[i];
+		if (aux==NULL){
+			;
+		}
+		else{
+
+			while(aux!=NULL){
+
+				Cabecera[i] = aux-> siguiente;
+				free(aux->nombre);
+				free(aux);
+				aux = Cabecera[i];
+
+			}
+
+		}
+
+		//printf("Soy la cabecera dentro de la funcion: %s\n",Cabecera[i]);
+	}
 }
 
 
@@ -122,6 +150,7 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo){
 			temporal =(LISTA*)malloc(sizeof(LISTA));
 			
 			temporal->nombre = Linea;
+			temporal->siguiente=NULL;
 			resto = numeroLinea%numeroProcesos;
 			
 			// Caso en el que temporal es el primer elemento de la lista
@@ -203,25 +232,32 @@ void main(int argc, char *argv[]) {
 	LISTA *Cabecera[numeroHilos];
 	LISTA *aux=NULL;
 	LeerArchivo(archivoEntrada,numeroHilos,Cabecera);
-
+	
 	// Se crea la lista enlazada generica sobre la que trabajaran los hilos:
 
+	int r[numeroHilos];
+	pthread_t hilos[numeroHilos];	
+
+
+	// Se inicializan los hilos:
 	int i;
 	for (i = 0; i < numeroHilos; i++) {
 
-		aux=Cabecera[i];
-		printf("Soy el numero: %d\n", i);
-		while(aux!=NULL){
-			printf("Linea : %s\n",aux->nombre);
-			aux=aux->siguiente;
+		if(r[i] = pthread_create(&hilos[i],NULL,&hiloMap,NULL)){
+
+			printf("FAILED\n");
 		}
+
 	}
 
-	// Se inicializan los hilos:
-
-
+	// Se elimina la estructura que se creo al leer el archivo:
+	EliminarEstructuraLista(Cabecera,numeroHilos);
+	
 	// Se escribe la informacion en el archivo de salida:
 
-
+	// Se espera a que todos los hilos terminen:
+	for (i = 0; i < numeroHilos; i++) {
+			pthread_join(hilos[i],NULL);
+	}
 	exit(0);
 }
