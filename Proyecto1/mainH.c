@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <errno.h>
 
 // Definicion de Tipos:
 
@@ -110,13 +111,7 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo){
 			Arreglo[i]=NULL;
 			Aux[i]=NULL;
 		}
-		
-		// Se inicializan el numeroElementos:
-		
-		for(i=0; i < numeroProcesos; i++){
-			numeroElementos[i]=0;
-		}
-		
+
 		// Empiezo a leer el archivo:
 		
 		while(1){
@@ -134,14 +129,12 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo){
 			if (Aux[resto] == NULL) {
 				Arreglo[resto] = temporal;
 				Aux[resto] = temporal;
-				numeroElementos[resto]++;
 			}
 
 			// Caso en el que temporal no es el primer elemento de la lista
 			else {
 				Aux[resto]->siguiente=temporal;	
 				Aux[resto]=temporal;
-				numeroElementos[resto]++;
 			}
 			numeroLinea++;
 			
@@ -207,15 +200,22 @@ void main(int argc, char *argv[]) {
 	
 	// Se lee el archivo:
 
+	LISTA *Cabecera[numeroHilos];
+	LISTA *aux=NULL;
+	LeerArchivo(archivoEntrada,numeroHilos,Cabecera);
+
 	// Se crea la lista enlazada generica sobre la que trabajaran los hilos:
 
 	int i;
 	for (i = 0; i < numeroHilos; i++) {
 
-
+		aux=Cabecera[i];
+		printf("Soy el numero: %d\n", i);
+		while(aux!=NULL){
+			printf("Linea : %s\n",aux->nombre);
+			aux=aux->siguiente;
+		}
 	}
-
-
 
 	// Se inicializan los hilos:
 
