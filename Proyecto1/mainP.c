@@ -258,8 +258,8 @@ void  main(int argc, char *argv[]) {
 			
 			//LISTA *temp;
 			//temp = Cabecera[i];
-			//printf("Soy el arreglo %s \n",Array[j]);				
-			//printf("Soy el numero %d  \n",i);
+			printf("Soy el arreglo %s \n",Array[j]);				
+			printf("Soy el numero %d  \n",i);
 			//printf("El numero de elementos de mi arreglo es %d  \n",numElementos[i]);
 			//while(temp!=NULL){
 			//	printf("%s \n",temp->nombre)
