@@ -31,14 +31,9 @@ void main(int argc, char *argv[]) {
 	* Parametros de salida:
 	*
 	*/
-
-	printf("asdasdasda %s\n",argv[0]);
-
-	char* arreglo[3];
-	arreglo[0] = NULL;
-	printf("holaaa %p \n",arreglo[0]);
-
-
-
-
+	printf("holaaa : %s \n",argv[0]);
+	//printf("asdasdasda %s\n",argv[0]);
+	//char* arreglo[3];
+	//arreglo[0] = NULL;
+	//exit(0);
 }

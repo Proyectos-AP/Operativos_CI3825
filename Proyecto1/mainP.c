@@ -41,6 +41,82 @@ typedef struct listaAmigos {
 
 // Definicion de funciones:
 
+void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo,int numeroElementos[]){
+	
+	int numeroLinea=0;
+	int resto;
+	char *Linea;
+	FILE *archivo;
+		
+	// Creo arreglo de auxiliares:
+	LISTA *Aux[numeroProcesos];
+	
+	// Creo el temporal:
+	
+	LISTA *temporal;
+	
+	if ( (fopen(nombre_archivo,"r")) == NULL) {
+
+		perror("Error: El archivo indicado no fue encontrado ");
+		printf("errno = %d. \n",errno);
+		exit(1);
+	}
+	
+	else {
+		
+		archivo = fopen(nombre_archivo,"r");
+		
+		// Inicializo las cabeceras y sus respectivos auxiliares
+		int i;
+		for(i=0; i < numeroProcesos; i++){
+			Arreglo[i]=NULL;
+			Aux[i]=NULL;
+		}
+		
+		// Se inicializan el numeroElementos:
+		
+		for(i=0; i < numeroProcesos; i++){
+			numeroElementos[i]=0;
+		}
+		
+		// Empiezo a leer el archivo:
+		
+		while(1){
+			
+			// Se reserva el espacio de memoria para la nueva linea
+			Linea = (char*)malloc(sizeof(char)*101);
+			fscanf(archivo, " %[^\n]\n" ,Linea);
+			printf("%s\n",Linea);
+			temporal =(LISTA*)malloc(sizeof(LISTA));
+			
+			temporal->nombre = Linea;
+			resto = numeroLinea%numeroProcesos;
+			
+			// Caso en el que temporal es el primer elemento de la lista
+			
+			if (Aux[resto] == NULL) {
+				Arreglo[resto] = temporal;
+				Aux[resto] = temporal;
+				numeroElementos[resto]++;
+			}
+
+			// Caso en el que temporal no es el primer elemento de la lista
+			else {
+				Aux[resto]->siguiente=temporal;	
+				Aux[resto]=temporal;
+				numeroElementos[resto]++;
+			}
+			numeroLinea++;
+			
+			// Se verifica si se ha llegado al fin del archivo
+			if (feof(archivo)) {
+				break;
+				
+				}
+			}
+		}
+	}
+	
 
 int lineasArchivo(char *nombre_archivo) {
 
@@ -85,6 +161,26 @@ int lineasArchivo(char *nombre_archivo) {
 
 }
 
+void ListaEnlazadaArreglo(LISTA *listaEnlazada,int size,char *Array[]){
+	
+		int i;
+		int Contador=0;
+		LISTA *temp;
+		temp = listaEnlazada;
+		char *Arreglo[10];
+						
+		while(temp!=NULL){
+			
+			Arreglo[Contador]=temp->nombre;
+			Array[Contador]=temp->nombre;
+			//printf("Estoy en la funcion %s \n",Array[Contador]);
+			temp=temp->siguiente;
+			Contador++;
+				
+			}
+	}
+	
+
 
 // Inicio del codigo principal:
 
@@ -125,54 +221,68 @@ void  main(int argc, char *argv[]) {
 		else {
 
 			printf("Error: No se han pasado los argumentos de forma correcta.\n");
-
 		}
 
-
 	}
-
 	else {
-//
-		printf("Error: No se han pasado los argumentos de forma correcta.\n");
 
+		printf("Error: No se han pasado los argumentos de forma correcta.\n");
 	}
 
 
 
 	int numeroLineas = lineasArchivo(archivoEntrada);
 
-	printf("numero lineas es %d\n",numeroLineas);
-
-
+	printf("numero lineas es %d \n",numeroLineas);
 
 	LISTA *apuntador; 
 
-	apuntador = (LISTA*) malloc(sizeof(LISTA));
+	// Creo arreglo de cabeceras:
+	int numElementos[numeroProcesos];
+	LISTA *Cabecera[numeroProcesos];
+	LeerArchivo(archivoEntrada,numeroProcesos,Cabecera,numElementos);
+	
+	int i;
+	int j;
+	
+	for(i=0;i<numeroProcesos;i++){
+		printf("Soy el numero %d  \n",i);
+		char *Array[numElementos[i]];
+		ListaEnlazadaArreglo(Cabecera[i],numElementos[i],Array);
+	
+		
+		// Imprimo los elementos de la cabecera:
+		for(j =0; j<numElementos[i];j++){
+			
+			//LISTA *temp;
+			//temp = Cabecera[i];
+			printf("Soy el arreglo %s \n",Array[j]);				
+			//printf("Soy el numero %d  \n",i);
+			//printf("El numero de elementos de mi arreglo es %d  \n",numElementos[i]);
+			//while(temp!=NULL){
+			//	printf("%s \n",temp->nombre);
+			//	temp=temp->siguiente;
+			
+			}
+			
+			
+		//printf("%s",prueba->nombre);
 
-	char* nombre = (char*) malloc(sizeof(char)*10);
+		pid_t childpid;
+		childpid = fork();
 
-	apuntador->nombre = "que poco creativo soy";
+		if (childpid == 0) {
 
-	pid_t childpid;
+			execvp("./map",Array);
+			exit(0);
 
+		} 
 
+		else {
+				wait();
+				printf("mi hijo termino\n");
+		}
 
-
-
-	childpid = fork();
-
-	if (childpid == 0) {
-
-		execlp("./map",apuntador->nombre,NULL);
-
-	} 
-
-	else {
-		wait();
-		printf("mi hijo termino\n");
+			
 	}
-
-
-
-
 }
