@@ -221,12 +221,16 @@ void  main(int argc, char *argv[]) {
 		else {
 
 			printf("Error: No se han pasado los argumentos de forma correcta.\n");
+
 		}
 
-	}
-	else {
 
+	}
+
+	else {
+//
 		printf("Error: No se han pasado los argumentos de forma correcta.\n");
+
 	}
 
 
@@ -246,7 +250,7 @@ void  main(int argc, char *argv[]) {
 	int j;
 	
 	for(i=0;i<numeroProcesos;i++){
-		printf("Soy el numero %d  \n",i);
+		//printf("Soy el numero %d  \n",i);
 		char *Array[numElementos[i]];
 		ListaEnlazadaArreglo(Cabecera[i],numElementos[i],Array);
 	
@@ -256,7 +260,7 @@ void  main(int argc, char *argv[]) {
 			
 			//LISTA *temp;
 			//temp = Cabecera[i];
-			printf("Soy el arreglo %s \n",Array[j]);				
+			//printf("Soy el arreglo %s \n",Array[j]);				
 			//printf("Soy el numero %d  \n",i);
 			//printf("El numero de elementos de mi arreglo es %d  \n",numElementos[i]);
 			//while(temp!=NULL){
