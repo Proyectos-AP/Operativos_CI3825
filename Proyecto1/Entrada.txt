@@ -1,2 +1,4 @@
 Ana -> Bernardo Cristina David
 Bernardo -> Ana Cristina David Ernesto
+Cristina -> Maria Jose Alejandra
+Alejandra -> Pablo Stephanie Rebeca
