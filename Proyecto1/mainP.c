@@ -276,21 +276,20 @@ void  main(int argc, char *argv[]) {
 		if (childpid == 0) {
 			
 			if (execvp("./map",Array) < 0) {
-				perror("Falla en la ejecucion de exec");
+				perror("Fallo en la ejecucion de exec");
 				exit(1);	
 			}
 			
 		}
-		else{
-				wait();
-				
-				} 
+		//else{
+		//		wait();	
+		//		} 
 		
 	}
 		
-	//for(i=0;i<numeroProcesos;i++){
-	//	wait();
-	//	printf("Mi hijo termino \n");
+	for(i=0;i<numeroProcesos;i++){
+		wait();
+		printf("Mi hijo termino \n");
 		
-	//	}
+		}
 }
