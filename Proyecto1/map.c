@@ -64,6 +64,7 @@ void main(int argc, char *argv[]) {
 
 	printf("EL PARAMETRO QUE ME PASARON ES : %s\n",argv[0]);
 
+
 	// Se lee el archivo de entrada
 	FILE *archivoEntrada;
 
@@ -89,6 +90,7 @@ void main(int argc, char *argv[]) {
    		if (ftell(archivoEntrada) == 0 )	{
    			
    			//El archivo esta vacio.
+   			printf("No tengo trabajo asignado\n");
    			exit(0);
     	}
 
@@ -165,7 +167,6 @@ void main(int argc, char *argv[]) {
 	}
 
 	// Se cierra el archivo de salida:
-	fclose(archivoSalida);
+	fclose(archivoSalida);	
 	exit(0);
-
 }

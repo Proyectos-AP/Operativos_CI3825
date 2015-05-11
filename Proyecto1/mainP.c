@@ -42,6 +42,17 @@ typedef struct listaAmigos {
 // Definicion de funciones:
 
 void LeerArchivo(char *nombre_archivo,int numeroProcesos){
+
+	/*
+
+		Definicion de la funcion:	
+	
+		Parametros de entrada:
+	
+	 	Parametros de salida:
+	
+	*/
+
 	
 	int numeroLinea=0;
 	int resto;
@@ -64,7 +75,6 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 		archivo = fopen(nombre_archivo,"r");
 		
 		// Abro los archivos
-	
 		for (i = 0; i < numeroProcesos; ++i)
 		{
 			sprintf(nombreString,"%d",i);
@@ -93,11 +103,12 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 				}
 			}
 
-			// Se cierran todos los archivos abiertos:
-			for (i = 0; i < numeroProcesos; ++i){
+		// Se cierran todos los archivos abiertos:
+		for (i = 0; i < numeroProcesos; ++i){
 
-				fclose(archivoSalida[i]);
-			}
+			fclose(archivoSalida[i]);
+
+		}
 			
 		}
 	}
@@ -107,13 +118,13 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 void  main(int argc, char *argv[]) {
 
 	/*
-	*
-	* Definicion de la funcion:	
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
+
+		Definicion de la funcion:	
+	
+		Parametros de entrada:
+	
+	 	Parametros de salida:
+	
 	*/
 
 	int numeroProcesos;
@@ -159,12 +170,12 @@ void  main(int argc, char *argv[]) {
 	LeerArchivo(archivoEntrada,numeroProcesos);
 	int i;
 	char *numeroArchivo;
+	pid_t childpid[numeroProcesos];
 
 	for(i=0;i<numeroProcesos;i++){
-		pid_t childpid;
-		childpid = fork();
-
-		if (childpid == 0) {
+		
+		childpid[i] = fork();
+		if (childpid[i] == 0) {
 			sprintf(numeroArchivo, "%d", i);
 			if (execlp("./map",numeroArchivo,NULL) < 0) {
 				perror("Fallo en la ejecucion de exec");	
@@ -174,9 +185,10 @@ void  main(int argc, char *argv[]) {
 
 	}
 	
+	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
 		wait();
-		printf("Mi hijo termino \n");
+		printf("Mi hijo termino %ld \n",childpid[i]);
 		
 		}
 }
