@@ -41,19 +41,16 @@ typedef struct listaAmigos {
 
 // Definicion de funciones:
 
-void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo,int numeroElementos[]){
+void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 	
 	int numeroLinea=0;
 	int resto;
+	char nombreString[10];
+	int i;
+	//char nombreArchivoSalida;
 	char *Linea;
 	FILE *archivo;
-		
-	// Creo arreglo de auxiliares:
-	LISTA *Aux[numeroProcesos];
-	
-	// Creo el temporal:
-	
-	LISTA *temporal;
+	FILE *archivoSalida[numeroProcesos];
 	
 	if ( (fopen(nombre_archivo,"r")) == NULL) {
 
@@ -66,18 +63,14 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo,int num
 		
 		archivo = fopen(nombre_archivo,"r");
 		
-		// Inicializo las cabeceras y sus respectivos auxiliares
-		int i;
-		for(i=0; i < numeroProcesos; i++){
-			Arreglo[i]=NULL;
-			Aux[i]=NULL;
+		// Abro los archivos
+	
+		for (i = 0; i < numeroProcesos; ++i)
+		{
+			sprintf(nombreString,"%d",i);
+			archivoSalida[i] = fopen(nombreString,"w");
 		}
-		
-		// Se inicializan el numeroElementos:
-		
-		for(i=0; i < numeroProcesos; i++){
-			numeroElementos[i]=0;
-		}
+
 		
 		// Empiezo a leer el archivo:
 		
@@ -86,102 +79,29 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo,int num
 			Linea = (char*)malloc(sizeof(char)*101);
 			fscanf(archivo, " %[^\n]\n" ,Linea);
 			//printf("%s\n",Linea);
-			temporal =(LISTA*)malloc(sizeof(LISTA));
-			
-			temporal->nombre = Linea;
-			resto = numeroLinea%numeroProcesos;
-			
-			// Caso en el que temporal es el primer elemento de la lista
-			
-			if (Aux[resto] == NULL) {
-				Arreglo[resto] = temporal;
-				Aux[resto] = temporal;
-				numeroElementos[resto]++;
-			}
 
-			// Caso en el que temporal no es el primer elemento de la lista
-			else {
-				Aux[resto]->siguiente=temporal;	
-				Aux[resto]=temporal;
-				numeroElementos[resto]++;
-			}
+			resto = numeroLinea%numeroProcesos;
+			fprintf(archivoSalida[resto],"%s \n",Linea);
+			
 			numeroLinea++;
 			
 			// Se verifica si se ha llegado al fin del archivo
 			if (feof(archivo)) {
+				fclose(archivo);
 				break;
 				
 				}
 			}
-		}
-	}
-	
 
-int lineasArchivo(char *nombre_archivo) {
+			// Se cierran todos los archivos abiertos:
+			for (i = 0; i < numeroProcesos; ++i){
 
-	/*
-	*
-	* Definicion de la funcion:	
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
-	*/
-
-	FILE *archivo;
-	char caracter;
-	int lineas = 0;
-
-	if ( (fopen(nombre_archivo,"r")) == NULL) {
-
-		perror("Error: El archivo indicado no fue encontrado ");
-		printf("errno = %d. \n",errno);
-		exit(1);
-	}
-
-	else { 
-
-		archivo = fopen(nombre_archivo,"r");
-
-		while(!feof(archivo)) {
-
-			caracter = fgetc(archivo);
-
-			if (caracter == '\n') {
-				lineas++;
+				fclose(archivoSalida[i]);
 			}
-
-		}
-
-	}
-
-	return lineas; 
-
-}
-
-void ListaEnlazadaArreglo(LISTA *listaEnlazada,int size,char *Array[]){
-	
-		int i;
-		int Contador=0;
-		LISTA *temp;
-		temp = listaEnlazada;
-		char *Arreglo[size+1];
-						
-		while(temp!=NULL){
 			
-			//Arreglo[Contador]=temp->nombre;
-			Array[Contador]=temp->nombre;
-			//printf("Estoy en la funcion %s \n",Array[Contador]);
-			temp=temp->siguiente;
-			Contador++;
-				
-			}
-		Array[size]=NULL;
+		}
 	}
 	
-
-
 // Inicio del codigo principal:
 
 void  main(int argc, char *argv[]) {
@@ -221,6 +141,7 @@ void  main(int argc, char *argv[]) {
 		else {
 
 			printf("Error: No se han pasado los argumentos de forma correcta.\n");
+			exit(0);
 
 		}
 
@@ -228,65 +149,31 @@ void  main(int argc, char *argv[]) {
 	}
 
 	else {
-//
-		printf("Error: No se han pasado los argumentos de forma correcta.\n");
+
+		printf("Error: No se han pasado los argumentos de forma correcta .\n");
+		exit(0);
 
 	}
 
-
-
-	int numeroLineas = lineasArchivo(archivoEntrada);
-
-	printf("numero lineas es %d \n",numeroLineas);
-
-	LISTA *apuntador; 
-
-	// Creo arreglo de cabeceras:
-	int numElementos[numeroProcesos];
-	LISTA *Cabecera[numeroProcesos];
-	LeerArchivo(archivoEntrada,numeroProcesos,Cabecera,numElementos);
+	// Se lee el archivo de entrada :
+	LeerArchivo(archivoEntrada,numeroProcesos);
 	int i;
-	int j;
-	
-	for(i=0;i<numeroProcesos;i++){
-		
-		char *Array[numElementos[i]*1];
-		ListaEnlazadaArreglo(Cabecera[i],numElementos[i],Array);
-		
-		// Imprimo los elementos de la cabecera:
-		for(j =0; j<numElementos[i];j++){
-			
-			//LISTA *temp;
-			//temp = Cabecera[i];
-			printf("Soy el arreglo %s \n",Array[j]);				
-			printf("Soy el numero %d  \n",i);
-			//printf("El numero de elementos de mi arreglo es %d  \n",numElementos[i]);
-			//while(temp!=NULL){
-			//	printf("%s \n",temp->nombre)
-			//	temp=temp->siguiente;
-			
-			}
-			
-			
-		//printf("%s",prueba->nombre);
+	char *numeroArchivo;
 
+	for(i=0;i<numeroProcesos;i++){
 		pid_t childpid;
 		childpid = fork();
 
 		if (childpid == 0) {
-			
-			if (execvp("./map",Array) < 0) {
-				perror("Fallo en la ejecucion de exec");
-				exit(1);	
+			sprintf(numeroArchivo, "%d", i);
+			if (execlp("./map",numeroArchivo,NULL) < 0) {
+				perror("Fallo en la ejecucion de exec");	
 			}
 			
 		}
-		//else{
-		//		wait();	
-		//		} 
-		
+
 	}
-		
+	
 	for(i=0;i<numeroProcesos;i++){
 		wait();
 		printf("Mi hijo termino \n");

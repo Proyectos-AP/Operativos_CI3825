@@ -20,16 +20,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-// Definicion de tipos:
-
-
-typedef struct lista {
-
-	char *elem;
-	struct lista *siguiente;
-
-} LISTA;
-
 
 // Inicio del codigo principal:
 
@@ -47,10 +37,11 @@ void main(int argc, char *argv[]) {
 
 	// Se obtiene el PID del proceso:
 	int miPID = getpid();
-
+	
 	// Se convierte el PID en string
 	char pidStr[20];
 	sprintf(pidStr, "%d",miPID);
+	int FinalArchivo=0;
 
 	// Se concatena el PID con ".txt"
 	// para obtener el nombre del archivo de salida:
@@ -60,9 +51,67 @@ void main(int argc, char *argv[]) {
 	strcpy(nombreSalida,inicio);
 	strcat(nombreSalida, ".txt");
 
-	int i;
+	printf("EL PARAMETRO QUE ME PASARON ES : %s\n",argv[0]);
 
-	printf("soy el hijo %d con %d asignaciones\n",miPID,argc);
+
+	// Se lee el archivo de entrada
+	FILE *archivoEntrada;
+
+		if ( fopen(argv[0],"r") == NULL ) {
+
+		printf("No tengo trabajo asignado\n");
+		exit(1);
+	}
+
+	else {
+
+		archivoEntrada = fopen(argv[0],"r");
+		fseek(archivoEntrada,0,SEEK_END);
+
+   		if (ftell(archivoEntrada) == 0 )	{
+   			
+   			//El archivo esta vacio.
+   			exit(0);
+    	}
+
+    	else{
+
+    		fseek(archivoEntrada,0,SEEK_SET);
+			char *Persona;
+			char *Amigos;	
+
+			while(FinalArchivo == 0){
+
+				Persona = (char*)malloc(sizeof(char)*15);
+				Amigos = (char*)malloc(sizeof(char)*30);
+				fscanf(archivoEntrada," %[^ ->] -> %[^\n]\n" ,Persona,Amigos);
+				printf("Persona: %s -> %s \n",Persona,Amigos);
+
+				// Se verifica si se ha llegado al fin del archivo
+				if(feof(archivoEntrada)== 1){
+					FinalArchivo = 1;
+					remove(argv[0]);
+					fclose(archivoEntrada);	
+				}
+
+			}
+		}
+
+	}
+
+	char Probando[] = "Ana -> Bernardo Cristina David";
+
+	char *token;
+	char *rest = Probando;
+
+  	char *p;
+  
+  	p = strtok (Probando," ");
+  
+  	while (p != NULL) {
+    	printf ("%s\n", p);
+    	p = strtok (NULL, " ");
+ 	 }
 
 	// Se abre el archivo de salida:
 
@@ -70,61 +119,10 @@ void main(int argc, char *argv[]) {
 
 	archivoSalida = fopen(nombreSalida,"a");
 
-
-	LISTA *listaAmigos;
-	LISTA *aux;
-	LISTA *nueva_caja;
-	LISTA *amigos;
-
-	listaAmigos = NULL;
-
-	for (i = 0; i < argc; i++) {
-
-		nueva_caja = (LISTA*)malloc(sizeof(LISTA));
-
-		nueva_caja->elem = strtok(argv[i]," ->");
-
-		listaAmigos = nueva_caja;
-		aux = nueva_caja;
-
-
-		while (aux->elem != NULL) {
-
-			printf("Soy el token: %s.\n",aux->elem);
-			nueva_caja = (LISTA*)malloc(sizeof(LISTA));
-			nueva_caja->elem = strtok(NULL," ");
-			aux->siguiente = nueva_caja;
-			aux = aux->siguiente;
-		}
-
-
-		aux = listaAmigos->siguiente->siguiente;
-
-		while( aux->elem != NULL) {
-
-			amigos = listaAmigos->siguiente->siguiente;
-
-			fprintf(archivoSalida,"(%s %s) -> ",listaAmigos->elem,aux->elem );
-
-			while (amigos->elem != NULL) {
-
-				fprintf(archivoSalida,"%s ",amigos->elem);
-
-				amigos = amigos->siguiente;
-
-			}
-
-			fprintf(archivoSalida,"\n");
-
-			aux = aux->siguiente;
-
-		}
-
-	}
+	fprintf(archivoSalida,"(%s %s) -> %s",Probando,Probando,Probando);
 
 
 	// Se cierra el archivo de salida:
-	fclose(archivoSalida);
+	fclose(archivoSalida);	
 	exit(0);
-
 }
