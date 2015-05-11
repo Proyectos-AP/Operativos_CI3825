@@ -110,7 +110,7 @@ void main(int argc, char *argv[]) {
   	p = strtok (Probando," ");
   
   	while (p != NULL) {
-    	//printf ("%s\n", p);
+    	printf ("%s\n", p);
     	p = strtok (NULL, " ");
  	 }
 
@@ -121,6 +121,7 @@ void main(int argc, char *argv[]) {
 	archivoSalida = fopen(nombreSalida,"a");
 
 	fprintf(archivoSalida,"(%s %s) -> %s",Probando,Probando,Probando);
+
 
 	// Se cierra el archivo de salida:
 	fclose(archivoSalida);	
