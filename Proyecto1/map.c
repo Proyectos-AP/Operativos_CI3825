@@ -71,6 +71,7 @@ void main(int argc, char *argv[]) {
    		if (ftell(archivoEntrada) == 0 )	{
    			
    			//El archivo esta vacio.
+   			printf("No tengo trabajo asignado\n");
    			exit(0);
     	}
 
@@ -91,7 +92,7 @@ void main(int argc, char *argv[]) {
 				if(feof(archivoEntrada)== 1){
 					FinalArchivo = 1;
 					remove(argv[0]);
-					fclose(archivoEntrada);	
+					fclose(archivoEntrada);
 				}
 
 			}
