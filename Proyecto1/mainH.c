@@ -18,6 +18,7 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <stdlib.h>
+#include <errno.h>
 
 // Definicion de Tipos:
 

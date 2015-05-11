@@ -60,6 +60,9 @@ void main(int argc, char *argv[]) {
 	strcpy(nombreSalida,inicio);
 	strcat(nombreSalida, ".txt");
 
+	int i;
+
+	printf("soy el hijo %d con %d asignaciones\n",miPID,argc);
 
 	// Se abre el archivo de salida:
 
@@ -67,74 +70,61 @@ void main(int argc, char *argv[]) {
 
 	archivoSalida = fopen(nombreSalida,"a");
 
-	printf("el nombre del archivo de salida es %s\n",nombreSalida);
 
-	int contador = 0;
-	char Probando[] = "Ana -> Bernardo Cristina David";
+	LISTA *listaAmigos;
+	LISTA *aux;
+	LISTA *nueva_caja;
+	LISTA *amigos;
 
-	char *prueba = strtok(Probando, " ->");
-	char *amigos;
+	listaAmigos = NULL;
 
-	while (prueba != NULL) {
-		printf("el valor es %s..,\n",prueba);
-		amigos = strtok(NULL,"");
+	for (i = 0; i < argc; i++) {
+
+		nueva_caja = (LISTA*)malloc(sizeof(LISTA));
+
+		nueva_caja->elem = strtok(argv[i]," ->");
+
+		listaAmigos = nueva_caja;
+		aux = nueva_caja;
+
+
+		while (aux->elem != NULL) {
+
+			printf("Soy el token: %s.\n",aux->elem);
+			nueva_caja = (LISTA*)malloc(sizeof(LISTA));
+			nueva_caja->elem = strtok(NULL," ");
+			aux->siguiente = nueva_caja;
+			aux = aux->siguiente;
+		}
+
+
+		aux = listaAmigos->siguiente->siguiente;
+
+		while( aux->elem != NULL) {
+
+			amigos = listaAmigos->siguiente->siguiente;
+
+			fprintf(archivoSalida,"(%s %s) -> ",listaAmigos->elem,aux->elem );
+
+			while (amigos->elem != NULL) {
+
+				fprintf(archivoSalida,"%s ",amigos->elem);
+
+				amigos = amigos->siguiente;
+
+			}
+
+			fprintf(archivoSalida,"\n");
+
+			aux = aux->siguiente;
+
+		}
+
 	}
 
-
-	char Probando2[] = "Ana -> Bernardo Cristina David";
-
-	char *prueba2 = strtok(Probando2, " ->");
-	char *amigos2;
-
-	while (prueba2 != NULL) {
-		printf("el valor es %s..,\n",prueba);
-		amigos2 = strtok(NULL,"");
-	}
-
-	char *p = strtok (amigos2," ");
-
-  	while (p != NULL) {
-
-  		if (contador == 0) {
-  			;
-  		}
-
- 		else {
-
-			fprintf(archivoSalida,"(%s %s) %s\n",prueba,p,amigos);
-
- 		}
- 		
-    	p = strtok (NULL," ");
- 		contador++;
-
-	 }
-
-	 fprintf(archivoSalida, "\n");
 
 	// Se cierra el archivo de salida:
-
 	fclose(archivoSalida);
-
 	exit(0);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
 
 }
