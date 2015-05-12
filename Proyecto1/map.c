@@ -138,7 +138,7 @@ void main(int argc, char *argv[]) {
 					amigos = listaAmigos;
 
 					fprintf(archivoSalida,"(%s %s) -> ",Persona,aux->elem );
-
+				
 					while (amigos->elem != NULL) {
 
 						fprintf(archivoSalida,"%s ",amigos->elem);

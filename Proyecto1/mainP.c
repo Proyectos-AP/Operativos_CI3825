@@ -169,14 +169,21 @@ void  main(int argc, char *argv[]) {
 	// Se lee el archivo de entrada :
 	LeerArchivo(archivoEntrada,numeroProcesos);
 	int i;
-	char *numeroArchivo;
-	pid_t childpid[numeroProcesos];
+	char numeroArchivo[20];
+	
 
-	for(i=0;i<numeroProcesos;i++){
+	int k;
+
+	for(k = 0;k < numeroProcesos;k++){
+		pid_t childpid;
 		
-		childpid[i] = fork();
-		if (childpid[i] == 0) {
-			sprintf(numeroArchivo, "%d", i);
+		if ((childpid = fork()) < 0) {
+			perror("Error en el fork");
+			exit(0);
+		}
+
+		if (childpid == 0) {
+			sprintf(numeroArchivo, "%d", k);
 			if (execlp("./map",numeroArchivo,NULL) < 0) {
 				perror("Fallo en la ejecucion de exec");	
 			}
@@ -188,7 +195,7 @@ void  main(int argc, char *argv[]) {
 	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
 		wait();
-		printf("Mi hijo termino %ld \n",childpid[i]);
+		//printf("Mi hijo termino %ld \n",childpid);
 		
 		}
 }
