@@ -173,16 +173,16 @@ void  main(int argc, char *argv[]) {
 	
 
 	int k;
+	pid_t childpid[numeroProcesos];
 
 	for(k = 0;k < numeroProcesos;k++){
-		pid_t childpid;
 		
-		if ((childpid = fork()) < 0) {
+		if ((childpid[k] = fork()) < 0) {
 			perror("Error en el fork");
 			exit(0);
 		}
 
-		if (childpid == 0) {
+		if (childpid[k] == 0) {
 			sprintf(numeroArchivo, "%d", k);
 			if (execlp("./map",numeroArchivo,NULL) < 0) {
 				perror("Fallo en la ejecucion de exec");	
@@ -195,7 +195,7 @@ void  main(int argc, char *argv[]) {
 	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
 		wait();
-		//printf("Mi hijo termino %ld \n",childpid);
+		printf("Mi hijo termino %d \n",childpid[k]);
 		
 		}
 }
