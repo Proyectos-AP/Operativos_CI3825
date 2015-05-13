@@ -366,20 +366,6 @@ void  main(int argc, char *argv[]) {
 			printf("Amigos2 es: %s\n",aux->amigos2);
 
 			aux = aux->siguiente;
-
-			
-
-
-
-
-
-
-
-
-
-
-
-
 			
 
 		}
