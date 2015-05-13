@@ -80,7 +80,7 @@ void main(int argc, char *argv[]) {
 
 		printf("No tengo trabajo asignado\n");
 		exit(1);
-	}
+		}
 
 	else {
 
