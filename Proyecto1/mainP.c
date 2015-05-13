@@ -248,7 +248,7 @@ void  main(int argc, char *argv[]) {
 
 		while (FinalArchivo == 0) {
 
-				Persona1 = (char*)malloc(sizeof(char)*101);
+				Persona1 = (char*)malloc(sizeof(char)*15);
 				Persona2 = (char*)malloc(sizeof(char)*15);
 				Amigos = (char*)malloc(sizeof(char)*30);
 
@@ -354,7 +354,17 @@ void  main(int argc, char *argv[]) {
 
 		}
 
+	}
+
+
+
 		// Se imprime la lista enlazada:
+
+		int contadorReduce = 0;
+		int restoReduce = 0;
+		char nombreReduce[10];
+
+		FILE *archivosReduce[numeroProcesos];
 
 		aux = listaAmigos;
 
@@ -365,22 +375,46 @@ void  main(int argc, char *argv[]) {
 			printf("Amigos1 es: %s.\n",aux->amigos1);
 			printf("Amigos2 es: %s\n",aux->amigos2);
 
+			// Se abren los archivos para repartir las tareas:
+
+			restoReduce = contadorReduce % numeroProcesos;
+
+			sprintf(nombreReduce,"%d",restoReduce);
+			archivosReduce[restoReduce] = fopen(nombreReduce,"a");
+
+			if ( aux->listo == 1) {
+
+				fprintf(archivosReduce[restoReduce],"(%s %s) -> %s, %s\n",aux->persona1,aux->persona2,aux->amigos1,aux->amigos2);
+				printf("Entre en listo \n");
+
+			}
+
+			else {
+
+				if (aux->amigos1 != NULL) {
+
+
+					fprintf(archivosReduce[restoReduce],"(%s %s) -> %s\n",aux->persona1,aux->persona2,aux->amigos1);
+					printf("Tengo un amigo \n");
+
+
+
+				}
+
+				else {
+
+					fprintf(archivosReduce[restoReduce],"(%s %s) -> -None-\n",aux->persona1,aux->persona2);
+
+
+				}
+
+			}
+
+			contadorReduce++;
 			aux = aux->siguiente;
 
-			
-
-
-
-
-
-
-
-
-
-
-
-
-			
+			fclose(archivosReduce[restoReduce]);
+		
 
 		}
 
