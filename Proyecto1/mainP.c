@@ -387,7 +387,7 @@ void  main(int argc, char *argv[]) {
 
 			if ( aux->listo == 1) {
 
-				fprintf(archivosReduce[restoReduce],"(%s %s) -> %s, %s\n",aux->persona1,aux->persona2,aux->amigos1,aux->amigos2);
+				fprintf(archivosReduce[restoReduce],"%d (%s %s) -> %s, %s\n",aux->listo,aux->persona1,aux->persona2,aux->amigos1,aux->amigos2);
 				//printf("Entre en listo \n");
 
 			}
@@ -397,7 +397,7 @@ void  main(int argc, char *argv[]) {
 				if (aux->amigos1 != NULL) {
 
 
-					fprintf(archivosReduce[restoReduce],"(%s %s) -> %s\n",aux->persona1,aux->persona2,aux->amigos1);
+					fprintf(archivosReduce[restoReduce],"%d (%s %s) -> %s\n",aux->listo,aux->persona1,aux->persona2,aux->amigos1);
 					//printf("Tengo un amigo \n");
 
 
@@ -406,7 +406,7 @@ void  main(int argc, char *argv[]) {
 
 				else {
 
-					fprintf(archivosReduce[restoReduce],"(%s %s) -> -None-\n",aux->persona1,aux->persona2);
+					fprintf(archivosReduce[restoReduce],"%d (%s %s) -> -None-\n",aux->listo,aux->persona1,aux->persona2);
 
 
 				}
