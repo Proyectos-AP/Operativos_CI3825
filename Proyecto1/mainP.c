@@ -455,7 +455,70 @@ void  main(int argc, char *argv[]) {
 		
 		}
 
+//----------------------------------------------------------------------------
+
+	// El proceso padre lee todos los archivos creados por sus hijos para
+	// crear el archivo de salida:
+
+	FILE *archivoFinal;
+	FILE *archivoHijos;
+	FinalArchivo=0;
+	char *Linea;
+	char archivoProceso[30];
+
+	archivoFinal = fopen(archivoSalida,"w");
+
+	for (i = 0; i < numeroProcesos; i++) {
+
+		FinalArchivo=0;
+		// Se convierte el PID en string
+		sprintf(archivoProceso, "%d",childpid[i]);
+		strcat(archivoProceso, ".txt");
 
 
+		if ( fopen(archivoProceso,"r") == NULL ) {
+
+			printf("No tengo trabajo asignado\n");
+			exit(1);
+		}
+		else{
+
+			archivoHijos = fopen(archivoProceso,"r");
+			fseek(archivoHijos,0,SEEK_END);
+
+   			if (ftell(archivoHijos) == 0 )	{
+   			
+   				//El archivo esta vacio.
+   				printf("No tengo trabajo asignado\n");
+   				exit(0);
+
+    		}
+    		else{
+
+    			fseek(archivoHijos,0,SEEK_SET);
+    			
+    			while(FinalArchivo == 0){
+
+    				Linea = (char*)malloc(sizeof(char)*101);
+					fscanf(archivoHijos, " %[^\n]\n" ,Linea);
+    				printf("La linea es: %s\n",Linea);
+					fprintf(archivoFinal,"%s\n",Linea);
+
+    				// Se verifica si se ha llegado al fin del archivo
+					if(feof(archivoHijos)== 1){
+						FinalArchivo = 1;
+						remove(archivoProceso);
+						fclose(archivoHijos);	
+					}
+    			}
+
+    		}
+
+		}
+
+
+	}
+
+	fclose(archivoFinal);
 
 }

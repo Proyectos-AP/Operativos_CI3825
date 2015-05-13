@@ -76,7 +76,7 @@ void main(int argc, char *argv[]) {
 
 
 
-		if ( fopen(argv[0],"r") == NULL ) {
+	if ( fopen(argv[0],"r") == NULL ) {
 
 		printf("No tengo trabajo asignado\n");
 		exit(1);

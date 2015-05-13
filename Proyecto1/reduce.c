@@ -216,13 +216,12 @@ void main(int argc, char *argv[]) {
 						aux2 = aux2->siguiente;
 					}
 
-					/*
-					
-
+						
 					aux1 = listaAmigos1;
-					aux2 = listaAmigos2;
 
 					while (aux1 != NULL) {
+
+						aux2 = listaAmigos2;
 
 						while(aux2 != NULL) {
 
@@ -248,10 +247,8 @@ void main(int argc, char *argv[]) {
 						fprintf(archivoSalida,"-None-");
 					}
 
-					*/
+					
 					fprintf(archivoSalida,"\n");
-
-
 
     				printf("---------------------------\n");
     				printf("Persona 1: %s.\n",Persona1);
@@ -272,7 +269,7 @@ void main(int argc, char *argv[]) {
     			// Se verifica si se ha llegado al fin del archivo
 				if(feof(archivoEntrada)== 1){
 					FinalArchivo = 1;
-					//remove(argv[0]);
+					remove(argv[0]);
 					fclose(archivoEntrada);	
 					fclose(archivoSalida);
 				}
