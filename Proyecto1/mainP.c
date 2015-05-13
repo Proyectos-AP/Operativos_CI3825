@@ -257,33 +257,92 @@ void  main(int argc, char *argv[]) {
 				//fscanf(archivoProcesos," %[^ ->] -> %[^\n]\n" ,Persona1,Persona2);
 				fscanf(archivoProcesos," ( %[^ (] %[^ )] ) -> %[^\n]\n" ,Persona1,Persona2,Amigos);
 				
-				printf("La persona1 es: %s \n",Persona1);
-				printf("La persona2 es: %s \n",Persona2);
-				printf("Los amigos son: %s \n",Amigos);
+				//printf("La persona1 es: %s \n",Persona1);
+				//printf("La persona2 es: %s \n",Persona2);
+				//printf("Los amigos son: %s \n",Amigos);
 
 				// Se agrega la informacion a la lista enlazada de personas:
 
-				//aux = listaAmigos;
+				aux = listaAmigos;
 
-				//if(aux == NULL) {
+				if (aux == NULL) {
 
 					// Se crea un nuevo nodo
-				//	nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
-				//	nueva_caja->persona1=Persona1;
-				//	nueva_caja->persona2=Persona2;
-				//	nueva_caja->amigos1=Amigos;
-				//	nueva_caja->siguiente=NULL;
+					nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+					nueva_caja->listo = 0;
+					nueva_caja->persona1=Persona1;
+					nueva_caja->persona2=Persona2;
+					nueva_caja->amigos1=Amigos;
+					nueva_caja->amigos2 = NULL;
+					nueva_caja->siguiente=NULL;
 
-				//	listaAmigos=nueva_caja;
+					listaAmigos=nueva_caja;
 
-				//}
+				}
 
+				else {
+
+					while (aux != NULL) {
+
+
+						if (aux->listo == 1 ) {
+							aux = aux->siguiente;
+						}
+
+						else {
+
+
+							if ( ((strcmp(aux->persona1,Persona2)) == 0) && (strcmp(aux->persona2,Persona1) == 0) )  {
+
+								if (aux->amigos1 == NULL) {
+									aux->amigos1 = Amigos;
+									aux->amigos2 = NULL;
+								}
+
+								else if (aux->amigos2 == NULL) {
+									aux->amigos2 = Amigos;
+									aux->listo = 1;
+								}
+
+								break;
+
+							}
+
+							else {
+
+								if (aux->siguiente == NULL) {
+
+
+									// Se crea un nuevo nodo
+									nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+									nueva_caja->listo = 0;
+									nueva_caja->persona1=Persona1;
+									nueva_caja->persona2=Persona2;
+									nueva_caja->amigos1=Amigos;
+									nueva_caja->amigos2 = NULL;
+									nueva_caja->siguiente=NULL;
+									aux->siguiente = nueva_caja;
+									break;
+
+								}
+
+								aux = aux->siguiente;
+
+							}
+
+						}
+
+					}
+
+				}
 
 
 				if (feof(archivoProcesos)){
 					FinalArchivo = 1;
 					fclose(archivoProcesos);	
 					printf("FINAL ARCHIVO\n");
+
+					// hay que descomentar esto:
 					//remove(nombreSalida);
 					
 					if (archivoProcesos == NULL) {
@@ -292,6 +351,36 @@ void  main(int argc, char *argv[]) {
 					}
 
 				}
+
+		}
+
+		// Se imprime la lista enlazada:
+
+		aux = listaAmigos;
+
+		while (aux != NULL) {
+
+			printf("Persona1 es: %s.\n",aux->persona1);
+			printf("Persona2 es: %s.\n",aux->persona2);
+			printf("Amigos1 es: %s.\n",aux->amigos1);
+			printf("Amigos2 es: %s\n",aux->amigos2);
+
+			aux = aux->siguiente;
+
+			
+
+
+
+
+
+
+
+
+
+
+
+
+			
 
 		}
 
