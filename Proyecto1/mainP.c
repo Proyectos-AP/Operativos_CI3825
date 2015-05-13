@@ -32,9 +32,11 @@ typedef struct lista {
 
 typedef struct listaAmigos {
 
-	char *personas;
-	LISTA *amigos1;
-	LISTA *amigos2;
+	int listo;
+	char *persona1;
+	char *persona2;
+	char *amigos1;
+	char *amigos2;
 	struct listaAmigos *siguiente;
 
 } LISTAAMIGOS;
@@ -192,10 +194,112 @@ void  main(int argc, char *argv[]) {
 
 	}
 	
+	
 	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
 		wait();
-		printf("Mi hijo termino %d \n",childpid[k]);
+		printf("Mi hijo termino %d \n",childpid[i]);
 		
 		}
+
+	// El padre lee el trabajo realizado por los hijos:
+
+	char *Persona1;
+	char *Persona2;
+	char *Amigos;
+
+	LISTAAMIGOS *listaAmigos;
+	LISTAAMIGOS *aux;
+	LISTAAMIGOS *nueva_caja;
+	FILE *archivoProcesos;
+	int FinalArchivo = 0;
+
+	listaAmigos = NULL;
+
+	for (i = 0; i < numeroProcesos; i++) {
+	
+		// Se convierte el PID en string:
+		char pidStr[20];
+		sprintf(pidStr, "%d",childpid[i]);
+
+		// Se concatena el PID con ".txt"
+		// para obtener el nombre del archivo de salida:
+		char nombreSalida[30];
+		char inicio[40];
+		int FinalArchivo = 0;
+		strcpy(inicio,pidStr);
+		strcpy(nombreSalida,inicio);
+		strcat(nombreSalida, ".txt");
+
+		printf("Soy el proceso:  %d\n",childpid[i]);
+		printf("Mi archivo de salida es:  %s\n",nombreSalida);
+
+
+		if ( fopen(nombreSalida,"r") == NULL ) {
+
+		printf("No tengo trabajo asignado\n");
+		exit(1);
+		}
+
+		else {
+
+		archivoProcesos = fopen(nombreSalida,"r");
+			
+
+		while (FinalArchivo == 0) {
+
+				Persona1 = (char*)malloc(sizeof(char)*101);
+				Persona2 = (char*)malloc(sizeof(char)*15);
+				Amigos = (char*)malloc(sizeof(char)*30);
+
+				//fscanf(archivoProcesos,"(%s %s) -> %s",Persona1,Persona2,Amigos);
+
+				//fscanf(archivoProcesos," %[^ ->] -> %[^\n]\n" ,Persona1,Persona2);
+				fscanf(archivoProcesos," ( %[^ (] %[^ )] ) -> %[^\n]\n" ,Persona1,Persona2,Amigos);
+				
+				printf("La persona1 es: %s \n",Persona1);
+				printf("La persona2 es: %s \n",Persona2);
+				printf("Los amigos son: %s \n",Amigos);
+
+				// Se agrega la informacion a la lista enlazada de personas:
+
+				//aux = listaAmigos;
+
+				//if(aux == NULL) {
+
+					// Se crea un nuevo nodo
+				//	nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+				//	nueva_caja->persona1=Persona1;
+				//	nueva_caja->persona2=Persona2;
+				//	nueva_caja->amigos1=Amigos;
+				//	nueva_caja->siguiente=NULL;
+
+				//	listaAmigos=nueva_caja;
+
+				//}
+
+
+
+				if (feof(archivoProcesos)){
+					FinalArchivo = 1;
+					fclose(archivoProcesos);	
+					printf("FINAL ARCHIVO\n");
+					//remove(nombreSalida);
+					
+					if (archivoProcesos == NULL) {
+
+						perror("problemas");
+					}
+
+				}
+
+		}
+
+		printf("me sali del ciclo\n");
+
+		
+
+		}
+
+	}
 }
