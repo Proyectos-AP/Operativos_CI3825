@@ -194,10 +194,11 @@ void  main(int argc, char *argv[]) {
 
 	}
 	
+	
 	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
 		wait();
-		printf("Mi hijo termino %d \n",childpid[k]);
+		printf("Mi hijo termino %d \n",childpid[i]);
 		
 		}
 
@@ -215,25 +216,26 @@ void  main(int argc, char *argv[]) {
 
 	listaAmigos = NULL;
 
-	for (i = 0; i < 1; i++) {
+	for (i = 0; i < numeroProcesos; i++) {
 	
-		printf("Soy el proceso:  %d\n",childpid[i]);
-
 		// Se convierte el PID en string:
-		//char pidStr[20];
-		//sprintf(pidStr, "%d",childpid[i]);
+		char pidStr[20];
+		sprintf(pidStr, "%d",childpid[i]);
 
 		// Se concatena el PID con ".txt"
 		// para obtener el nombre del archivo de salida:
-		//char nombreSalida[30];
-		//char inicio[40];
-		int finalArchivo = 0;
-		///strcpy(inicio,pidStr);
-		//strcpy(nombreSalida,inicio);
-		//strcat(nombreSalida, ".txt");
+		char nombreSalida[30];
+		char inicio[40];
+		int FinalArchivo = 0;
+		strcpy(inicio,pidStr);
+		strcpy(nombreSalida,inicio);
+		strcat(nombreSalida, ".txt");
+
+		printf("Soy el proceso:  %d\n",childpid[i]);
+		printf("Mi archivo de salida es:  %s\n",nombreSalida);
 
 
-		if ( fopen(argv[0],"r") == NULL ) {
+		if ( fopen(nombreSalida,"r") == NULL ) {
 
 		printf("No tengo trabajo asignado\n");
 		exit(1);
@@ -241,25 +243,23 @@ void  main(int argc, char *argv[]) {
 
 		else {
 
-		archivoProcesos = fopen("23093.txt","r");
+		archivoProcesos = fopen(nombreSalida,"r");
 			
-
-
-
-
-
 
 		while (FinalArchivo == 0) {
 
-				Persona1 = (char*)malloc(sizeof(char)*15);
+				Persona1 = (char*)malloc(sizeof(char)*101);
 				Persona2 = (char*)malloc(sizeof(char)*15);
 				Amigos = (char*)malloc(sizeof(char)*30);
 
 				//fscanf(archivoProcesos,"(%s %s) -> %s",Persona1,Persona2,Amigos);
 
-				fscanf(archivoProcesos,"%[^\n]\n" ,Persona1);
-
-				printf("La linea es: %s \n",Persona1);
+				//fscanf(archivoProcesos," %[^ ->] -> %[^\n]\n" ,Persona1,Persona2);
+				fscanf(archivoProcesos," ( %[^ (] %[^ )] ) -> %[^\n]\n" ,Persona1,Persona2,Amigos);
+				
+				printf("La persona1 es: %s \n",Persona1);
+				printf("La persona2 es: %s \n",Persona2);
+				printf("Los amigos son: %s \n",Amigos);
 
 				// Se agrega la informacion a la lista enlazada de personas:
 
@@ -280,8 +280,9 @@ void  main(int argc, char *argv[]) {
 
 
 
-				if (feof(archivoProcesos)) {
+				if (feof(archivoProcesos)){
 					FinalArchivo = 1;
+					fclose(archivoProcesos);	
 					printf("FINAL ARCHIVO\n");
 					//remove(nombreSalida);
 					
@@ -296,14 +297,9 @@ void  main(int argc, char *argv[]) {
 
 		printf("me sali del ciclo\n");
 
-		//fclose(archivoProcesos);	
+		
 
 		}
-
-
-
-
-
 
 	}
 }
