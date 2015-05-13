@@ -202,6 +202,8 @@ void  main(int argc, char *argv[]) {
 		
 		}
 
+
+
 	// El padre lee el trabajo realizado por los hijos:
 
 	char *Persona1;
@@ -237,7 +239,7 @@ void  main(int argc, char *argv[]) {
 
 		if ( fopen(nombreSalida,"r") == NULL ) {
 
-		printf("No tengo trabajo asignado\n");
+		//printf("No tengo trabajo asignado\n");
 		exit(1);
 		}
 
@@ -340,7 +342,7 @@ void  main(int argc, char *argv[]) {
 				if (feof(archivoProcesos)){
 					FinalArchivo = 1;
 					fclose(archivoProcesos);	
-					printf("FINAL ARCHIVO\n");
+					//printf("FINAL ARCHIVO\n");
 
 					// hay que descomentar esto:
 					remove(nombreSalida);
@@ -358,7 +360,7 @@ void  main(int argc, char *argv[]) {
 
 	}
 
-
+//----------------------------------------------------------------------------
 		// Se imprime la lista enlazada:
 
 		int contadorReduce = 0;
@@ -371,10 +373,10 @@ void  main(int argc, char *argv[]) {
 
 		while (aux != NULL) {
 
-			printf("Persona1 es: %s.\n",aux->persona1);
-			printf("Persona2 es: %s.\n",aux->persona2);
-			printf("Amigos1 es: %s.\n",aux->amigos1);
-			printf("Amigos2 es: %s\n",aux->amigos2);
+			//printf("Persona1 es: %s.\n",aux->persona1);
+			//printf("Persona2 es: %s.\n",aux->persona2);
+			//printf("Amigos1 es: %s.\n",aux->amigos1);
+			//printf("Amigos2 es: %s\n",aux->amigos2);
 
 			// Se abren los archivos para repartir las tareas:
 
@@ -386,7 +388,7 @@ void  main(int argc, char *argv[]) {
 			if ( aux->listo == 1) {
 
 				fprintf(archivosReduce[restoReduce],"(%s %s) -> %s, %s\n",aux->persona1,aux->persona2,aux->amigos1,aux->amigos2);
-				printf("Entre en listo \n");
+				//printf("Entre en listo \n");
 
 			}
 
@@ -396,7 +398,7 @@ void  main(int argc, char *argv[]) {
 
 
 					fprintf(archivosReduce[restoReduce],"(%s %s) -> %s\n",aux->persona1,aux->persona2,aux->amigos1);
-					printf("Tengo un amigo \n");
+					//printf("Tengo un amigo \n");
 
 
 
@@ -419,6 +421,41 @@ void  main(int argc, char *argv[]) {
 
 		}
 
-		printf("me sali del ciclo\n");
+		//printf("me sali del ciclo\n");
+
+//----------------------------------------------------------------------------
+
+	// Se realiza fork para crear los proceso que van a realizar reduce.
+
+	//pid_t childpid[numeroProcesos];
+
+	for(k = 0;k < numeroProcesos;k++){
+		
+		if ((childpid[k] = fork()) < 0) {
+			perror("Error en el fork");
+			exit(0);
+		}
+
+		if (childpid[k] == 0) {
+			sprintf(numeroArchivo, "%d", k);
+			if (execlp("./reduce",numeroArchivo,NULL) < 0) {
+				perror("Fallo en la ejecucion de exec");	
+			}
+			
+		}
+
+	}
+
+//----------------------------------------------------------------------------
+
+	// Espero que los proceso hijos terminen:
+	for(i=0;i<numeroProcesos;i++){
+		wait();
+		printf("Mi hijo termino %d \n",childpid[i]);
+		
+		}
+
+
+
 
 }
