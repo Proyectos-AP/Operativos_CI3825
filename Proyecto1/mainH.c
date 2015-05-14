@@ -32,6 +32,7 @@ typedef struct lista {
 
 typedef struct listaAmigos {
 
+	int reduced;
 	int listo;
 	char *persona1;
 	char *persona2;
@@ -69,6 +70,7 @@ int counter = 0;
 void *hiloMap(void *arg);
 pthread_mutex_t semaforoListaAmigos = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t semaforoArchivoSalida = PTHREAD_MUTEX_INITIALIZER; 
+pthread_mutex_t semaforoReduce = PTHREAD_MUTEX_INITIALIZER; 
 LISTACABECERAMAPH *listaMapH;
 LISTAAMIGOS *listaAmigosPadre;
 LISTACABECERAAMIGOS *listaCabeceraAmigosPadre;
@@ -87,10 +89,6 @@ void *hiloMap(void *arg) {
 	*/
 	//printf("Soy el hilo map\n");
 	//printf("recibi el argumento: %s\n",arg);
-
-	pthread_mutex_lock(&semaforoArchivoSalida);
-	counter++;
-	pthread_mutex_unlock(&semaforoArchivoSalida);
 
 	LISTACABECERAMAPH *temp1 = listaMapH; 
 	int contador = 0;
@@ -168,6 +166,7 @@ void *hiloMap(void *arg) {
 			if (auxCabecera == NULL) {
 
 				nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+				nuevaCaja->reduced = 0;
 				nuevaCaja->persona1= auxHilo->persona;
 				nuevaCaja->persona2=auxAmigos->elem;
 				nuevaCaja->amigos1=amigos;
@@ -220,6 +219,7 @@ void *hiloMap(void *arg) {
 
 									// Se crea un nuevo nodo
 									nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+									nuevaCaja->reduced = 0;
 									nuevaCaja->persona1= auxHilo->persona;
 									nuevaCaja->persona2=auxAmigos->elem;
 									nuevaCaja->amigos1=amigos;
@@ -326,6 +326,141 @@ void *hiloReduce(void *arg) {
 	* Parametros de salida:
 	*
 	*/
+
+	FILE *archivo_salida;
+	LISTAAMIGOS *auxListaPadres;
+	LISTA *aux1;
+	LISTA *aux2;
+
+	LISTA *CabeceraLista=NULL;
+	LISTA *auxLista;
+	LISTA *nuevaCajaLista;
+	int amigosEnComun = 0;
+
+	auxListaPadres = listaAmigosPadre;
+
+	while (auxListaPadres != NULL) {
+
+		if (auxListaPadres->reduced == 0) {
+
+			pthread_mutex_lock(&semaforoReduce);
+			auxListaPadres->reduced = 1;
+			pthread_mutex_unlock(&semaforoReduce);
+
+			if ( auxListaPadres->listo == 0) {
+
+				printf("entre aca\n");
+
+				pthread_mutex_lock(&semaforoArchivoSalida);
+
+				archivo_salida = fopen(arg,"a");
+
+				fprintf(archivo_salida,"(%s %s) -> -None-\n",auxListaPadres->persona1,auxListaPadres->persona2);
+
+				fclose(archivo_salida);
+
+				pthread_mutex_unlock(&semaforoArchivoSalida);
+
+			}
+
+			else {
+
+				// Se hace reduce:
+
+				aux1 = auxListaPadres->amigos1;
+				auxLista=CabeceraLista;
+
+				while (aux1 != NULL) {
+
+						aux2 = auxListaPadres->amigos2;
+
+						while(aux2 != NULL) {
+
+							if (strcmp(aux1->elem,aux2->elem) == 0) {
+
+								amigosEnComun = 1;
+
+								printf("Amigo en comun: %s\n",aux1->elem);
+
+								if (auxLista == NULL) {
+
+									nuevaCajaLista = (LISTA*)malloc(sizeof(LISTA));
+									nuevaCajaLista->elem = aux1->elem;
+									CabeceraLista = nuevaCajaLista;
+									auxLista = CabeceraLista;
+								}
+								else{
+									auxLista = CabeceraLista;
+									while(auxLista->siguiente!=NULL){
+										auxLista = auxLista->siguiente;
+									}
+									nuevaCajaLista = (LISTA*)malloc(sizeof(LISTA));
+									nuevaCajaLista->elem = aux1->elem;
+									auxLista->siguiente=nuevaCajaLista;
+
+									printf("Entre aqui\n");
+								}
+
+								
+								break;
+
+							}
+
+							aux2 = aux2->siguiente;
+
+
+						}
+
+						aux1 = aux1->siguiente;
+
+					}
+
+
+		
+				pthread_mutex_lock(&semaforoArchivoSalida);
+
+				archivo_salida = fopen(arg,"a");
+
+				fprintf(archivo_salida,"(%s %s) -> ",auxListaPadres->persona1,auxListaPadres->persona2);
+
+				if (amigosEnComun == 0) {
+
+					fprintf(archivo_salida,"-None-");
+
+				}
+
+				else {
+
+					aux1 = CabeceraLista;
+
+					while (aux1 != NULL) {
+
+						fprintf(archivo_salida,"%s ",aux1->elem);
+
+						aux1 = aux1->siguiente;
+
+					}
+
+				}
+
+				fprintf(archivo_salida,"\n");
+
+				fclose(archivo_salida);
+
+				pthread_mutex_unlock(&semaforoArchivoSalida);
+
+				printf("entre aqui\n");
+
+
+			}
+
+		}
+
+		auxListaPadres = auxListaPadres->siguiente;
+
+	}
+
+	printf("haciendo reduce\n");
 
 	// Pendiente revisar:
 	return(0);
@@ -600,7 +735,7 @@ int main(int argc, char *argv[]) {
 
 	// Se imprime la lista global:
 
-	while (auxCabecera != NULL) {
+	/*while (auxCabecera != NULL) {
 
 		printf("La persona 1 es: %s\n",auxCabecera->persona1);
 		printf("La persona 2 es: %s\n",auxCabecera->persona2);
@@ -632,10 +767,25 @@ int main(int argc, char *argv[]) {
 
 
 
-	}
+	}*/
 
 	// Se crean los hilos que haran reduce y escribiran en el archivo
 	// de salida:
+
+	for (i = 0; i < numeroHilos; i++) {
+
+		sprintf(argumentos[i], "%d", i);
+
+		if( (r[i] = pthread_create(&hilos[i],NULL,&hiloReduce,archivoSalida)) ) {
+
+			printf("FAILED\n");
+		}
+
+	}
+
+	for (i = 0; i < numeroHilos; i++) {
+			pthread_join(hilos[i],NULL);
+	}
 
 
 	// Se hace reduce y se imprimen en el archivo de 
