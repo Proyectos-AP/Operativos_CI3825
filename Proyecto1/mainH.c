@@ -65,12 +65,13 @@ typedef struct listaCabeceraAmigos {
 } LISTACABECERAAMIGOS;
 
 // DEFINICION DE VARIABLES GLOBALES:
+int counter = 0;
 void *hiloMap(void *arg);
 pthread_mutex_t semaforoListaAmigos = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t semaforoArchivoSalida = PTHREAD_MUTEX_INITIALIZER; 
-LISTACABECERAMAPH *listaMapH = NULL;
-LISTAAMIGOS *listaAmigosPadre = NULL;
-LISTACABECERAAMIGOS *listaCabeceraAmigosPadre = NULL;
+LISTACABECERAMAPH *listaMapH;
+LISTAAMIGOS *listaAmigosPadre;
+LISTACABECERAAMIGOS *listaCabeceraAmigosPadre;
 
 // Definicion de hilos:
 
@@ -84,8 +85,12 @@ void *hiloMap(void *arg) {
 	* Parametros de salida:
 	*
 	*/
-	printf("Soy el hilo map\n");
-	printf("recibi el argumento: %s\n",arg);
+	//printf("Soy el hilo map\n");
+	//printf("recibi el argumento: %s\n",arg);
+
+	pthread_mutex_lock(&semaforoArchivoSalida);
+	counter++;
+	pthread_mutex_unlock(&semaforoArchivoSalida);
 
 	LISTACABECERAMAPH *temp1 = listaMapH; 
 	int contador = 0;
@@ -101,7 +106,7 @@ void *hiloMap(void *arg) {
 
 		sprintf(contadorStr, "%d", contador);
 
-		printf("El contador Str vale: %s\n",contadorStr);
+		//printf("El contador Str vale: %s\n",contadorStr);
 
 
 	}
@@ -110,6 +115,7 @@ void *hiloMap(void *arg) {
 	LISTAMAPH *auxHilo = cabeceraHilo;
 
 	while (auxHilo != NULL) {
+
 
 		//printf("----------------------\n");
 		//printf("La persona es: %s.\n",auxHilo->persona);
@@ -126,7 +132,7 @@ void *hiloMap(void *arg) {
 
 		nuevaCajaAmigos = (LISTA*)malloc(sizeof(LISTA));
 
-		printf("Los amigos son: %s.\n",auxHilo->amigos);
+		//printf("Los amigos son: %s.\n",auxHilo->amigos);
 
 		token = strtok(auxHilo->amigos," ");
 
@@ -135,21 +141,27 @@ void *hiloMap(void *arg) {
 		amigos = nuevaCajaAmigos;
 		auxAmigos = nuevaCajaAmigos;
 
+
 		while (token != NULL) {
 
 			token = strtok(NULL," ");
 
-				printf("Soy el token: %s.\n",auxAmigos->elem);
-				nuevaCajaAmigos = (LISTA*)malloc(sizeof(LISTA));
-				nuevaCajaAmigos->elem = token;
-				auxAmigos->siguiente = nuevaCajaAmigos;
-				auxAmigos = auxAmigos->siguiente;
+				if (token != NULL ){ 
 
-		}		
+					//printf("Soy el token: %s.\n",auxAmigos->elem);
+					nuevaCajaAmigos = (LISTA*)malloc(sizeof(LISTA));
+					nuevaCajaAmigos->elem = token;
+					auxAmigos->siguiente = nuevaCajaAmigos;
+					auxAmigos = auxAmigos->siguiente;
+
+				}
+		}	
+
 
 		auxAmigos = amigos;
 
 		while ( auxAmigos != NULL) {
+
 
 			auxCabecera = listaAmigosPadre;
 
@@ -164,10 +176,13 @@ void *hiloMap(void *arg) {
 				listaAmigosPadre = nuevaCaja; 
 				pthread_mutex_unlock(&semaforoListaAmigos);
 
+				auxCabecera = nuevaCaja;
+
 			}
 
 
-			else{
+			else {
+
 				while (auxCabecera != NULL) {
 
 						if (auxCabecera->listo == 1 ) {
@@ -214,55 +229,84 @@ void *hiloMap(void *arg) {
 									pthread_mutex_lock(&semaforoListaAmigos);
 									auxCabecera->siguiente = nuevaCaja;
 									pthread_mutex_unlock(&semaforoListaAmigos);
+
+									auxCabecera = nuevaCaja;
+
 									break;
 
 								}
 
-								auxCabecera = auxCabecera->siguiente;
+								else {
+
+									auxCabecera = auxCabecera->siguiente;
+								}
+
 
 							}
 
 						}
 
-
-					auxCabecera = auxCabecera->siguiente;
 				}
 
 			}
 
 			auxAmigos = auxAmigos->siguiente;
 
+		}
+
+		auxHilo = auxHilo->siguiente;
 
 
+
+
+	}
+
+	
+	LISTAAMIGOS *auxCabecera = listaAmigosPadre;
+	LISTA *auxAmigos1;
+	LISTA *auxAmigos2;
+
+	/*while (auxCabecera != NULL) {
+
+		printf("La persona 1 es: %s\n",auxCabecera->persona1);
+		printf("La persona 2 es: %s\n",auxCabecera->persona2);
+
+		auxAmigos1 = auxCabecera->amigos1;
+		auxAmigos2 = auxCabecera->amigos2;
+
+		while (auxAmigos1 != NULL) {
+
+			printf("El amigo 1 es: %s\n",auxAmigos1->elem);
+
+
+			auxAmigos1 = auxAmigos1->siguiente;
+
+		}
+
+			while (auxAmigos2 != NULL) {
+
+
+			printf("El amigo 2 es: %s\n",auxAmigos2->elem);
+
+			auxAmigos2 = auxAmigos2->siguiente;
 
 		}
 
 
 
+		auxCabecera = auxCabecera->siguiente;
 
 
 
+	}*/
 
+	
+	//auxCabecera=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+	//auxCabecera->persona1= "hola";
+	//auxCabecera->persona2="hola";
+	//auxCabecera->siguiente=NULL;
 
-
-
-
-
-
-
-		auxHilo = auxHilo->siguiente;
-
-	}
-
-
-
-
-
-
-
-
-
-
+	//listaAmigosPadre = auxCabecera;
 
 
 	// Pendiente revisar:
@@ -534,6 +578,11 @@ int main(int argc, char *argv[]) {
 
 	}
 
+
+
+	printf("El valor del contador es: %d\n",counter);
+
+
 	// Se elimina la estructura que se creo al leer el archivo:
 	//EliminarEstructuraLista(Cabecera,numeroHilos);
 	
@@ -543,6 +592,56 @@ int main(int argc, char *argv[]) {
 	for (i = 0; i < numeroHilos; i++) {
 			pthread_join(hilos[i],NULL);
 	}
+
+	LISTAAMIGOS *auxCabecera = listaAmigosPadre;
+	LISTA *auxAmigos1;
+	LISTA *auxAmigos2;
+
+
+	// Se imprime la lista global:
+
+	while (auxCabecera != NULL) {
+
+		printf("La persona 1 es: %s\n",auxCabecera->persona1);
+		printf("La persona 2 es: %s\n",auxCabecera->persona2);
+
+		auxAmigos1 = auxCabecera->amigos1;
+		auxAmigos2 = auxCabecera->amigos2;
+
+		while (auxAmigos1 != NULL) {
+
+			printf("El amigo 1 es: %s\n",auxAmigos1->elem);
+
+
+			auxAmigos1 = auxAmigos1->siguiente;
+
+		}
+
+			while (auxAmigos2 != NULL) {
+
+
+			printf("El amigo 2 es: %s\n",auxAmigos2->elem);
+
+			auxAmigos2 = auxAmigos2->siguiente;
+
+		}
+
+
+
+		auxCabecera = auxCabecera->siguiente;
+
+
+
+	}
+
+	// Se crean los hilos que haran reduce y escribiran en el archivo
+	// de salida:
+
+
+	// Se hace reduce y se imprimen en el archivo de 
+	// salida los resultados:
+
+
 
 	return(0);
 
