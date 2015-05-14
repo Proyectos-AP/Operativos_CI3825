@@ -261,7 +261,7 @@ int main(int argc, char *argv[]) {
     			// Se verifica si se ha llegado al fin del archivo
 				if(feof(archivoEntrada)== 1){
 					FinalArchivo = 1;
-					//remove(argv[0]);
+					remove(argv[0]);
 					fclose(archivoEntrada);	
 					fclose(archivoSalida);
 				}

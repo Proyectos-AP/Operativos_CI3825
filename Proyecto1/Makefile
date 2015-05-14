@@ -11,7 +11,7 @@
 
 Main:
 	gcc -Wall mainP.c -o friendfindP
-	gcc  mainH.c -pthread -o friendfindH
+	gcc -Wall mainH.c -pthread -o friendfindH
 	gcc -Wall map.c -o map
 	gcc -Wall reduce.c -o reduce
 
