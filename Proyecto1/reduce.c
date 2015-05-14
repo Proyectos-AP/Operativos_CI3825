@@ -31,7 +31,7 @@ typedef struct lista {
 } LISTA;
 
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
 	/*
 	*
@@ -51,9 +51,6 @@ void main(int argc, char *argv[]) {
 	char *Persona1;
 	char *Persona2;
 	char *Amigos;
-	char *Amigos1;
-	char *Amigos2;
-	char probando;	
 
 
 	// Se lee el archivo de entrada
@@ -62,7 +59,6 @@ void main(int argc, char *argv[]) {
 
 	
 	// Se convierte el PID en string
-	char pidStr[20];
 	sprintf(nombreSalida, "%d",miPID);
 	strcat(nombreSalida, ".txt");
 	printf("reduce %s\n",argv[0]);
@@ -96,8 +92,6 @@ void main(int argc, char *argv[]) {
 
     		fseek(archivoEntrada,0,SEEK_SET);
 
-    		int i = 0;
-
     		while(FinalArchivo == 0){
 
   
@@ -110,7 +104,7 @@ void main(int argc, char *argv[]) {
     				printf("No tengo amigos en comun\n");
     				Persona1 = (char*)malloc(sizeof(char)*15);
     				Persona2 = (char*)malloc(sizeof(char)*15);
-					Amigos1 = (char*)malloc(sizeof(char)*30);
+
 
     				fscanf(archivoEntrada," (%[^ (] %[^ )] ) \n" ,Persona1,Persona2);
 
@@ -253,8 +247,6 @@ void main(int argc, char *argv[]) {
     				printf("---------------------------\n");
     				printf("Persona 1: %s.\n",Persona1);
 					printf("Persona 2: %s.\n",Persona2);
-					printf("amigos 1: %s.\n",Amigos1);
-					printf("amigos 2: %s.\n",Amigos2);
 					printf("---------------------------\n");
 
     			}
@@ -301,6 +293,7 @@ void main(int argc, char *argv[]) {
 
 	}
 
+	return(0);
 
 
 

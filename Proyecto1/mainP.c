@@ -19,6 +19,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <errno.h>
 
 // Definicion de Tipos:
@@ -55,7 +56,6 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 	
 	*/
 
-	
 	int numeroLinea=0;
 	int resto;
 	char nombreString[10];
@@ -117,7 +117,7 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 	
 // Inicio del codigo principal:
 
-void  main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
 	/*
 
@@ -129,6 +129,7 @@ void  main(int argc, char *argv[]) {
 	
 	*/
 
+	int status;
 	int numeroProcesos;
 	char *archivoEntrada;
 	char *archivoSalida;
@@ -197,7 +198,7 @@ void  main(int argc, char *argv[]) {
 	
 	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
-		wait();
+		wait(&status);
 		printf("Mi hijo termino %d \n",childpid[i]);
 		
 		}
@@ -450,7 +451,7 @@ void  main(int argc, char *argv[]) {
 
 	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
-		wait();
+		wait(&status);
 		printf("Mi hijo termino %d \n",childpid[i]);
 		
 		}
@@ -520,5 +521,7 @@ void  main(int argc, char *argv[]) {
 	}
 
 	fclose(archivoFinal);
+
+	return(0);
 
 }

@@ -34,7 +34,7 @@ typedef struct lista {
 
 // Inicio del codigo principal:
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
 	/*
 	*
@@ -168,5 +168,8 @@ void main(int argc, char *argv[]) {
 
 	// Se cierra el archivo de salida:
 	fclose(archivoSalida);	
-	exit(0);
+
+	return(0);
+
+
 }

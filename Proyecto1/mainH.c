@@ -178,7 +178,7 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTA **Arreglo){
 
 //----------------------------------------------------------------------------//
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
 	/*
 	*
@@ -259,5 +259,8 @@ void main(int argc, char *argv[]) {
 	for (i = 0; i < numeroHilos; i++) {
 			pthread_join(hilos[i],NULL);
 	}
-	exit(0);
+
+	return(0);
+
+
 }
