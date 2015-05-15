@@ -91,6 +91,8 @@ int main(int argc, char *argv[]) {
    			
    			//El archivo esta vacio.
    			printf("No tengo trabajo asignado\n");
+			fclose(archivoEntrada);
+   			remove(argv[0]);
    			exit(0);
     	}
 
@@ -98,14 +100,15 @@ int main(int argc, char *argv[]) {
 
     		fseek(archivoEntrada,0,SEEK_SET);
 			char *Persona;
-			char *Amigos;	
+			char *Amigos;
+			char *token;	
 
 			while(FinalArchivo == 0){
 
 				Persona = (char*)malloc(sizeof(char)*15);
 				Amigos = (char*)malloc(sizeof(char)*30);
 				fscanf(archivoEntrada," %[^ ->] -> %[^\n]\n" ,Persona,Amigos);
-				printf("Persona: %s -> %s \n",Persona,Amigos);
+				printf("La Persona : %s -> %s \n",Persona,Amigos);
 
 				LISTA *listaAmigos;
 				LISTA *aux;
@@ -114,51 +117,59 @@ int main(int argc, char *argv[]) {
 
 				listaAmigos = NULL;
 
-				nueva_caja = (LISTA*)malloc(sizeof(LISTA));
+				token=strtok(Amigos," ");
 
-				nueva_caja->elem = strtok(Amigos," ");
-
-				listaAmigos = nueva_caja;
-				aux = nueva_caja;
-
-
-				while (aux->elem != NULL) {
-
-					printf("Soy el token: %s.\n",aux->elem);
-					nueva_caja = (LISTA*)malloc(sizeof(LISTA));
-					nueva_caja->elem = strtok(NULL," ");
-					aux->siguiente = nueva_caja;
-					aux = aux->siguiente;
+				if (strcmp(token,"-None-") == 0) {
+					printf("HABIA UN NONE\n");
+					free(Persona);
+					free(Amigos);
 				}
+				else {
 
-				aux = listaAmigos;
+					nueva_caja = (LISTA*)malloc(sizeof(LISTA));
+					nueva_caja->elem = token;
+					listaAmigos = nueva_caja;
+					aux = nueva_caja;
 
-				while( aux->elem != NULL) {
 
-					amigos = listaAmigos;
+					while (aux->elem != NULL) {
 
-					fprintf(archivoSalida,"(%s %s) -> ",Persona,aux->elem );
-				
-					while (amigos->elem != NULL) {
+						printf("Soy el token: %s.\n",aux->elem);
+						nueva_caja = (LISTA*)malloc(sizeof(LISTA));
+						nueva_caja->elem = strtok(NULL," ");
+						aux->siguiente = nueva_caja;
+						aux = aux->siguiente;
+					}
 
-						fprintf(archivoSalida,"%s ",amigos->elem);
+					aux = listaAmigos;
 
-						amigos = amigos->siguiente;
+					while( aux->elem != NULL) {
+
+						amigos = listaAmigos;
+
+						fprintf(archivoSalida,"(%s %s) -> ",Persona,aux->elem );
+					
+						while (amigos->elem != NULL) {
+
+							fprintf(archivoSalida,"%s ",amigos->elem);
+
+							amigos = amigos->siguiente;
+
+						}
+
+						fprintf(archivoSalida,"\n");
+
+						aux = aux->siguiente;
 
 					}
 
-					fprintf(archivoSalida,"\n");
-
-					aux = aux->siguiente;
-
 				}
 
-				
 				// Se verifica si se ha llegado al fin del archivo
 				if(feof(archivoEntrada)== 1){
 					FinalArchivo = 1;
-					remove(argv[0]);
 					fclose(archivoEntrada);	
+					remove(argv[0]);
 				}
 
 			}

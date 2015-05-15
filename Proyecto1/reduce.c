@@ -85,6 +85,8 @@ int main(int argc, char *argv[]) {
    			
    			//El archivo esta vacio.
    			printf("No tengo trabajo asignado\n");
+			fclose(archivoEntrada);	
+			remove(argv[0]);
    			exit(0);
     	}
 
@@ -261,8 +263,8 @@ int main(int argc, char *argv[]) {
     			// Se verifica si se ha llegado al fin del archivo
 				if(feof(archivoEntrada)== 1){
 					FinalArchivo = 1;
-					remove(argv[0]);
 					fclose(archivoEntrada);	
+					remove(argv[0]);
 					fclose(archivoSalida);
 				}
 
@@ -278,10 +280,6 @@ int main(int argc, char *argv[]) {
 				///printf("Persona 2: %s.\n",Persona2);
 				//printf("amigos 1: %s.\n",Amigos1);
 				//printf("amigos 2: %s.\n",Amigos2);
-
-
-
-
 
     		}
 

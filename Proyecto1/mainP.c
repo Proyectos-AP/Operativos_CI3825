@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
 		}
 
 
-
+//----------------------------------------------------------------------------
 	// El padre lee el trabajo realizado por los hijos:
 
 	char *Persona1;
@@ -247,89 +247,101 @@ int main(int argc, char *argv[]) {
 		else {
 
 		archivoProcesos = fopen(nombreSalida,"r");
+		fseek(archivoProcesos,0,SEEK_END);
+
+   		if (ftell(archivoProcesos) == 0 )	{		
+   			//El archivo esta vacio.
+   			printf("No tengo trabajo asignado\n");
+			fclose(archivoProcesos);
+   			remove(nombreSalida);
+
+    	}
 			
+    	else {
+    		fseek(archivoProcesos,0,SEEK_SET);
+			while (FinalArchivo == 0) {
 
-		while (FinalArchivo == 0) {
+					Persona1 = (char*)malloc(sizeof(char)*15);
+					Persona2 = (char*)malloc(sizeof(char)*15);
+					Amigos = (char*)malloc(sizeof(char)*30);
 
-				Persona1 = (char*)malloc(sizeof(char)*15);
-				Persona2 = (char*)malloc(sizeof(char)*15);
-				Amigos = (char*)malloc(sizeof(char)*30);
+					//fscanf(archivoProcesos,"(%s %s) -> %s",Persona1,Persona2,Amigos);
 
-				//fscanf(archivoProcesos,"(%s %s) -> %s",Persona1,Persona2,Amigos);
+					//fscanf(archivoProcesos," %[^ ->] -> %[^\n]\n" ,Persona1,Persona2);
+					fscanf(archivoProcesos," ( %[^ (] %[^ )] ) -> %[^\n]\n" ,Persona1,Persona2,Amigos);
+					
+					//printf("La persona1 es: %s \n",Persona1);
+					//printf("La persona2 es: %s \n",Persona2);
+					//printf("Los amigos son: %s \n",Amigos);
 
-				//fscanf(archivoProcesos," %[^ ->] -> %[^\n]\n" ,Persona1,Persona2);
-				fscanf(archivoProcesos," ( %[^ (] %[^ )] ) -> %[^\n]\n" ,Persona1,Persona2,Amigos);
-				
-				//printf("La persona1 es: %s \n",Persona1);
-				//printf("La persona2 es: %s \n",Persona2);
-				//printf("Los amigos son: %s \n",Amigos);
+					// Se agrega la informacion a la lista enlazada de personas:
 
-				// Se agrega la informacion a la lista enlazada de personas:
+					aux = listaAmigos;
 
-				aux = listaAmigos;
+					if (aux == NULL) {
 
-				if (aux == NULL) {
+						// Se crea un nuevo nodo
+						nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+						nueva_caja->listo = 0;
+						nueva_caja->persona1=Persona1;
+						nueva_caja->persona2=Persona2;
+						nueva_caja->amigos1=Amigos;
+						nueva_caja->amigos2 = NULL;
+						nueva_caja->siguiente=NULL;
 
-					// Se crea un nuevo nodo
-					nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
-					nueva_caja->listo = 0;
-					nueva_caja->persona1=Persona1;
-					nueva_caja->persona2=Persona2;
-					nueva_caja->amigos1=Amigos;
-					nueva_caja->amigos2 = NULL;
-					nueva_caja->siguiente=NULL;
+						listaAmigos=nueva_caja;
 
-					listaAmigos=nueva_caja;
+					}
 
-				}
+					else {
 
-				else {
-
-					while (aux != NULL) {
-
-
-						if (aux->listo == 1 ) {
-							aux = aux->siguiente;
-						}
-
-						else {
+						while (aux != NULL) {
 
 
-							if ( ((strcmp(aux->persona1,Persona2)) == 0) && (strcmp(aux->persona2,Persona1) == 0) )  {
-
-								if (aux->amigos1 == NULL) {
-									aux->amigos1 = Amigos;
-									aux->amigos2 = NULL;
-								}
-
-								else if (aux->amigos2 == NULL) {
-									aux->amigos2 = Amigos;
-									aux->listo = 1;
-								}
-
-								break;
-
+							if (aux->listo == 1 ) {
+								aux = aux->siguiente;
 							}
 
 							else {
 
-								if (aux->siguiente == NULL) {
 
+								if ( ((strcmp(aux->persona1,Persona2)) == 0) && (strcmp(aux->persona2,Persona1) == 0) )  {
 
-									// Se crea un nuevo nodo
-									nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
-									nueva_caja->listo = 0;
-									nueva_caja->persona1=Persona1;
-									nueva_caja->persona2=Persona2;
-									nueva_caja->amigos1=Amigos;
-									nueva_caja->amigos2 = NULL;
-									nueva_caja->siguiente=NULL;
-									aux->siguiente = nueva_caja;
+									if (aux->amigos1 == NULL) {
+										aux->amigos1 = Amigos;
+										aux->amigos2 = NULL;
+									}
+
+									else if (aux->amigos2 == NULL) {
+										aux->amigos2 = Amigos;
+										aux->listo = 1;
+									}
+
 									break;
 
 								}
 
-								aux = aux->siguiente;
+								else {
+
+									if (aux->siguiente == NULL) {
+
+
+										// Se crea un nuevo nodo
+										nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+										nueva_caja->listo = 0;
+										nueva_caja->persona1=Persona1;
+										nueva_caja->persona2=Persona2;
+										nueva_caja->amigos1=Amigos;
+										nueva_caja->amigos2 = NULL;
+										nueva_caja->siguiente=NULL;
+										aux->siguiente = nueva_caja;
+										break;
+
+									}
+
+									aux = aux->siguiente;
+
+								}
 
 							}
 
@@ -337,20 +349,21 @@ int main(int argc, char *argv[]) {
 
 					}
 
-				}
 
+					if (feof(archivoProcesos)){
+						FinalArchivo = 1;
+						fclose(archivoProcesos);	
+						remove(nombreSalida);
+						//printf("FINAL ARCHIVO\n");
 
-				if (feof(archivoProcesos)){
-					FinalArchivo = 1;
-					fclose(archivoProcesos);	
-					//printf("FINAL ARCHIVO\n");
+						// hay que descomentar esto:
+						
+						
+						if (archivoProcesos == NULL) {
 
-					// hay que descomentar esto:
-					remove(nombreSalida);
-					
-					if (archivoProcesos == NULL) {
+							perror("problemas");
+						}
 
-						perror("problemas");
 					}
 
 				}
@@ -491,7 +504,8 @@ int main(int argc, char *argv[]) {
    			
    				//El archivo esta vacio.
    				printf("No tengo trabajo asignado\n");
-   				exit(0);
+				fclose(archivoHijos);
+   				remove(archivoProceso);
 
     		}
     		else{
@@ -508,11 +522,11 @@ int main(int argc, char *argv[]) {
     				// Se verifica si se ha llegado al fin del archivo
 					if(feof(archivoHijos)== 1){
 						FinalArchivo = 1;
-						remove(archivoProceso);
 						fclose(archivoHijos);	
+						remove(archivoProceso);
 					}
     			}
-
+    			
     		}
 
 		}
