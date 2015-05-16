@@ -10,10 +10,10 @@
 #
 
 Main:
-	gcc mainP.c -o friendfindP
-	gcc mainH.c -pthread -o friendfindH
-	gcc map.c -o map
-	gcc reduce.c -o reduce
+	gcc -Wall mainP.c -o friendfindP
+	gcc -Wall mainH.c -pthread -o friendfindH
+	gcc -Wall map.c -o map
+	gcc -Wall reduce.c -o reduce
 
 clean:
 	rm friendfindP
