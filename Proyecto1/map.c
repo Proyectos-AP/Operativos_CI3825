@@ -31,54 +31,178 @@ typedef struct lista {
 
 } LISTA;
 
+//----------------------------------------------------------------------------//
+
+void EliminarEstructuraLista(LISTA **Cabecera){
+
+	/*
+
+		Definicion de la funcion:	
+			Esta funcion destruye una estructura del tipo LISTA.
+	
+		Parametros de entrada:
+
+			- Cabecera : Direccion de memoria de una caberera de una estructuta 
+						del tipo LISTA.
+	
+	 	Parametros de salida:
+	 		Ninguno.
+	
+	*/
+
+	// Declaracion de variables:
+	LISTA *aux;
+	aux = *Cabecera;
+
+
+	if (aux==NULL){
+		;
+	}
+	else{
+
+		while(aux!=NULL){
+
+			*Cabecera= aux-> siguiente;
+			free(aux->elem);
+			free(aux);
+			aux = *Cabecera;
+
+		}
+
+	}
+
+}
+
+//----------------------------------------------------------------------------//
+
+void mapProcesos(char *Persona,char *Amigos, FILE *archivoSalida){
+
+	/*
+
+		Definicion de la funcion:	
+
+			Esta funcion, dado el nombre de una persona y una lista de amigos 
+		realiza el algortimo de map y escribe el resultado en un archivo de
+		salida que es pasado por los parametros de la funcion.
+	
+		Parametros de entrada:
+
+			- Persona : Nombre del archivo que sera leido.
+			- Amigos : Numero de archivos que seran creados.
+			- archivoSalida : Numero de archivos que seran creados.	
+	 	Parametros de salida:
+	 		Ninguno.
+	
+	*/
+
+	// Declaracion de variables:
+	char *token;	
+	LISTA *listaAmigos;
+	LISTA *aux;
+	LISTA *nueva_caja;
+	LISTA *amigos;
+
+	listaAmigos = NULL;
+
+
+	// A continuacion se creara una lista enlazada que almacenara
+	// cada nombre de los amigos de la variable Persona.
+	token=strtok(Amigos," ");
+
+	if (strcmp(token,"-None-") == 0) {
+		//free(Persona);
+		//free(Amigos);
+	}
+	else {
+
+		// Se crea el primer elemento de la lista de amigos
+		nueva_caja = (LISTA*)malloc(sizeof(LISTA));
+		nueva_caja->elem = token;
+		listaAmigos = nueva_caja;
+		aux = nueva_caja;
+
+		while (aux->elem != NULL) {
+			nueva_caja = (LISTA*)malloc(sizeof(LISTA));
+			nueva_caja->elem = strtok(NULL," ");
+			aux->siguiente = nueva_caja;
+			aux = aux->siguiente;
+		}
+
+		// Se procede a escribir en el archivo de salida con el formato del algoritmo de map.
+		aux = listaAmigos;
+
+		while( aux->elem != NULL) {
+
+			amigos = listaAmigos;
+			// Se imprime la variable Persona y a uno de sus amigos
+			fprintf(archivoSalida,"(%s %s) -> ",Persona,aux->elem );
+				
+			// Se imprimen todos los amigos de la variable Persona	
+			while (amigos->elem != NULL) {
+
+				fprintf(archivoSalida,"%s ",amigos->elem);
+				amigos = amigos->siguiente;
+
+			}
+
+			fprintf(archivoSalida,"\n");
+			aux = aux->siguiente;
+		}
+
+		// Se destruye la estructura creada
+		//EliminarEstructuraLista(&listaAmigos);
+
+	}
+}
+//----------------------------------------------------------------------------//
 
 // Inicio del codigo principal:
 
 int main(int argc, char *argv[]) {
 
 	/*
-	*
-	* Definicion de la funcion:	
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
+
+		Definicion de la funcion:	
+
+			Dado el nombre de un archivo esta funcion lee cada 
+		linea del mismo y realiza map sobre cada una de ellas.
+	
+		Parametros de entrada:
+
+			- argv[0]: Nombre del archivo que sera leido.
+	
+	 	Parametros de salida:
+	 		Ninguno.
+	
 	*/
+
+	// Declaracion de variables:
+	int FinalArchivo=0;
+	char nombreSalida[30];
+	char *persona;
+	char *amigos;
+	FILE *archivoEntrada;
+	FILE *archivoDeSalida;
 
 	// Se obtiene el PID del proceso:
 	int miPID = getpid();
 	
 	// Se convierte el PID en string
-	char pidStr[20];
-	sprintf(pidStr, "%d",miPID);
-	int FinalArchivo=0;
-
+	sprintf(nombreSalida, "%d",miPID);
 	// Se concatena el PID con ".txt"
 	// para obtener el nombre del archivo de salida:
-	char nombreSalida[30];
-	char inicio[40];
-	strcpy(inicio,pidStr);
-	strcpy(nombreSalida,inicio);
 	strcat(nombreSalida, ".txt");
 
-	printf("EL PARAMETRO QUE ME PASARON ES : %s\n",argv[0]);
-
-
-	// Se lee el archivo de entrada
-	FILE *archivoEntrada;
 
 	// Se abre el archivo de salida:
-
-	FILE *archivoSalida;
-
-	archivoSalida = fopen(nombreSalida,"a");
+	archivoDeSalida = fopen(nombreSalida,"a");
 
 
+	// Se procede a leer el archivo de entrada.
 
+	// No existe el archivo
 	if ( fopen(argv[0],"r") == NULL ) {
 
-		printf("No tengo trabajo asignado\n");
 		exit(1);
 		}
 
@@ -90,7 +214,6 @@ int main(int argc, char *argv[]) {
    		if (ftell(archivoEntrada) == 0 )	{
    			
    			//El archivo esta vacio.
-   			printf("No tengo trabajo asignado\n");
 			fclose(archivoEntrada);
    			remove(argv[0]);
    			exit(0);
@@ -99,72 +222,17 @@ int main(int argc, char *argv[]) {
     	else {
 
     		fseek(archivoEntrada,0,SEEK_SET);
-			char *Persona;
-			char *Amigos;
-			char *token;	
+	
 
 			while(FinalArchivo == 0){
 
-				Persona = (char*)malloc(sizeof(char)*15);
-				Amigos = (char*)malloc(sizeof(char)*30);
-				fscanf(archivoEntrada," %[^ ->] -> %[^\n]\n" ,Persona,Amigos);
-				printf("La Persona : %s -> %s \n",Persona,Amigos);
+				persona = (char*)malloc(sizeof(char)*15);
+				amigos = (char*)malloc(sizeof(char)*30);
+				fscanf(archivoEntrada," %[^ ->] -> %[^\n]\n" ,persona,amigos);
 
-				LISTA *listaAmigos;
-				LISTA *aux;
-				LISTA *nueva_caja;
-				LISTA *amigos;
-
-				listaAmigos = NULL;
-
-				token=strtok(Amigos," ");
-
-				if (strcmp(token,"-None-") == 0) {
-					printf("HABIA UN NONE\n");
-					free(Persona);
-					free(Amigos);
-				}
-				else {
-
-					nueva_caja = (LISTA*)malloc(sizeof(LISTA));
-					nueva_caja->elem = token;
-					listaAmigos = nueva_caja;
-					aux = nueva_caja;
-
-
-					while (aux->elem != NULL) {
-
-						printf("Soy el token: %s.\n",aux->elem);
-						nueva_caja = (LISTA*)malloc(sizeof(LISTA));
-						nueva_caja->elem = strtok(NULL," ");
-						aux->siguiente = nueva_caja;
-						aux = aux->siguiente;
-					}
-
-					aux = listaAmigos;
-
-					while( aux->elem != NULL) {
-
-						amigos = listaAmigos;
-
-						fprintf(archivoSalida,"(%s %s) -> ",Persona,aux->elem );
-					
-						while (amigos->elem != NULL) {
-
-							fprintf(archivoSalida,"%s ",amigos->elem);
-
-							amigos = amigos->siguiente;
-
-						}
-
-						fprintf(archivoSalida,"\n");
-
-						aux = aux->siguiente;
-
-					}
-
-				}
-
+				mapProcesos(persona,amigos,archivoDeSalida);
+				free(persona);
+				free(amigos);
 				// Se verifica si se ha llegado al fin del archivo
 				if(feof(archivoEntrada)== 1){
 					FinalArchivo = 1;
@@ -173,14 +241,11 @@ int main(int argc, char *argv[]) {
 				}
 
 			}
+
 		}
-
 	}
-
 	// Se cierra el archivo de salida:
-	fclose(archivoSalida);	
-
+	fclose(archivoDeSalida);	
 	return(0);
-
 
 }
