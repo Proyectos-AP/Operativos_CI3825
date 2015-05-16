@@ -19,6 +19,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <errno.h>
 
 // Definicion de Tipos:
@@ -117,7 +118,7 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 	
 // Inicio del codigo principal:
 
-void  main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
 	/*
 
@@ -129,6 +130,7 @@ void  main(int argc, char *argv[]) {
 	
 	*/
 
+	int status;
 	int numeroProcesos;
 	char *archivoEntrada;
 	char *archivoSalida;
@@ -197,13 +199,13 @@ void  main(int argc, char *argv[]) {
 	
 	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
-		wait();
+		wait(&status);
 		printf("Mi hijo termino %d \n",childpid[i]);
 		
 		}
 
 
-
+//----------------------------------------------------------------------------
 	// El padre lee el trabajo realizado por los hijos:
 
 	char *Persona1;
@@ -248,17 +250,16 @@ void  main(int argc, char *argv[]) {
 		archivoProcesos = fopen(nombreSalida,"r");
 		fseek(archivoProcesos,0,SEEK_END);
 
-
-   		if (ftell(archivoProcesos) == 0 )	{
-   			
+   		if (ftell(archivoProcesos) == 0 )	{		
    			//El archivo esta vacio.
-   			printf("ESTOY VACIO\n");
+   			printf("No tengo trabajo asignado\n");
+			fclose(archivoProcesos);
+   			remove(nombreSalida);
+
     	}
-
-    	else{
-
-	    	fseek(archivoProcesos,0,SEEK_SET);
-
+			
+    	else {
+    		fseek(archivoProcesos,0,SEEK_SET);
 			while (FinalArchivo == 0) {
 
 					Persona1 = (char*)malloc(sizeof(char)*15);
@@ -297,6 +298,7 @@ void  main(int argc, char *argv[]) {
 
 						while (aux != NULL) {
 
+		
 
 							if (aux->listo == 1 ) {
 								aux = aux->siguiente;
@@ -305,12 +307,15 @@ void  main(int argc, char *argv[]) {
 							else {
 
 
+
 								if ( ((strcmp(aux->persona1,Persona2)) == 0) && (strcmp(aux->persona2,Persona1) == 0) )  {
 
 									if (aux->amigos1 == NULL) {
 										aux->amigos1 = Amigos;
 										aux->amigos2 = NULL;
 									}
+
+	
 
 									else if (aux->amigos2 == NULL) {
 										aux->amigos2 = Amigos;
@@ -343,20 +348,23 @@ void  main(int argc, char *argv[]) {
 
 								}
 
+							
 							}
 
 						}
 
 					}
 
+				}
 
 					if (feof(archivoProcesos)){
 						FinalArchivo = 1;
 						fclose(archivoProcesos);	
+						remove(nombreSalida);
 						//printf("FINAL ARCHIVO\n");
 
 						// hay que descomentar esto:
-						remove(nombreSalida);
+						
 						
 						if (archivoProcesos == NULL) {
 
@@ -463,7 +471,7 @@ void  main(int argc, char *argv[]) {
 
 	// Espero que los proceso hijos terminen:
 	for(i=0;i<numeroProcesos;i++){
-		wait();
+		wait(&status);
 		printf("Mi hijo termino %d \n",childpid[i]);
 		
 		}
@@ -503,7 +511,8 @@ void  main(int argc, char *argv[]) {
    			
    				//El archivo esta vacio.
    				printf("No tengo trabajo asignado\n");
-   				exit(0);
+				fclose(archivoHijos);
+   				remove(archivoProceso);
 
     		}
     		else{
@@ -520,11 +529,11 @@ void  main(int argc, char *argv[]) {
     				// Se verifica si se ha llegado al fin del archivo
 					if(feof(archivoHijos)== 1){
 						FinalArchivo = 1;
-						remove(archivoProceso);
 						fclose(archivoHijos);	
+						remove(archivoProceso);
 					}
     			}
-
+    			
     		}
 
 		}
@@ -533,5 +542,7 @@ void  main(int argc, char *argv[]) {
 	}
 
 	fclose(archivoFinal);
+
+	return(0);
 
 }
