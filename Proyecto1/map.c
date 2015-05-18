@@ -1,15 +1,15 @@
 /*
-*
-* Archivo: map.c
-*
-* Nombres:
-*	Alejandra Cordero / Carnet: 12-10645
-*	Pablo Maldonado   / Carnet: 12-10561
-*
-* Descripcion:
-*
-* Ultima modificacion: 09/05/2015
-*
+
+ Archivo: map.c
+
+ Nombres:
+	Alejandra Cordero / Carnet: 12-10645
+	Pablo Maldonado   / Carnet: 12-10561
+
+ Descripcion:
+
+ Ultima modificacion: 09/05/2015
+
 */
 
 // Directivas de Preprocesador:
@@ -19,144 +19,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
-
-
-// Definicion de tipos:
-
-
-typedef struct lista {
-
-	char *elem;
-	struct lista *siguiente;
-
-} LISTA;
+#include "lib_procesos.h"
 
 //----------------------------------------------------------------------------//
-
-void EliminarEstructuraLista(LISTA **Cabecera){
-
-	/*
-
-		Definicion de la funcion:	
-			Esta funcion destruye una estructura del tipo LISTA.
-	
-		Parametros de entrada:
-
-			- Cabecera : Direccion de memoria de una caberera de una estructuta 
-						del tipo LISTA.
-	
-	 	Parametros de salida:
-	 		Ninguno.
-	
-	*/
-
-	// Declaracion de variables:
-	LISTA *aux;
-	aux = *Cabecera;
-
-
-	if (aux==NULL){
-		;
-	}
-	else{
-
-		while(aux!=NULL){
-
-			*Cabecera= aux-> siguiente;
-			free(aux->elem);
-			free(aux);
-			aux = *Cabecera;
-
-		}
-
-	}
-
-}
-
+//                          INICIO DEL CODIGO PRINCIPAL                       //
 //----------------------------------------------------------------------------//
-
-void mapProcesos(char *Persona,char *Amigos, FILE *archivoSalida){
-
-	/*
-
-		Definicion de la funcion:	
-
-			Esta funcion, dado el nombre de una persona y una lista de amigos 
-		realiza el algortimo de map y escribe el resultado en un archivo de
-		salida que es pasado por los parametros de la funcion.
-	
-		Parametros de entrada:
-
-			- Persona : Nombre del archivo que sera leido.
-			- Amigos : Numero de archivos que seran creados.
-			- archivoSalida : Numero de archivos que seran creados.	
-	 	Parametros de salida:
-	 		Ninguno.
-	
-	*/
-
-	// Declaracion de variables:
-	char *token;	
-	LISTA *listaAmigos;
-	LISTA *aux;
-	LISTA *nueva_caja;
-	LISTA *amigos;
-
-	listaAmigos = NULL;
-
-
-	// A continuacion se creara una lista enlazada que almacenara
-	// cada nombre de los amigos de la variable Persona.
-	token=strtok(Amigos," ");
-
-	if (strcmp(token,"-None-") == 0) {
-		//free(Persona);
-		//free(Amigos);
-	}
-	else {
-
-		// Se crea el primer elemento de la lista de amigos
-		nueva_caja = (LISTA*)malloc(sizeof(LISTA));
-		nueva_caja->elem = token;
-		listaAmigos = nueva_caja;
-		aux = nueva_caja;
-
-		while (aux->elem != NULL) {
-			nueva_caja = (LISTA*)malloc(sizeof(LISTA));
-			nueva_caja->elem = strtok(NULL," ");
-			aux->siguiente = nueva_caja;
-			aux = aux->siguiente;
-		}
-
-		// Se procede a escribir en el archivo de salida con el formato del algoritmo de map.
-		aux = listaAmigos;
-
-		while( aux->elem != NULL) {
-
-			amigos = listaAmigos;
-			// Se imprime la variable Persona y a uno de sus amigos
-			fprintf(archivoSalida,"(%s %s) -> ",Persona,aux->elem );
-				
-			// Se imprimen todos los amigos de la variable Persona	
-			while (amigos->elem != NULL) {
-
-				fprintf(archivoSalida,"%s ",amigos->elem);
-				amigos = amigos->siguiente;
-
-			}
-
-			fprintf(archivoSalida,"\n");
-			aux = aux->siguiente;
-		}
-
-		// Se destruye la estructura creada
-		//EliminarEstructuraLista(&listaAmigos);
-
-	}
-}
-//----------------------------------------------------------------------------//
-
-// Inicio del codigo principal:
 
 int main(int argc, char *argv[]) {
 
