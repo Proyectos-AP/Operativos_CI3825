@@ -132,7 +132,7 @@ void EliminarListaAmigos(LISTAAMIGOS **lista){
 		Parametros de entrada:
 
 			- lista : Direccion de la cabecera de una estructura del 
-						tipo LISTAAMIGOS.
+						tipopLISTAAMIGOS.
 		
 	 	Parametros de salida:
 	 		Ninguno.
@@ -201,7 +201,7 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 	FILE *archivo;
 	FILE *archivoSalida[numeroProcesos];
 	
-	if ( (fopen(nombre_archivo,"r")) == NULL) {
+	if ( (archivo=fopen(nombre_archivo,"r")) == NULL) {
 
 		perror("Error: El archivo indicado no fue encontrado ");
 		printf("errno = %d. \n",errno);
@@ -210,7 +210,7 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 	
 	else {
 		
-		archivo = fopen(nombre_archivo,"r");
+		//archivo = fopen(nombre_archivo,"r");
 		fseek(archivo,0,SEEK_END);
 
 		 if (ftell(archivo) == 0 )	{		
@@ -244,7 +244,7 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos){
 				// Se escribe en alguno de los archivos creados.
 				fprintf(archivoSalida[resto],"%s \n",Linea);
 				numeroLinea++;
-				
+				free(Linea);
 				// Se verifica si se ha llegado al fin del archivo
 				if (feof(archivo)) {
 					fclose(archivo);
@@ -393,7 +393,7 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 		// para obtener el nombre del archivo de salida:
 		strcat(nombreSalida, ".txt");
 
-		if ( fopen(nombreSalida,"r") == NULL ) {
+		if ( (archivoProcesos=fopen(nombreSalida,"r")) == NULL ) {
 
 			perror("Error: El archivo indicado no fue encontrado ");
 			printf("errno = %d. \n",errno);
@@ -402,7 +402,7 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 
 		else {
 
-			archivoProcesos = fopen(nombreSalida,"r");
+			//archivoProcesos = fopen(nombreSalida,"r");
 			fseek(archivoProcesos,0,SEEK_END);
 
 	   		if (ftell(archivoProcesos) == 0 )	{		
@@ -468,7 +468,9 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 										aux->amigos2 = Amigos;
 										aux->listo = 1;
 									}
-
+									
+									free(Persona1);
+									free(Persona2);
 									break;
 
 								}
@@ -491,6 +493,9 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 										break;
 
 									}
+									else{
+										
+										}
 									aux = aux->siguiente;
 
 								}
@@ -516,8 +521,6 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 		}
 
 	}
-
-
 }
 
 //----------------------------------------------------------------------------//
@@ -758,7 +761,7 @@ void LeerTrabajoReduce(int numeroArchivos,char *archivoSalida,int nombre_archivo
 		sprintf(archivoProceso, "%d",nombre_archivos[i]);
 		strcat(archivoProceso, ".txt");
 
-		if ( fopen(archivoProceso,"r") == NULL ) {
+		if ( (archivoHijos=fopen(archivoProceso,"r")) == NULL ) {
 
 			perror("Error: El archivo indicado no fue encontrado ");
 			printf("errno = %d. \n",errno);
@@ -767,7 +770,7 @@ void LeerTrabajoReduce(int numeroArchivos,char *archivoSalida,int nombre_archivo
 
 		else{
 
-			archivoHijos = fopen(archivoProceso,"r");
+			//archivoHijos = fopen(archivoProceso,"r");
 			fseek(archivoHijos,0,SEEK_END);
 
    			if (ftell(archivoHijos) == 0 )	{
@@ -785,6 +788,7 @@ void LeerTrabajoReduce(int numeroArchivos,char *archivoSalida,int nombre_archivo
     				Linea = (char*)malloc(sizeof(char)*101);
 					fscanf(archivoHijos, " %[^\n]\n" ,Linea);
 					fprintf(archivoFinal,"%s\n",Linea);
+					free(Linea);
 
     				// Se verifica si se ha llegado al fin del archivo
 					if(feof(archivoHijos)== 1){

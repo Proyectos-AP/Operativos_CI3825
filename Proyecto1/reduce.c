@@ -99,7 +99,8 @@ int main(int argc, char *argv[]) {
 
     				fscanf(archivoEntrada," (%[^ (] %[^ )] ) \n" ,Persona1,Persona2);
 					fprintf(archivoSalida,"(%s %s) -> -None-\n",Persona1,Persona2);
-
+					free(Persona1);
+					free(Persona2);
 					while (fgetc(archivoEntrada) != 10);
 
     			}
@@ -114,9 +115,11 @@ int main(int argc, char *argv[]) {
 
     				// Se aplica reduce
     				ReduceProcesos(Persona1,Persona2,Amigos,archivoSalida);
+    				free(Persona1);
+					free(Persona2);
+					free(Amigos);
 
     			}
-
 
     			// Se verifica si se ha llegado al fin del archivo
 				if(feof(archivoEntrada)== 1){
@@ -128,9 +131,7 @@ int main(int argc, char *argv[]) {
 
     		}
 
-
     	}
-
 
 	}
 
