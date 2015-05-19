@@ -10,10 +10,19 @@
 #
 
 Main:
-	gcc -Wall mainP.c -o friendfindP
-	gcc  mainH.c -pthread -o friendfindH
-	gcc -Wall map.c -o map
-	gcc -Wall reduce.c -o reduce
+	gcc -Wall -g mainP.c lib_procesos.c -o friendfindP
+	gcc -Wall -g mainH.c -pthread -o friendfindH
+	gcc -Wall -g map.c lib_procesos.c -o map
+	gcc -Wall -g reduce.c lib_procesos.c -o reduce
+
+friendfindP.o : mainP.c lib_procesos.h
+	gcc -c mainP.c
+
+map.o : map.c lib_procesos.h
+	gcc -c map.c
+
+reduce.o : reduce.c lib_procesos.h
+	gcc -c reduce.c
 
 clean:
 	rm friendfindP
