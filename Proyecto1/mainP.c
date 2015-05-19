@@ -129,7 +129,6 @@ int main(int argc, char *argv[]) {
 	//  procesos hijos en map y lo almacena en una lista enlazada:
 	LeerTrabajoMap(numeroDeProcesos,&listaDeAmigos,childpid);
 
-
 	// El proceso padre toma la estructura creada anteriormente y reparte 	
 	// el trabajo de manera equitativa en archivos para que procesos hijos 
 	//puedan hacer reduce.
@@ -137,7 +136,6 @@ int main(int argc, char *argv[]) {
 
 	// Se elimina la estructura listaAmigos creada:
 	EliminarListaAmigos(&listaDeAmigos);
-
 
 	// Se realiza fork para crear los proceso que van a realizar reduce.
 	for(i = 0;i < numeroDeProcesos;i++){
