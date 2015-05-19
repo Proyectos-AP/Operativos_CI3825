@@ -6,14 +6,10 @@
 *	Alejandra Cordero / Carnet: 12-10645
 *	Pablo Maldonado   / Carnet: 12-10561
 *
-* Descripcion: Programa que dada una lista
-* de personas con sus respectivos amigos 
-* devuelve en un archivo de salida los 
-* amigos en comun existentes entre todas
-* ellas. Se hace uso del modelo de 
-* programacion map / reduce.
+* Descripcion: Programa que dada una lista de personas con sus respectivos 
+* amigos devuelve en un archivo de salida los amigos en comun existentes entre 
+* todas ellas. Se hace uso del modelo de programacion map / reduce.
 * 
-*
 * Ultima modificacion: 15/05/2015
 *
 */
@@ -91,9 +87,14 @@ typedef struct listaMapH {
 	/* Descripcion de la estructura: Estructura que recibiran los hilos para
 	hacer map a cada una de las lineas del archivo de entrada.  */
 
-	char *persona;                // Apuntador a string que contiene el no
-	char *amigos;                 //
-	struct listaMapH *siguiente;  //
+	char *persona;                // Apuntador a string que contiene el 
+								  // nombre de la persona 
+
+	char *amigos;                 // Apuntador al string de los amigos 
+								  // de la persona 
+
+	struct listaMapH *siguiente;  // Apuntador al siguiente elemento de la
+								  // lista enlazada.
 	
 } LISTAMAPH;
 
@@ -101,10 +102,18 @@ typedef struct listaMapH {
 
 typedef struct listaCabeceraMapH {
 
-	// Descripcion de la estructura:
+	/* Descripcion de la estructura: Es una lista enlazada de apuntadores
+	a los primeros elementos de listas de tipo LISTAMAPH. Se utilizara esta
+	lista para realizar la reparticion de tareas a los hilos que haran 
+	map. 
+	*/
 
-	LISTAMAPH *elem;                      //
-	struct listaCabeceraMapH *siguiente;  //
+	LISTAMAPH *elem;                      // Apuntador a una listaMapH
+										  // que sera asignada a un hilo.
+
+
+	struct listaCabeceraMapH *siguiente;  // Apuntador al siguiente elemento
+										  // de la lista enlazada.
 
 } LISTACABECERAMAPH;
 
@@ -112,10 +121,12 @@ typedef struct listaCabeceraMapH {
 
 typedef struct listaCabeceraAmigos {
 
-	// Descripcion de la estructura:
+	/* Descripcion de la estructura: */
 
-	LISTAAMIGOS *elem;                      //
-	struct listaCabeceraAmigos *siguiente;  //
+	LISTAAMIGOS *elem;                      // Apuntador a una listaAmigos
+
+	struct listaCabeceraAmigos *siguiente;  // Apuntador al siguiente elemento
+											// de la lista enlazada.
 
 } LISTACABECERAAMIGOS;
 
@@ -123,17 +134,23 @@ typedef struct listaCabeceraAmigos {
 //                      DEFINICION DE VARIABLES GLOBALES                      //
 //----------------------------------------------------------------------------//
 
-// 
+// Semaforo que se utiliza para actualizar la lista global de amigos
 pthread_mutex_t semaforoListaAmigos = PTHREAD_MUTEX_INITIALIZER;
-//
+
+// Semaforo que se utiliza para controlar la escritura en el archivo de salida
 pthread_mutex_t semaforoArchivoSalida = PTHREAD_MUTEX_INITIALIZER; 
-//
+
+// Semaforo que se utiliza para indicar que un par de amigos ya fue "reducdido"
 pthread_mutex_t semaforoReduce = PTHREAD_MUTEX_INITIALIZER; 
-//
+
+// Esta lista se utiliza para repartir a los hijos el trabajo de map
 LISTACABECERAMAPH *listaMapH;
-//
+
+// Esta lista se utiiliza para almacenar los amigos y sus amigos luego de 
+// leer el archivo
 LISTAAMIGOS *listaAmigosPadre;
-//
+
+// Esta lista se utiliza para 
 LISTACABECERAAMIGOS *listaCabeceraAmigosPadre;
 
 //----------------------------------------------------------------------------//
@@ -152,10 +169,13 @@ void *hiloMap(void *arg) {
 	/*
 	*
 	* Definicion de la funcion de hilo: Cada hilo que ejecute esta funcion
+	* recibira una lista enlazada de amigos y se encargara de hacerle map
+	* a cada elemento de dicha lista. Al hacer esto, actualizara una 
+	* lista enlazada global de pares de amigos
 	* 
-	*
 	* Parametros de entrada:
-	*	- argc : 
+	*	- argc : Apuntador a la lista enlazada de personas con sus 
+	*   respectivos amigos que le corresponde al hilo para hacer map
 	*
 	* Parametros de salida:
 	* 	- Ninguno.
@@ -331,6 +351,7 @@ void *hiloMap(void *arg) {
 
 	}
 
+	// Indica que el hilo culmino de forma exitosa:
 	return(0);
 
 }
@@ -340,7 +361,7 @@ void *hiloMap(void *arg) {
 void *hiloReduce(void *arg) {
 	/*
 	*
-	* Definicion del hilo:	
+	* Definicion del hilo:
 	*
 	* Parametros de entrada:
 	*
@@ -481,64 +502,16 @@ void *hiloReduce(void *arg) {
 
 	}
 
+	// Indica que el hilo culmino de forma exitosa
 	return(0);
 
 }
-
-//----------------------------------------------------------------------------//
-
-void EliminarEstructuraLista(LISTA **Cabecera,int num) {
-
-	/*
-	*
-	* Definicion del hilo:	
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
-	*/
-
-	// Declaracion de variables:
-
-
-	LISTA *aux;
-	int i;
-	for (i = 0; i < num; ++i){
-
-		aux = Cabecera[i];
-		if (aux==NULL){
-			;
-		}
-		else{
-
-			while(aux!=NULL){
-
-				Cabecera[i] = aux-> siguiente;
-				free(aux->elem);
-				free(aux);
-				aux = Cabecera[i];
-
-			}
-
-		}
-
-	}
-}
-
-//----------------------------------------------------------------------------//
-
-
-
-
-
 
 //----------------------------------------------------------------------------//
 //                          DEFINICION DE FUNCIONES                           //
 //----------------------------------------------------------------------------//
 
 void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTACABECERAMAPH **CabeceraMapH) {
-
 	/*
 	*
 	* Definicion del hilo:	
@@ -725,7 +698,6 @@ int main(int argc, char *argv[]) {
 	}
 
 
-	
 	// Se lee el archivo:
 
 	LeerArchivo(archivoEntrada,numeroHilos,&listaMapH);
@@ -754,12 +726,8 @@ int main(int argc, char *argv[]) {
 		}
 
 	}
-
-
-	// Se elimina la estructura que se creo al leer el archivo:
-	//EliminarEstructuraLista(Cabecera,numeroHilos);
 	
-	// Se espera a que todos los hilos terminen:
+	// Se espera a que todos los hilos que realizan map terminen:
 	for (i = 0; i < numeroHilos; i++) {
 			pthread_join(hilos[i],NULL);
 	}
@@ -778,10 +746,93 @@ int main(int argc, char *argv[]) {
 
 	}
 
+	// Se espera a que todos los hilos que realizan reduce terminen:
+
 	for (i = 0; i < numeroHilos; i++) {
 			pthread_join(hilos[i],NULL);
 	}
 
+
+	/*
+
+	// Se libera la memoria reservada para la lista enlazada global:
+
+	LISTAAMIGOS *auxLiberar;
+	LISTAAMIGOS *auxSiguiente;
+
+	auxLiberar = listaAmigosPadre;
+
+
+	while (auxLiberar != NULL) {
+
+		auxSiguiente = auxLiberar->siguiente;
+
+		free(auxLiberar->persona1);
+		free(auxLiberar->persona2);
+
+		LISTA *auxLista;
+		LISTA *auxListaSiguiente;
+
+		auxLista = auxLiberar->amigos1;
+
+		while (auxLista != NULL) {
+
+			auxListaSiguiente = auxLista->siguiente;
+
+			free(auxLista);
+
+			auxLista = auxListaSiguiente;
+
+		}
+
+		auxLista = auxLiberar->amigos2;
+
+		while (auxLista != NULL) {
+
+			auxListaSiguiente = auxLista->siguiente;
+
+			free(auxLista);
+
+			auxLista = auxListaSiguiente;
+
+
+		}
+
+
+		free(auxLiberar);
+
+		auxLiberar = auxSiguiente;
+
+
+	}
+
+
+	// Se libera la memoria reservada de las listas de reparticion de Map:
+
+
+	LISTACABECERAMAPH *auxMap;
+	LISTACABECERAMAPH *auxMapSiguiente;
+
+	auxMap = listaMapH;
+
+	while (auxMap != NULL) {
+
+		auxMapSiguiente = auxMap->siguiente;
+
+		free(auxMap);
+
+		auxMap = auxMapSiguiente;
+
+
+	}
+
+	*/
+
+
 	return(0);
 
 }
+
+//----------------------------------------------------------------------------//
+//                             FIN DEL CODIGO PRINCIPAL                       //
+//----------------------------------------------------------------------------//

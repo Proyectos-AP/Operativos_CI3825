@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
 				if(feof(archivoEntrada)== 1){
 					FinalArchivo = 1;
 					fclose(archivoEntrada);	
-					remove(argv[0]);
+					//remove(argv[0]);
 				}
 
 			}
