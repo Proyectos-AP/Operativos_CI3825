@@ -387,6 +387,8 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 
 	for (i = 0; i < numeroArchivos; i++) {
 	
+
+		printf("El valor de i actual es: %d\n",i);
 		// Se transforma el nombre del archivo en string:
 		sprintf(nombreSalida, "%d",NombreArchivos[i]);
 		// Se concatena el nombre del archivo con ".txt"
@@ -422,7 +424,15 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 					Amigos = (char*)malloc(sizeof(char)*30);
 
 					fscanf(archivoProcesos," ( %[^ (] %[^ )] ) -> %[^\n]\n" ,Persona1,Persona2,Amigos);
-						
+
+					/*
+					printf("--------------------------\n");
+					printf("Persona 1: %s\n",Persona1);
+					printf("Persona 2: %s\n",Persona2);
+					printf("Amigos 1: %s\n",Amigos);
+					printf("--------------------------\n");
+					*/
+
 					// Se agrega la informacion a la lista enlazada de personas:
 
 					aux = *listaAmigos;
@@ -430,6 +440,7 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 					// La lista enlazada esta vacia:
 					if (aux == NULL) {
 
+						printf("Entre aca\n");
 						// Se crea un nuevo nodo
 						nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 						nueva_caja->listo = 0;
@@ -438,7 +449,6 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 						nueva_caja->amigos1=Amigos;
 						nueva_caja->amigos2 = NULL;
 						nueva_caja->siguiente=NULL;
-
 						*listaAmigos=nueva_caja;
 
 					}
@@ -446,15 +456,42 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 					else {
 
 						while (aux != NULL) {
+							//printf("Entre aqui\n");
+
 
 							// El nodo ya posee toda la informacion que se requiere
 							if (aux->listo == 1 ) {
-								aux = aux->siguiente;
+
+								if (aux->siguiente == NULL) {
+
+									//printf("--------------------------\n");
+									//printf("Persona 1: %s\n",aux->persona1);
+									//printf("Persona 2: %s\n",aux->persona2);
+									//printf("Amigos 1: %s\n",aux->amigos1);
+									//printf("Amigos 2: %s\n",aux->amigos2);
+									//printf("--------------------------\n");
+									// Se crea un nuevo nodo
+									nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+									nueva_caja->listo = 0;
+									nueva_caja->persona1=Persona1;
+									nueva_caja->persona2=Persona2;
+									nueva_caja->amigos1=Amigos;
+									nueva_caja->amigos2 = NULL;
+									nueva_caja->siguiente=NULL;
+									aux->siguiente = nueva_caja;
+									break;
+
+								}
+
+								else {
+									
+									aux = aux->siguiente;
+								}
 							}
 
 							else {
 
-								// Se comparan los nombre se las personas para
+								// Se comparan los nombres de las personas para
 								// eliminar redundancias
 								if ( ((strcmp(aux->persona1,Persona2)) == 0) \
 									&& (strcmp(aux->persona2,Persona1) == 0) ) {
@@ -481,6 +518,14 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 									//la lista enlazada.
 									if (aux->siguiente == NULL) {
 
+
+										//printf("--------------------------\n");
+										//printf("Persona 1: %s\n",aux->persona1);
+										//printf("Persona 2: %s\n",aux->persona2);
+										//printf("Amigos 1: %s\n",aux->amigos1);
+										//printf("Amigos 2: %s\n",aux->amigos2);
+										//printf("--------------------------\n");
+
 										// Se crea un nuevo nodo
 										nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 										nueva_caja->listo = 0;
@@ -493,9 +538,7 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 										break;
 
 									}
-									else{
-										
-										}
+									
 									aux = aux->siguiente;
 
 								}
@@ -521,6 +564,24 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 		}
 
 	}
+
+
+	aux = *listaAmigos;
+
+	while (aux != NULL) {
+
+		printf("--------------------------\n");
+		printf("Persona 1: %s\n",aux->persona1);
+		printf("Persona 2: %s\n",aux->persona2);
+		printf("Amigos 1: %s\n",aux->amigos1);
+		printf("Amigos 2: %s\n",aux->amigos2);
+		printf("--------------------------\n");
+
+		aux = aux->siguiente;
+
+	}
+
+	
 }
 
 //----------------------------------------------------------------------------//
