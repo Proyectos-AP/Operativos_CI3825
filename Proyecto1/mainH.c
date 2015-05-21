@@ -253,6 +253,65 @@ void EliminarRedundancia(LISTAAMIGOS **listaAmigosPadre){
 
 //----------------------------------------------------------------------------//
 
+int ReduceDeHilos(LISTAAMIGOS *auxListaPadres,LISTA **CabeceraLista){
+	
+	// Se hace reduce:
+				LISTA *nuevaCajaLista;
+				LISTA *auxLista;
+				LISTA *aux1;
+				LISTA *aux2;
+				
+				
+				aux1 = auxListaPadres->amigos1;
+				auxLista=*CabeceraLista;
+				int amigosEnComun = 0;
+
+				while (aux1 != NULL) {
+					
+						aux2 = auxListaPadres->amigos2;
+
+						while(aux2 != NULL) {
+
+							if (strcmp(aux1->elem,aux2->elem) == 0) {
+
+								amigosEnComun = 1;
+
+								if (auxLista == NULL) {
+
+									nuevaCajaLista = (LISTA*)malloc(sizeof(LISTA));
+									nuevaCajaLista->elem = aux1->elem;
+									*CabeceraLista = nuevaCajaLista;
+									auxLista = *CabeceraLista;
+								}
+								else{
+									auxLista = *CabeceraLista;
+									while(auxLista->siguiente!=NULL){
+										auxLista = auxLista->siguiente;
+									}
+									nuevaCajaLista = (LISTA*)malloc(sizeof(LISTA));
+									nuevaCajaLista->elem = aux1->elem;
+									auxLista->siguiente=nuevaCajaLista;
+
+								}
+
+								
+								break;
+
+							}
+
+							aux2 = aux2->siguiente;
+
+
+						}
+
+						aux1 = aux1->siguiente;
+
+					}
+					
+		return amigosEnComun; 
+	}
+//----------------------------------------------------------------------------//
+
 void *hiloMap(void *arg) {
 	/*
 	*
@@ -501,11 +560,10 @@ void *hiloReduce(void *arg) {
 	FILE *archivo_salida;
 	LISTAAMIGOS *auxListaPadres;
 	LISTA *aux1;
-	LISTA *aux2;
+	//LISTA *aux2;
 
 	LISTA *CabeceraLista=NULL;
-	LISTA *auxLista;
-	LISTA *nuevaCajaLista;
+	//LISTA *nuevaCajaLista;
 	int amigosEnComun = 0;
 
 	auxListaPadres = listaAmigosPadre;
@@ -533,58 +591,12 @@ void *hiloReduce(void *arg) {
 			}
 
 			else {
+				
+				// Se realiza reduce:
 
-				// Se hace reduce:
-
-				aux1 = auxListaPadres->amigos1;
-				auxLista=CabeceraLista;
-				amigosEnComun = 0;
-
-				while (aux1 != NULL) {
-
-
-						aux2 = auxListaPadres->amigos2;
-
-						while(aux2 != NULL) {
-
-							if (strcmp(aux1->elem,aux2->elem) == 0) {
-
-								amigosEnComun = 1;
-
-								if (auxLista == NULL) {
-
-									nuevaCajaLista = (LISTA*)malloc(sizeof(LISTA));
-									nuevaCajaLista->elem = aux1->elem;
-									CabeceraLista = nuevaCajaLista;
-									auxLista = CabeceraLista;
-								}
-								else{
-									auxLista = CabeceraLista;
-									while(auxLista->siguiente!=NULL){
-										auxLista = auxLista->siguiente;
-									}
-									nuevaCajaLista = (LISTA*)malloc(sizeof(LISTA));
-									nuevaCajaLista->elem = aux1->elem;
-									auxLista->siguiente=nuevaCajaLista;
-
-								}
-
-								
-								break;
-
-							}
-
-							aux2 = aux2->siguiente;
-
-
-						}
-
-						aux1 = aux1->siguiente;
-
-					}
-
-
-		
+				amigosEnComun=ReduceDeHilos(auxListaPadres,&CabeceraLista);
+				
+				
 				pthread_mutex_lock(&semaforoArchivoSalida);
 
 				archivo_salida = fopen(arg,"a");
@@ -819,27 +831,29 @@ void LeerArchivo(char *nombre_archivo,int numeroProcesos,LISTACABECERAMAPH **Cab
 
 int main(int argc, char *argv[]) {
 	/*
-	*
-	* Definicion de la funcion:	codigo principal. Se encarga de la creacion y 
-	* manejo de los hilos que realizaran la busqueda de los amigos en comun
-	* con el uso de las funciones map y reduce.
-	*
-	* Parametros de entrada:
-	* 	argc : Numero de elementos pasador por consola en argv
-	* 	argv : Arreglo que contiene los parametros pasados por consola
-	*		   al momento de ejecutar el programa.
-	*
-	* Parametros de salida:
-	*	int  : Indica culminacion  de la ejecucion del programa. 
-	*	(0 - Exitosa / 1 - Fallida)
-	*
+	
+	 Definicion de la funcion:	codigo principal. Se encarga de la creacion y 
+	 manejo de los hilos que realizaran la busqueda de los amigos en comun
+	 con el uso de las funciones map y reduce.
+	
+	 Parametros de entrada:
+	 	argc : Numero de elementos pasador por consola en argv
+	 	argv : Arreglo que contiene los parametros pasados por consola
+			   al momento de ejecutar el programa.
+	
+	 Parametros de salida:
+		int  : Indica culminacion  de la ejecucion del programa. 
+		(0 - Exitosa / 1 - Fallida)
+	
 	*/
 
 	// Declaracion de variables:
-
 	int numeroHilos;
+	int i;
 	char *archivoEntrada;
 	char *archivoSalida;
+	FILE *archivo_Salida;
+	//LISTAAMIGOS *aux;
 
 	if (argc == 3) {
 
@@ -880,20 +894,13 @@ int main(int argc, char *argv[]) {
 
 	LeerArchivo(archivoEntrada,numeroHilos,&listaMapH);
 	
-	// Se crea la lista enlazada generica sobre la que trabajaran los hilos:
+	// Se crea la lista enlazada generica sobre la que se trabajaran los hilos:
 	int r[numeroHilos];
 	pthread_t hilos[numeroHilos];	
 	char argumentos[numeroHilos][20];
 
-
-	// Se crea el archivo de salida:
-
-	FILE *archivo_Salida;
-	archivo_Salida = fopen(archivoSalida,"a");
-	fclose(archivo_Salida);
-
 	// Se inicializan los hilos:
-	int i;
+	
 	for (i = 0; i < numeroHilos; i++) {
 
 		sprintf(argumentos[i], "%d", i);
@@ -913,17 +920,14 @@ int main(int argc, char *argv[]) {
 			pthread_join(hilos[i],NULL);
 	}
 
-	//printf(" %s",listaDeAmigos->persona1);
+	
 
 	// Se eliminan las redundancias de la lista enlazada actualizada por 
 	//los hilos:
-
-	
 	EliminarRedundancia(&listaAmigosPadre);
-
-	LISTAAMIGOS *aux;
-
-	aux = listaAmigosPadre;
+	
+	
+	//aux = listaAmigosPadre;
 
 	/*
 	while (aux != NULL) {
@@ -963,7 +967,12 @@ int main(int argc, char *argv[]) {
 */
 	
 	
-
+	
+	// Se crea el archivo de salida:
+	
+	archivo_Salida = fopen(archivoSalida,"a");
+	fclose(archivo_Salida);
+	
 	// Se crean los hilos que haran reduce y escribiran en el archivo
 	// de salida:
 
