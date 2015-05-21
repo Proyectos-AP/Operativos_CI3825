@@ -310,6 +310,41 @@ int ReduceDeHilos(LISTAAMIGOS *auxListaPadres,LISTA **CabeceraLista){
 					
 		return amigosEnComun; 
 	}
+	
+//----------------------------------------------------------------------------//
+
+void ImprimirEnArchivoSalida(LISTAAMIGOS *auxListaPadres,FILE *archivo_salida,LISTA *CabeceraLista,int amigosEnComun){
+	
+	LISTA *aux1;
+	
+	fprintf(archivo_salida,"(%s %s) -> ",auxListaPadres->persona1,auxListaPadres->persona2);
+
+	if (amigosEnComun == 0) {
+
+		fprintf(archivo_salida,"-None-");
+
+	}
+
+	else {
+
+		aux1 = CabeceraLista;
+					
+		while (CabeceraLista != NULL) {
+
+			aux1 = CabeceraLista;
+			CabeceraLista = aux1->siguiente;
+
+			fprintf(archivo_salida,"%s ",aux1->elem);
+
+			free(aux1);
+
+		}
+
+	}
+	
+	fprintf(archivo_salida,"\n");
+	
+	}
 //----------------------------------------------------------------------------//
 
 void *hiloMap(void *arg) {
@@ -425,7 +460,7 @@ void *hiloMap(void *arg) {
 
 								if (auxCabecera->siguiente == NULL) {
 
-										// Se crea un nuevo nodo
+									// Se crea un nuevo nodo
 										
 									nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 									nuevaCaja->reduced = 0;
@@ -556,10 +591,9 @@ void *hiloReduce(void *arg) {
 
 	//printf("entre al reduce\n");
 
-
 	FILE *archivo_salida;
 	LISTAAMIGOS *auxListaPadres;
-	LISTA *aux1;
+	//LISTA *aux1;
 	//LISTA *aux2;
 
 	LISTA *CabeceraLista=NULL;
@@ -582,6 +616,7 @@ void *hiloReduce(void *arg) {
 
 				archivo_salida = fopen(arg,"a");
 
+				// Se imprime en el archivo de salida: 
 				fprintf(archivo_salida,"(%s %s) -> -None-\n",auxListaPadres->persona1,auxListaPadres->persona2);
 
 				fclose(archivo_salida);
@@ -593,40 +628,15 @@ void *hiloReduce(void *arg) {
 			else {
 				
 				// Se realiza reduce:
-
 				amigosEnComun=ReduceDeHilos(auxListaPadres,&CabeceraLista);
 				
 				
 				pthread_mutex_lock(&semaforoArchivoSalida);
-
+				
 				archivo_salida = fopen(arg,"a");
 
-				fprintf(archivo_salida,"(%s %s) -> ",auxListaPadres->persona1,auxListaPadres->persona2);
-
-				if (amigosEnComun == 0) {
-
-					fprintf(archivo_salida,"-None-");
-
-				}
-
-				else {
-
-					aux1 = CabeceraLista;
-					
-					while (CabeceraLista != NULL) {
-
-						aux1 = CabeceraLista;
-						CabeceraLista = aux1->siguiente;
-
-						fprintf(archivo_salida,"%s ",aux1->elem);
-
-						free(aux1);
-
-					}
-
-				}
-
-				fprintf(archivo_salida,"\n");
+				// Se imprime en el archivo de salida: 
+				ImprimirEnArchivoSalida(auxListaPadres,archivo_salida,CabeceraLista,amigosEnComun);
 
 				fclose(archivo_salida);
 
@@ -640,8 +650,6 @@ void *hiloReduce(void *arg) {
 		auxListaPadres = auxListaPadres->siguiente;
 
 	}
-
-	//printf("sali del reduce\n");
 
 	return(0);
 
