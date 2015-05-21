@@ -190,6 +190,66 @@ void EliminarEstructuraLista(LISTA **Cabecera){
 	}
 
 }
+//----------------------------------------------------------------------------//
+
+void EliminarRedundancia(LISTAAMIGOS **listaAmigosPadre){
+	
+	LISTAAMIGOS *aux1;
+	LISTAAMIGOS *aux2;
+	LISTAAMIGOS *anterior;
+
+	aux1 = *listaAmigosPadre;
+
+	while (aux1 != NULL) {
+
+		//printf("aqui es 3\n");
+		aux2 = aux1->siguiente;
+		anterior = aux1->siguiente;
+		//printf("aqui es 4\n");
+
+		while (aux2 != NULL) {
+
+			//printf("--------------------------\n");
+			//printf("Estoy comparando: %s  %s \n",aux1->persona1,aux1->persona2);
+			//printf(" Con: %s  %s \n",aux2->persona1,aux2->persona2);
+			//printf("--------------------------\n");
+
+			if ( ((strcmp(aux1->persona1,aux2->persona2)) == 0) && (strcmp(aux1->persona2,aux2->persona1) == 0) ) {
+
+
+				if (aux1->amigos1 == NULL) {
+
+					aux1->amigos1 = aux2->amigos1;
+
+				}
+
+				else if (aux1->amigos2 == NULL) {
+
+					aux1->amigos2 = aux2->amigos1;
+
+
+				}
+
+				aux2->siguiente = NULL;
+
+				anterior->siguiente = aux2->siguiente;
+				aux2 = anterior;
+
+
+			}
+
+			
+			anterior = aux2;
+			aux2 = aux2->siguiente;
+
+		}
+
+		//printf("pase 1\n");
+		aux1 = aux1->siguiente;
+		//printf("pase 2\n");
+	}
+	
+	}
 
 //----------------------------------------------------------------------------//
 
@@ -624,13 +684,6 @@ void EliminarListaAmigos(LISTAAMIGOS **lista) {
 }
 
 //----------------------------------------------------------------------------//
-
-
-
-
-
-
-//----------------------------------------------------------------------------//
 //                          DEFINICION DE FUNCIONES                           //
 //----------------------------------------------------------------------------//
 
@@ -865,67 +918,14 @@ int main(int argc, char *argv[]) {
 	// Se eliminan las redundancias de la lista enlazada actualizada por 
 	//los hilos:
 
-	LISTAAMIGOS *aux1;
-	LISTAAMIGOS *aux2;
-	LISTAAMIGOS *anterior;
-
-	aux1 = listaAmigosPadre;
-
-	while (aux1 != NULL) {
-
-		//printf("aqui es 3\n");
-		aux2 = aux1->siguiente;
-		anterior = aux1->siguiente;
-		//printf("aqui es 4\n");
-
-		while (aux2 != NULL) {
-
-			//printf("--------------------------\n");
-			//printf("Estoy comparando: %s  %s \n",aux1->persona1,aux1->persona2);
-			//printf(" Con: %s  %s \n",aux2->persona1,aux2->persona2);
-			//printf("--------------------------\n");
-
-			if ( ((strcmp(aux1->persona1,aux2->persona2)) == 0) && (strcmp(aux1->persona2,aux2->persona1) == 0) ) {
-
-
-				if (aux1->amigos1 == NULL) {
-
-					aux1->amigos1 = aux2->amigos1;
-
-				}
-
-				else if (aux1->amigos2 == NULL) {
-
-					aux1->amigos2 = aux2->amigos1;
-
-
-				}
-
-				aux2->siguiente = NULL;
-
-				anterior->siguiente = aux2->siguiente;
-				aux2 = anterior;
-
-
-			}
-
-			
-			anterior = aux2;
-			aux2 = aux2->siguiente;
-
-		}
-
-		//printf("pase 1\n");
-		aux1 = aux1->siguiente;
-		//printf("pase 2\n");
-	}
-
+	
+	EliminarRedundancia(&listaAmigosPadre);
 
 	LISTAAMIGOS *aux;
 
 	aux = listaAmigosPadre;
 
-	
+	/*
 	while (aux != NULL) {
 
 		//printf("--------------------------\n");
@@ -960,7 +960,7 @@ int main(int argc, char *argv[]) {
 		aux = aux->siguiente;
 
 	}
-
+*/
 	
 	
 
