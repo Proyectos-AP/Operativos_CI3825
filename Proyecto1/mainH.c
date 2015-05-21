@@ -346,19 +346,42 @@ void ImprimirEnArchivoSalida(LISTAAMIGOS *auxListaPadres,FILE *archivo_salida,LI
 	
 	}
 //----------------------------------------------------------------------------//
+void AgregarNodoListaAmigos(LISTAAMIGOS **listaAmigosPadre,char *persona1,char *persona2,LISTA *Amigos){
+	
+	LISTAAMIGOS *auxCabecera;
+	auxCabecera = *listaAmigosPadre;
+	while(auxCabecera->siguiente!=NULL){
+		auxCabecera = auxCabecera->siguiente;
+	}
+	
+	printf("Persona1: %s\n",persona1);
+	printf("Persona2: %s\n",persona2);
+	LISTAAMIGOS *nuevaCaja;
+	nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+	nuevaCaja->reduced = 0;
+	nuevaCaja->persona1= persona1;
+	nuevaCaja->persona2=persona1;
+	nuevaCaja->amigos1=Amigos;
+	nuevaCaja->amigos2 = NULL;
+	nuevaCaja->siguiente=NULL;
+	auxCabecera->siguiente = nuevaCaja;
+	
+	}
+
+//----------------------------------------------------------------------------//
 
 void *hiloMap(void *arg) {
 	/*
-	*
-	* Definicion de la funcion de hilo: Cada hilo que ejecute esta funcion
-	* 
-	*
-	* Parametros de entrada:
-	*	- argc : 
-	*
-	* Parametros de salida:
-	* 	- Ninguno.
-	*
+	
+	 Definicion de la funcion de hilo: Cada hilo que ejecute esta funcion
+	 
+	
+	 Parametros de entrada:
+		- argc : 
+	
+	 Parametros de salida:
+	 	- Ninguno.
+	
 	*/
 
 	// Declaracion de variables:
@@ -367,6 +390,7 @@ void *hiloMap(void *arg) {
 	LISTACABECERAMAPH *temp1 = listaMapH; 
 	int contador = 0;
 	char contadorStr[20];
+	LISTAAMIGOS temporal;
 
 
 	sprintf(contadorStr, "%d", contador);
@@ -395,8 +419,6 @@ void *hiloMap(void *arg) {
 
 		// Se construye la lista enlazada de amigos:
 
-		nuevaCajaAmigos = (LISTA*)malloc(sizeof(LISTA));
-
 		token = strtok_r(auxHilo->amigos," ",&saveptr);
 
 		if (strcmp(token,"-None-") == 0) {
@@ -405,9 +427,8 @@ void *hiloMap(void *arg) {
 
 		else {
 
-			
+			nuevaCajaAmigos = (LISTA*)malloc(sizeof(LISTA));
 			nuevaCajaAmigos->elem = token;
-
 			amigos = nuevaCajaAmigos;
 			auxAmigos = nuevaCajaAmigos;
 
@@ -462,6 +483,12 @@ void *hiloMap(void *arg) {
 
 									// Se crea un nuevo nodo
 										
+									pthread_mutex_lock(&semaforoListaAmigos);
+									auxCabecera = listaAmigosPadre;
+									while (auxCabecera->siguiente!=NULL) {
+										auxCabecera = auxCabecera->siguiente;
+									}
+								
 									nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 									nuevaCaja->reduced = 0;
 									nuevaCaja->persona1= auxHilo->persona;
@@ -469,13 +496,6 @@ void *hiloMap(void *arg) {
 									nuevaCaja->amigos1=amigos;
 									nuevaCaja->amigos2 = NULL;
 									nuevaCaja->siguiente=NULL;
-
-									pthread_mutex_lock(&semaforoListaAmigos);
-									auxCabecera = listaAmigosPadre;
-									while (auxCabecera->siguiente!=NULL) {
-										auxCabecera = auxCabecera->siguiente;
-									}
-									//printf("HICE UNA CAJA\n");
 									auxCabecera->siguiente = nuevaCaja;
 									pthread_mutex_unlock(&semaforoListaAmigos);
 
@@ -522,6 +542,12 @@ void *hiloMap(void *arg) {
 
 										// Se crea un nuevo nodo
 										
+										
+										while (auxCabecera->siguiente!=NULL) {
+											auxCabecera = auxCabecera->siguiente;
+										}	
+																
+										pthread_mutex_lock(&semaforoListaAmigos);
 										nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 										nuevaCaja->reduced = 0;
 										nuevaCaja->persona1= auxHilo->persona;
@@ -529,17 +555,9 @@ void *hiloMap(void *arg) {
 										nuevaCaja->amigos1=amigos;
 										nuevaCaja->amigos2 = NULL;
 										nuevaCaja->siguiente=NULL;
-
-										pthread_mutex_lock(&semaforoListaAmigos);
-										//printf("HICE UNA CAJA\n");
-										while(auxCabecera->siguiente!=NULL){
-											auxCabecera = auxCabecera->siguiente;
-										}
 										auxCabecera->siguiente = nuevaCaja;
+										
 										pthread_mutex_unlock(&semaforoListaAmigos);
-
-										auxCabecera = nuevaCaja;
-
 										break;
 
 									}
@@ -578,28 +596,23 @@ void *hiloMap(void *arg) {
 
 void *hiloReduce(void *arg) {
 	/*
-	*
-	* Definicion del hilo:	
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
+	
+	 Definicion del hilo:	
+	
+	 Parametros de entrada:
+
+	 Parametros de salida:
+	
 	*/
 
 	// Declaracion de variables:
-
-	//printf("entre al reduce\n");
-
+	int amigosEnComun;
 	FILE *archivo_salida;
 	LISTAAMIGOS *auxListaPadres;
-	//LISTA *aux1;
-	//LISTA *aux2;
-
 	LISTA *CabeceraLista=NULL;
-	//LISTA *nuevaCajaLista;
-	int amigosEnComun = 0;
+	
 
+	// Inicializacion de variables:
 	auxListaPadres = listaAmigosPadre;
 
 	while (auxListaPadres != NULL) {
