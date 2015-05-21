@@ -136,6 +136,7 @@ LISTAAMIGOS *listaAmigosPadre;
 //
 LISTACABECERAAMIGOS *listaCabeceraAmigosPadre;
 
+
 //----------------------------------------------------------------------------//
 //                  DEFINICION DE FUNCIONES DE HILOS (FIRMAS)                 //
 //----------------------------------------------------------------------------//
@@ -147,6 +148,50 @@ void *hiloReduce(void *arg);
 //                     DEFINICION DE FUNCIONES DE HILOS                       //
 //----------------------------------------------------------------------------//
 
+
+//----------------------------------------------------------------------------//
+
+void EliminarEstructuraLista(LISTA **Cabecera){
+
+	/*
+
+		Definicion de la funcion:	
+			Esta funcion destruye una estructura del tipo LISTA.
+	
+		Parametros de entrada:
+
+			- Cabecera : Direccion de memoria de una caberera de una estructuta 
+						del tipo LISTA.
+	
+	 	Parametros de salida:
+	 		Ninguno.
+	
+	*/
+
+	// Declaracion de variables:
+	LISTA *aux;
+	aux = *Cabecera;
+
+
+	if (*Cabecera==NULL){
+		;
+	}
+	else{
+
+		while(*Cabecera!=NULL){
+
+			aux = *Cabecera;
+			*Cabecera= aux->siguiente;
+			//free(aux->elem);
+			free(aux);
+
+		}
+
+	}
+
+}
+
+//----------------------------------------------------------------------------//
 
 void *hiloMap(void *arg) {
 	/*
@@ -192,12 +237,13 @@ void *hiloMap(void *arg) {
 		LISTAAMIGOS *auxCabecera;
 		LISTAAMIGOS *nuevaCaja;
 		char *token;
+		char *saveptr;
 
 		// Se construye la lista enlazada de amigos:
 
 		nuevaCajaAmigos = (LISTA*)malloc(sizeof(LISTA));
 
-		token = strtok(auxHilo->amigos," ");
+		token = strtok_r(auxHilo->amigos," ",&saveptr);
 
 		if (strcmp(token,"-None-") == 0) {
 			;
@@ -214,7 +260,7 @@ void *hiloMap(void *arg) {
 
 			while (token != NULL) {
 
-				token = strtok(NULL," ");
+				token = strtok_r(NULL," ",&saveptr);
 
 					if (token != NULL ){ 
 
@@ -235,12 +281,13 @@ void *hiloMap(void *arg) {
 				auxCabecera = listaAmigosPadre;
 
 				if (auxCabecera == NULL) {
-
+				
 					nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 					nuevaCaja->reduced = 0;
 					nuevaCaja->persona1= auxHilo->persona;
 					nuevaCaja->persona2=auxAmigos->elem;
 					nuevaCaja->amigos1=amigos;
+					nuevaCaja->amigos2 = NULL;
 
 					pthread_mutex_lock(&semaforoListaAmigos);
 					listaAmigosPadre = nuevaCaja; 
@@ -256,7 +303,38 @@ void *hiloMap(void *arg) {
 					while (auxCabecera != NULL) {
 
 							if (auxCabecera->listo == 1 ) {
-								auxCabecera = auxCabecera->siguiente;
+
+								if (auxCabecera->siguiente == NULL) {
+
+										// Se crea un nuevo nodo
+										
+									nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
+									nuevaCaja->reduced = 0;
+									nuevaCaja->persona1= auxHilo->persona;
+									nuevaCaja->persona2=auxAmigos->elem;
+									nuevaCaja->amigos1=amigos;
+									nuevaCaja->amigos2 = NULL;
+									nuevaCaja->siguiente=NULL;
+
+									pthread_mutex_lock(&semaforoListaAmigos);
+									auxCabecera = listaAmigosPadre;
+									while (auxCabecera->siguiente!=NULL) {
+										auxCabecera = auxCabecera->siguiente;
+									}
+									//printf("HICE UNA CAJA\n");
+									auxCabecera->siguiente = nuevaCaja;
+									pthread_mutex_unlock(&semaforoListaAmigos);
+
+
+									auxCabecera = nuevaCaja;
+									break;
+
+								}
+
+								else {
+
+									auxCabecera = auxCabecera->siguiente;
+								}
 							}
 
 							else {
@@ -289,6 +367,7 @@ void *hiloMap(void *arg) {
 									if (auxCabecera->siguiente == NULL) {
 
 										// Se crea un nuevo nodo
+										
 										nuevaCaja=(LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 										nuevaCaja->reduced = 0;
 										nuevaCaja->persona1= auxHilo->persona;
@@ -298,6 +377,10 @@ void *hiloMap(void *arg) {
 										nuevaCaja->siguiente=NULL;
 
 										pthread_mutex_lock(&semaforoListaAmigos);
+										//printf("HICE UNA CAJA\n");
+										while(auxCabecera->siguiente!=NULL){
+											auxCabecera = auxCabecera->siguiente;
+										}
 										auxCabecera->siguiente = nuevaCaja;
 										pthread_mutex_unlock(&semaforoListaAmigos);
 
@@ -325,6 +408,8 @@ void *hiloMap(void *arg) {
 
 		}
 
+		//EliminarEstructuraLista(&amigos);
+
 		}
 
 		auxHilo = auxHilo->siguiente;
@@ -349,6 +434,9 @@ void *hiloReduce(void *arg) {
 	*/
 
 	// Declaracion de variables:
+
+	//printf("entre al reduce\n");
+
 
 	FILE *archivo_salida;
 	LISTAAMIGOS *auxListaPadres;
@@ -481,48 +569,57 @@ void *hiloReduce(void *arg) {
 
 	}
 
+	//printf("sali del reduce\n");
+
 	return(0);
 
 }
 
-//----------------------------------------------------------------------------//
 
-void EliminarEstructuraLista(LISTA **Cabecera,int num) {
+void EliminarListaAmigos(LISTAAMIGOS **lista) {
 
 	/*
-	*
-	* Definicion del hilo:	
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
+
+		Definicion de la funcion:	
+			Esta funcion destruye una estructura del tipo LISTAAMIGOS.
+
+		Parametros de entrada:
+
+			- lista : Direccion de la cabecera de una estructura del 
+						tipopLISTAAMIGOS.
+		
+	 	Parametros de salida:
+	 		Ninguno.
+	
 	*/
 
 	// Declaracion de variables:
+	LISTAAMIGOS *aux;
 
+	// Caso en donde la estructura no tiene elementos.
+	if(*lista==NULL){
+		;
+	}
 
-	LISTA *aux;
-	int i;
-	for (i = 0; i < num; ++i){
+	// Caso en donde la estructura tiene al menos un elemento.
+	else{
 
-		aux = Cabecera[i];
-		if (aux==NULL){
-			;
-		}
-		else{
+		while(*lista!=NULL){
 
-			while(aux!=NULL){
+			aux=*lista;
+			*lista=aux->siguiente;
+			//free(aux->persona1);
+			//free(aux->persona2);
 
-				Cabecera[i] = aux-> siguiente;
-				free(aux->elem);
-				free(aux);
-				aux = Cabecera[i];
-
+			if(aux->amigos1!=NULL){
+				EliminarEstructuraLista(&aux->amigos1);
 			}
 
+			if(aux->amigos2!=NULL){
+				EliminarEstructuraLista(&aux->amigos2);
+			}
+			free(aux);
 		}
-
 	}
 }
 
@@ -755,7 +852,6 @@ int main(int argc, char *argv[]) {
 
 	}
 
-
 	// Se elimina la estructura que se creo al leer el archivo:
 	//EliminarEstructuraLista(Cabecera,numeroHilos);
 	
@@ -763,6 +859,110 @@ int main(int argc, char *argv[]) {
 	for (i = 0; i < numeroHilos; i++) {
 			pthread_join(hilos[i],NULL);
 	}
+
+	//printf(" %s",listaDeAmigos->persona1);
+
+	// Se eliminan las redundancias de la lista enlazada actualizada por 
+	//los hilos:
+
+	LISTAAMIGOS *aux1;
+	LISTAAMIGOS *aux2;
+	LISTAAMIGOS *anterior;
+
+	aux1 = listaAmigosPadre;
+
+	while (aux1 != NULL) {
+
+		//printf("aqui es 3\n");
+		aux2 = aux1->siguiente;
+		anterior = aux1->siguiente;
+		//printf("aqui es 4\n");
+
+		while (aux2 != NULL) {
+
+			//printf("--------------------------\n");
+			//printf("Estoy comparando: %s  %s \n",aux1->persona1,aux1->persona2);
+			//printf(" Con: %s  %s \n",aux2->persona1,aux2->persona2);
+			//printf("--------------------------\n");
+
+			if ( ((strcmp(aux1->persona1,aux2->persona2)) == 0) && (strcmp(aux1->persona2,aux2->persona1) == 0) ) {
+
+
+				if (aux1->amigos1 == NULL) {
+
+					aux1->amigos1 = aux2->amigos1;
+
+				}
+
+				else if (aux1->amigos2 == NULL) {
+
+					aux1->amigos2 = aux2->amigos1;
+
+
+				}
+
+				aux2->siguiente = NULL;
+
+				anterior->siguiente = aux2->siguiente;
+				aux2 = anterior;
+
+
+			}
+
+			
+			anterior = aux2;
+			aux2 = aux2->siguiente;
+
+		}
+
+		//printf("pase 1\n");
+		aux1 = aux1->siguiente;
+		//printf("pase 2\n");
+	}
+
+
+	LISTAAMIGOS *aux;
+
+	aux = listaAmigosPadre;
+
+	
+	while (aux != NULL) {
+
+		//printf("--------------------------\n");
+		//printf("Persona 1: %s\n",aux->persona1);
+		//printf("Persona 2: %s\n",aux->persona2);
+
+		LISTA *aux1;
+		LISTA *aux2;
+
+		aux1 = aux->amigos1;
+
+		//printf("Amigos 1: ");
+		while (aux1 != NULL) {
+
+			//printf("%s ",aux1->elem);
+			aux1 = aux1->siguiente;
+		}
+
+		//printf("\n");
+
+		aux2 = aux->amigos2;
+
+		//printf("Amigos 2: ");
+		while (aux2 != NULL) {
+
+			//printf("%s ",aux2->elem);
+			aux2 = aux2->siguiente;
+		}
+
+		//printf("\n--------------------------\n");
+
+		aux = aux->siguiente;
+
+	}
+
+	
+	
 
 	// Se crean los hilos que haran reduce y escribiran en el archivo
 	// de salida:
@@ -781,6 +981,13 @@ int main(int argc, char *argv[]) {
 	for (i = 0; i < numeroHilos; i++) {
 			pthread_join(hilos[i],NULL);
 	}
+
+	archivo_Salida = fopen(archivoSalida,"a");
+	fprintf(archivo_Salida,"\n\n");
+	fclose(archivo_Salida);
+
+	EliminarListaAmigos(&listaAmigosPadre);
+	printf("termine\n");
 
 	return(0);
 
