@@ -570,13 +570,8 @@ int main(int argc, char *argv[]) {
 			pthread_join(hilos[i],NULL);
 	}
 
-	// Por eliminar
-	archivo_Salida = fopen(archivoSalida,"a");
-	fprintf(archivo_Salida,"\n\n");
-	fclose(archivo_Salida);
-
 	EliminarListaAmigos(&listaAmigosPadre);
-	printf("termine\n");
+
 
 	return(0);
 
