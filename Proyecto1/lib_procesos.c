@@ -342,9 +342,6 @@ void mapProcesos(char *Persona,char *Amigos, FILE *archivoSalida){
 			aux = aux->siguiente;
 		}
 
-		// Se destruye la estructura creada
-		//EliminarEstructuraLista(&listaAmigos);
-
 	}
 }
 
@@ -388,7 +385,7 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 	for (i = 0; i < numeroArchivos; i++) {
 	
 
-		printf("El valor de i actual es: %d\n",i);
+
 		// Se transforma el nombre del archivo en string:
 		sprintf(nombreSalida, "%d",NombreArchivos[i]);
 		// Se concatena el nombre del archivo con ".txt"
@@ -425,14 +422,6 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 
 					fscanf(archivoProcesos," ( %[^ (] %[^ )] ) -> %[^\n]\n" ,Persona1,Persona2,Amigos);
 
-					/*
-					printf("--------------------------\n");
-					printf("Persona 1: %s\n",Persona1);
-					printf("Persona 2: %s\n",Persona2);
-					printf("Amigos 1: %s\n",Amigos);
-					printf("--------------------------\n");
-					*/
-
 					// Se agrega la informacion a la lista enlazada de personas:
 
 					aux = *listaAmigos;
@@ -440,7 +429,6 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 					// La lista enlazada esta vacia:
 					if (aux == NULL) {
 
-						printf("Entre aca\n");
 						// Se crea un nuevo nodo
 						nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 						nueva_caja->listo = 0;
@@ -464,12 +452,6 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 
 								if (aux->siguiente == NULL) {
 
-									//printf("--------------------------\n");
-									//printf("Persona 1: %s\n",aux->persona1);
-									//printf("Persona 2: %s\n",aux->persona2);
-									//printf("Amigos 1: %s\n",aux->amigos1);
-									//printf("Amigos 2: %s\n",aux->amigos2);
-									//printf("--------------------------\n");
 									// Se crea un nuevo nodo
 									nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 									nueva_caja->listo = 0;
@@ -518,14 +500,6 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 									//la lista enlazada.
 									if (aux->siguiente == NULL) {
 
-
-										//printf("--------------------------\n");
-										//printf("Persona 1: %s\n",aux->persona1);
-										//printf("Persona 2: %s\n",aux->persona2);
-										//printf("Amigos 1: %s\n",aux->amigos1);
-										//printf("Amigos 2: %s\n",aux->amigos2);
-										//printf("--------------------------\n");
-
 										// Se crea un nuevo nodo
 										nueva_caja = (LISTAAMIGOS*)malloc(sizeof(LISTAAMIGOS));
 										nueva_caja->listo = 0;
@@ -564,23 +538,6 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 		}
 
 	}
-
-
-	aux = *listaAmigos;
-
-	while (aux != NULL) {
-
-		printf("--------------------------\n");
-		printf("Persona 1: %s\n",aux->persona1);
-		printf("Persona 2: %s\n",aux->persona2);
-		printf("Amigos 1: %s\n",aux->amigos1);
-		printf("Amigos 2: %s\n",aux->amigos2);
-		printf("--------------------------\n");
-
-		aux = aux->siguiente;
-
-	}
-
 	
 }
 
@@ -777,9 +734,6 @@ void ReduceProcesos(char *Persona1,char *Persona2,char *Amigos,FILE *archivoSali
 	
 	fprintf(archivoSalida,"\n");
 
-	// Se eliminan las estructuras creadas
-	//EliminarEstructuraLista(&listaAmigos1);
-	//EliminarEstructuraLista(&listaAmigos2);
 
 }
 

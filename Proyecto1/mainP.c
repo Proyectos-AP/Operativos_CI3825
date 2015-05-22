@@ -128,24 +128,6 @@ int main(int argc, char *argv[]) {
 	//  procesos hijos en map y lo almacena en una lista enlazada:
 	LeerTrabajoMap(numeroDeProcesos,&listaDeAmigos,childpid);
 
-
-	//printf(" %s",listaDeAmigos->persona1);
-
-	/*
-	while (aux != NULL) {
-
-		printf("--------------------------\n");
-		printf("Persona 1: %s\n",aux->persona1);
-		printf("Persona 2: %s\n",aux->persona2);
-		printf("Amigos 1: %s\n",aux->amigos1);
-		printf("Amigos 2: %s\n",aux->amigos2);
-		printf("--------------------------\n");
-
-		aux = aux->siguiente;
-
-	}
-
-	*/
 	
 	// El proceso padre toma la estructura creada anteriormente y reparte 	
 	// el trabajo de manera equitativa en archivos para que procesos hijos 
