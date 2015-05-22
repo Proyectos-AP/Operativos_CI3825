@@ -167,7 +167,7 @@ void EliminarListaAmigos(LISTAAMIGOS **lista) {
 		Parametros de entrada:
 
 			- lista : Direccion de la cabecera de una estructura del 
-						tipopLISTAAMIGOS.
+						tipo LISTAAMIGOS.
 		
 	 	Parametros de salida:
 	 		Ninguno.
@@ -199,7 +199,7 @@ void EliminarListaAmigos(LISTAAMIGOS **lista) {
 			if(aux->amigos2!=NULL){
 				EliminarEstructuraLista(&aux->amigos2);
 			}
-			//free(aux);
+			free(aux);
 		}
 	}
 }
@@ -484,7 +484,7 @@ int ReduceDeHilos(LISTAAMIGOS *auxListaPadres,LISTA **CabeceraLista){
 	/*
 
 		Definicion de la funcion:	
-			Dado el apuntador a una estructura de tipo LISTAAMIGOS que esta 
+			Dado el apuntador a una estructura de tipo LISTAAMIGOS  esta 
 		funcion crea una lista enlazada con los amigos en comun de las personas
 		que estan contenidas en dicha estructura.
 
@@ -614,7 +614,6 @@ void ImprimirEnArchivoSalida(LISTAAMIGOS *auxListaPadres,FILE *archivo_salida,\
 			CabeceraLista = aux1->siguiente;
 
 			fprintf(archivo_salida,"%s ",aux1->elem);
-
 			//free(aux1);
 
 		}

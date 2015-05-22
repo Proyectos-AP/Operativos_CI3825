@@ -11,12 +11,15 @@
 
 Main:
 	gcc -Wall -g mainP.c lib_procesos.c -o friendfindP
-	gcc -Wall -g mainH.c -pthread -o friendfindH
+	gcc -Wall -g mainH.c -pthread lib_hilos.c -o friendfindH
 	gcc -Wall -g map.c lib_procesos.c -o map
 	gcc -Wall -g reduce.c lib_procesos.c -o reduce
 
 friendfindP.o : mainP.c lib_procesos.h
 	gcc -c mainP.c
+
+friendfindH.o : mainH.c lib_hilos.h
+	gcc -c mainH.c
 
 map.o : map.c lib_procesos.h
 	gcc -c map.c

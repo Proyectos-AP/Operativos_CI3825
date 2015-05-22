@@ -315,8 +315,8 @@ void *hiloMap(void *arg) {
 			auxAmigos = auxAmigos->siguiente;
 
 		}
-
-		//EliminarEstructuraLista(&amigos);
+		// Se destruye una lista enlazada de amigos
+		EliminarEstructuraLista(&amigos);
 		auxHilo = auxHilo->siguiente;
 
 	}
@@ -394,6 +394,8 @@ void *hiloReduce(void *arg) {
 
 				pthread_mutex_unlock(&semaforoArchivoSalida);
 
+				// Se elimina la lista enlazada de amigos en comun
+				EliminarEstructuraLista(&CabeceraLista);
 			}
 
 		}
@@ -406,6 +408,47 @@ void *hiloReduce(void *arg) {
 
 }
 
+//----------------------------------------------------------------------------//
+
+
+void EliminarEstructuraListaCabeceraMap(LISTACABECERAMAPH **Cabecera,int numeroDeHilos){
+
+	/*
+
+		Definicion de la funcion:	
+			Esta funcion destruye una estructura del tipo LISTA.
+	
+		Parametros de entrada:
+
+			- Cabecera : Direccion de memoria de una caberera de una estructuta 
+						del tipo LISTA.
+	
+	 	Parametros de salida:
+	 		Ninguno.
+	
+	*/
+
+	// Declaracion de variables:
+	LISTACABECERAMAPH *aux;
+	aux = *Cabecera;
+
+	if (*Cabecera==NULL){
+		;
+	}
+	else{
+
+		while(*Cabecera!=NULL){
+
+			aux = *Cabecera;
+			*Cabecera= aux->siguiente;
+			//free(aux->elem);
+			free(aux);
+
+		}
+
+	}
+
+}
 //----------------------------------------------------------------------------//
 //                          INICIO DEL CODIGO PRINCIPAL                       //
 //----------------------------------------------------------------------------//
@@ -488,8 +531,7 @@ int main(int argc, char *argv[]) {
 
 	}
 
-	// Se elimina la estructura que se creo al leer el archivo:
-	//EliminarEstructuraLista(Cabecera,numeroHilos);
+
 	
 	// Se espera a que todos los hilos terminen:
 	for (i = 0; i < numeroHilos; i++) {
@@ -497,7 +539,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	
-
+	// Se elimina la estructura que se creo al leer el archivo:
+	EliminarEstructuraListaCabeceraMap(&listaMapH,numeroHilos);
+	
 	// Se eliminan las redundancias de la lista enlazada actualizada por 
 	//los hilos:
 	EliminarRedundancia(&listaAmigosPadre);
@@ -531,7 +575,7 @@ int main(int argc, char *argv[]) {
 	fprintf(archivo_Salida,"\n\n");
 	fclose(archivo_Salida);
 
-	//EliminarListaAmigos(&listaAmigosPadre);
+	EliminarListaAmigos(&listaAmigosPadre);
 	printf("termine\n");
 
 	return(0);
