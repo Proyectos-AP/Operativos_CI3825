@@ -418,7 +418,7 @@ void LeerTrabajoMap(int numeroArchivos,LISTAAMIGOS **listaAmigos, int NombreArch
 
 					Persona1 = (char*)malloc(sizeof(char)*15);
 					Persona2 = (char*)malloc(sizeof(char)*15);
-					Amigos = (char*)malloc(sizeof(char)*30);
+					Amigos = (char*)malloc(sizeof(char)*100);
 
 					fscanf(archivoProcesos," ( %[^ (] %[^ )] ) -> %[^\n]\n" ,Persona1,Persona2,Amigos);
 
