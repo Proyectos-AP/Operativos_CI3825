@@ -113,12 +113,12 @@ int main(int argc, char *argv[]) {
 	time_t t;
 	srand((unsigned) time(&t));
 
-	generarNumerosAleatorios(numerosAleatorios,numeroHijos,10);
+	generarNumerosAleatorios(numerosAleatorios,numeroHijos,10,ruta);
 
-	//for (i = 0; i < numeroHijos; i++) {
+	for (i = 0; i < numeroHijos; i++) {
 
-	//	printf("El numero aleatorio fuerda de la funcion es %d\n",numerosAleatorios[i]);		
-	//}
+		printf("El numero aleatorio fuerda de la funcion es %d\n",numerosAleatorios[i]);		
+	}
 
 	// Se crean los proceso hijos para que lean los archivos de cada directorio:
 	char numeroDirectorio[3];
@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
 
 			printf("El valor de la semilla es: %d \n",t2.tv_usec * t2.tv_sec);
 
-			generarNumerosAleatorios(numerosAleatoriosArchivos,numeroTextos,20);
+			generarNumerosAleatorios(numerosAleatoriosArchivos,numeroTextos,numeroArchivos,ruta);
 
 			for (i = 0; i < numeroTextos; i++) {
 

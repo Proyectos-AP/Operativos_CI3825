@@ -22,6 +22,8 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
+
 
 //------------------------------------------------------------------------------------------------//
 //                                     DEFINICION DE ESTRUCTURAS                                  //
@@ -31,7 +33,7 @@
 //                                    DEFINICION DE FUNCIONES                                     //
 //------------------------------------------------------------------------------------------------//
 
-void generarNumerosAleatorios(int *arregloNumeros,int numeroElementos,int numeroMaximo) {
+void generarNumerosAleatorios(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaDirectorio) {
 	/*
 	*
 	* Definicion de la funcion: La funcion 
@@ -44,32 +46,48 @@ void generarNumerosAleatorios(int *arregloNumeros,int numeroElementos,int numero
 	*
 	*/
 
+	char numeroDirectorio[20];
+	
 	int agregarNumero;
 	int numeroActual;
+	int esDirectorio;
 	int i = 0;
 	int j = 0;
 
 	while (i < numeroElementos) {
-	
+
+		char rutaAux[100];
 		agregarNumero = 1;
 		numeroActual = (rand() % numeroMaximo) + 1;
 
-		for (j = 0; j < i; j++) {
+	
+		// Se convierte el numero del directorio en string:
+		sprintf(numeroDirectorio, "%d",numeroActual);
+		strcat(rutaAux,rutaDirectorio);
+		strcat(rutaAux,numeroDirectorio);
 
-			if (numeroActual == arregloNumeros[j]) {
-				agregarNumero = 0;
-				break;
+		esDirectorio = verificarDirectorio(rutaDirectorio);
+
+		if (esDirectorio == 1) {
+
+			for (j = 0; j < i; j++) {
+
+				if (numeroActual == arregloNumeros[j]) {
+					agregarNumero = 0;
+					break;
+				}
+
 			}
 
+			if (agregarNumero == 1) {
+
+				arregloNumeros[i] = numeroActual;
+				i++;
+
+			}
+
+
 		}
-
-		if (agregarNumero == 1) {
-
-			arregloNumeros[i] = numeroActual;
-			i++;
-
-		}
-	
 
 	}
 
@@ -81,6 +99,42 @@ void generarNumerosAleatorios(int *arregloNumeros,int numeroElementos,int numero
 	//}
 
 
+
+}
+
+//------------------------------------------------------------------------------------------------//
+
+
+int verificarDirectorio(char *nombreDirectorio) {
+	/*
+	*
+	* Definicion de la funcion: 
+	*
+	* Parametros de entrada:
+	*
+	* Parametros de salida:
+	*
+	*/
+
+	struct stat statbuf;
+
+	printf("El nombreDirectorio es: %s\n",nombreDirectorio);
+
+   	if (stat(nombreDirectorio,&statbuf) ==-1) {
+        fprintf(stderr,"No se puede obtener el stat del archivo %s:%s\n",nombreDirectorio, strerror(errno));
+        exit(1);
+    }
+
+   	if (statbuf.st_mode & S_IFDIR) {
+        // Es un directorio:
+        return(1);
+   	} 
+
+  	else {
+
+        // No es un directorio
+        return(0);
+  	}
 
 }
 
@@ -104,6 +158,9 @@ int contarDirectorios(char *rutaDirectorio) {
 	struct dirent *direntp;
 	
 	if ((dirp = opendir(rutaDirectorio)) == NULL) {
+
+
+
 		fprintf(stderr,"No se puede abrir el directorio %s\n",rutaDirectorio);
 		strerror(errno);
 		exit(1);
@@ -138,11 +195,13 @@ void leerDirectorio(char *rutaDirectorio,int *arregloAleatorios,int numeroElemen
 	// Declaracion de variables:
 	int i;
 	char numeroArchivo[3];
+	char directorio[50];
 	DIR *dirp;
 	struct dirent *direntp;
 	char *Linea;
 	FILE *archivo;
 
+	printf("La rura inicial es: %s\n",rutaDirectorio);
 
 	
 	if ((dirp = opendir(rutaDirectorio)) == NULL) {
@@ -152,16 +211,30 @@ void leerDirectorio(char *rutaDirectorio,int *arregloAleatorios,int numeroElemen
 	}
 
 	else {
-
+		
+		char *Directorio;
+		Directorio = (char*)malloc(sizeof(char)*50);
 		for (i = 1; i < numeroElementos; i++) {
-
 			//Se convierte el numero del Directorio en string:
+			//printf("El archivo0 es: %s\n",Directorio);
+			//printf("hola es: %s\n",hola);
 			sprintf(numeroArchivo, "%d",arregloAleatorios[i]);
+			//printf("El archivo1 es: %s\n",Directorio);
+			strcat(Directorio, rutaDirectorio);
+			//printf("El archivo1 es: %s\n",Directorio);
+			strcat(Directorio,"/");
+			//printf("El archivo2 es: %s\n",Directorio);
+			strcat(Directorio,numeroArchivo);
+			//printf("El archivo0 es: %s\n",Directorio);
+			//printf("El directorio es: %s\n",rutaDirectorio);
+			//printf("Numero archivo: %s\n",numeroArchivo);
+			
 
+			if ( (archivo=fopen(Directorio,"r")) == NULL) {
 
-			if ( (archivo=fopen(numeroArchivo,"r")) == NULL) {
+				printf("El archivo no encontrado es: %s\n",Directorio);
 
-				perror("Error: El archivo indicado no fue encontrado ");
+				perror("Error: El archivo indicado no fue encontrado \n");
 				printf("errno = %d. \n",errno);
 				exit(1);
 			}
@@ -215,6 +288,7 @@ void leerDirectorio(char *rutaDirectorio,int *arregloAleatorios,int numeroElemen
 
 		} 
 
+		free(Directorio);
 		
 	}
 
