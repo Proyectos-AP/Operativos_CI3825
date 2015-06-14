@@ -160,7 +160,8 @@ int main(int argc, char *argv[]) {
 
 			//printf("El valor de la semilla es: %d \n",t2.tv_usec * t2.tv_sec);
 
-			generarNumerosAleatoriosArchivo(numerosAleatoriosArchivos,numeroTextos,numeroArchivos,ruta);
+			int archivosLeidos = generarNumerosAleatoriosArchivo(numerosAleatoriosArchivos,numeroTextos,numeroArchivos,ruta);
+			printf("El numero de archivos leidos es %d \n",archivosLeidos);
 
 			for (i = 1; i < numeroTextos+1; i++) {
 
@@ -241,15 +242,16 @@ int main(int argc, char *argv[]) {
 			else {
 
 				wait(&statusHijo);
+				
 
-				for (i = 0; i < numeroTextos +2; ++i) {
+				for (i = 0; i < numeroTextos + 1; ++i) {
 
 					free(arregloRutas[i]);
 					/* code */
 				
 				}
-
-				exit(0); // aqui hay que agregar lo de los archivos leidos
+				printf("El numero de archivos leidos es %d \n",archivosLeidos);
+				exit(99); // aqui hay que agregar lo de los archivos leidos
 
 			}
 

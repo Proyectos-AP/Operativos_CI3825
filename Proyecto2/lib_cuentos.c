@@ -169,7 +169,7 @@ void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,
 
 //------------------------------------------------------------------------------------------------//
 
-void generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaArchivo) {
+int generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaArchivo) {
 	/*
 	*
 	* Definicion de la funcion: La funcion 
@@ -240,9 +240,7 @@ void generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int
 
 	}
 
-
-
-
+	return(i);
 
 
 }
