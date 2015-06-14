@@ -56,14 +56,6 @@ int verificarArchivo(char *rutaArchivo){
 
 }
 
-
-
-
-
-
-
-
-
 //------------------------------------------------------------------------------------------------//
 
 
@@ -84,7 +76,9 @@ int verificarDirectorio(char *nombreDirectorio) {
 
    	if (stat(nombreDirectorio,&statbuf) ==-1) {
         fprintf(stderr,"No se puede obtener el stat del archivo %s:%s\n",nombreDirectorio, strerror(errno));
-        exit(1);
+        // No es un directorio
+        return(0);
+        //exit(1);
     }
 
    	if (statbuf.st_mode & S_IFDIR) {
@@ -102,11 +96,6 @@ int verificarDirectorio(char *nombreDirectorio) {
 
 
 //------------------------------------------------------------------------------------------------//
-
-
-
-
-
 void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaDirectorio) {
 	/*
 	*
@@ -142,6 +131,7 @@ void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,
 		strcat(rutaAux,numeroDirectorio);
 		esDirectorio = verificarDirectorio(rutaAux);
 		printf("esDirectorio : %d  y la ruta es %s \n",esDirectorio,rutaAux);
+
 		if (esDirectorio == 1) {
 
 			for (j = 0; j < i; j++) {
@@ -161,7 +151,7 @@ void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,
 			}
 			
 		}
-		
+
 		free(rutaAux);
 	}
 
@@ -183,32 +173,48 @@ int generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int 
 	*/
 
 	char numeroArchivo[20];
-	
+	int arregloNumerosIrregulares[numeroMaximo];
+	int agregarNumeroIrregular;
 	int agregarNumero;
 	int numeroActual;
 	int esArchivo;
+	int esDirectorio;
+	int numAux = 0;
 	int i = 0;
 	int j = 0;
+	int k = 0;
+	int p = 0;
 
 	while (i < numeroElementos) {
 
+		agregarNumero = 1;
+		agregarNumeroIrregular = 1;
+
 		char *rutaAux2;
 		rutaAux2 = (char*)calloc(1,sizeof(char)*50);
-		agregarNumero = 1;
-		numeroActual = (rand() % numeroMaximo) + 1;
+		numeroActual = (rand() % 20) + 1;
 
 		// Se convierte el numero del directorio en string:
-		printf("LA RUTA ES %s \n",rutaAux2);
 		sprintf(numeroArchivo, "%d",numeroActual);
 		strcat(rutaAux2,rutaArchivo);
 		strcat(rutaAux2,"/");
 		strcat(rutaAux2,numeroArchivo);
 
+		if(numAux == numeroMaximo){
+
+			return(i);
+
+		}
+
 		// Se verifica si la ruta pasada por argumento corresponde a la de un
 		// archivo regular.
 		esArchivo = verificarArchivo(rutaAux2);
+		esDirectorio = verificarDirectorio(rutaAux2);
 		printf("esArchivo : %d  y la ruta es %s \n",esArchivo ,rutaAux2);
 		//printf("esDirectorio : %d  y la ruta es %s \n",esDirectorio,rutaDirectorio);
+		printf("AUX NUMBER ES : %d\n",numAux);
+		printf("LA p ES : %d\n",p );
+
 		if (esArchivo == 1) {
 
 			for (j = 0; j < i; j++) {
@@ -224,20 +230,34 @@ int generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int 
 
 				arregloNumeros[i] = numeroActual;
 				i++;
+				numAux++;
 
 			}
 
 		}
+		else if(esDirectorio == 1){
+
+			for (k = 0; k < p; k++) {
+
+				if (numeroActual == arregloNumerosIrregulares[k]) {
+					agregarNumeroIrregular = 0;
+					break;
+				}
+
+			}
+
+			if (agregarNumeroIrregular == 1) {
+
+				arregloNumerosIrregulares[p] = numeroActual;
+				p++;
+				numAux++;
+
+			}
+
+		}
+		
 		free(rutaAux2);
 	
-	}
-
-	int k;
-
-	for (k = 0; k < numeroElementos; ++k) {
-		
-		printf("El elemento del arreglo es %d\n",arregloNumeros[k]);
-
 	}
 
 	return(i);

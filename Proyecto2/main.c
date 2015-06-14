@@ -161,12 +161,12 @@ int main(int argc, char *argv[]) {
 			//printf("El valor de la semilla es: %d \n",t2.tv_usec * t2.tv_sec);
 
 			int archivosLeidos = generarNumerosAleatoriosArchivo(numerosAleatoriosArchivos,numeroTextos,numeroArchivos,ruta);
-			printf("El numero de archivos leidos es %d \n",archivosLeidos);
+			//printf("El numero de archivos leidos es %d \n",archivosLeidos);
 
-			for (i = 1; i < numeroTextos+1; i++) {
+			//for (i = 1; i < numeroTextos+1; i++) {
 
-					printf("Soy el hijo %d  y el numero aleatorio del archivo es %d\n",getpid(),numerosAleatoriosArchivos[i-1]);		
-			}	
+					//printf("Soy el hijo %d  y el numero aleatorio del archivo es %d\n",getpid(),numerosAleatoriosArchivos[i-1]);		
+			//}	
 
 			//leerDirectorio(ruta,numerosAleatoriosArchivos,numeroTextos);
 
@@ -176,44 +176,25 @@ int main(int argc, char *argv[]) {
 
 			//exit(0);
 
-			char* arregloRutas[numeroTextos + 2];
+			char* arregloRutas[archivosLeidos + 2];
 
-			printf("El restulado es %d \n",numeroTextos + 2);
+			printf("El restulado es %d \n",archivosLeidos + 2);
 			char numeroArchivo[20];
 
 			arregloRutas[0] = (char*)calloc(1,sizeof(char)*50);	
-			arregloRutas[0] = "cat";
+			strcat(arregloRutas[0],"cat");
 			
-			for (i = 1; i < numeroTextos + 1; ++i) {
+			for (i = 1; i < archivosLeidos + 1; ++i) {
 
-				//printf("Ciclo \n");
 				arregloRutas[i] = (char*)calloc(1,sizeof(char)*50);
-				//arregloRutas[i] = "";
 				sprintf(numeroArchivo,"%d",numerosAleatoriosArchivos[i-1]);
-				printf("El valor de la i es : %d\n", i );
-				printf("El numero numero es %d y el string es %s\n",numerosAleatoriosArchivos[i-1],numeroArchivo);
 				strcat(arregloRutas[i],ruta);
-				printf("La ruta 0 es: %s \n",arregloRutas[i]);
 				strcat(arregloRutas[i],"/");
-				printf("La ruta 1 es: %s \n",arregloRutas[i]);
 				strcat(arregloRutas[i],numeroArchivo);
-				printf("La ruta 2 es: %s \n",arregloRutas[i]);
-
+				
 			}
 
-			arregloRutas[numeroTextos + 1] = NULL;
-
-			for (i = 1; i < numeroTextos+1; i++) {
-
-					printf("[DESPUES] Soy el hijo %d  y el numero aleatorio del archivo es %d\n",getpid(),numerosAleatoriosArchivos[i-1]);		
-			}
-
-
-			for (i = 0; i < numeroTextos +2; ++i) {
-
-				printf("El elemento actual es %s \n",arregloRutas[i]);
-				/* code */
-			}
+			arregloRutas[archivosLeidos + 1] = NULL;
 
 			int statusHijo;
 			pid_t childpid;
@@ -228,7 +209,6 @@ int main(int argc, char *argv[]) {
 
 			}
 
-
 			if (childpid == 0) {
 
 				if ( (execvp("cat",arregloRutas)) < 0) {
@@ -239,21 +219,13 @@ int main(int argc, char *argv[]) {
 
 			}
 
-			else {
+			wait(&statusHijo);
 
-				wait(&statusHijo);
-				
-
-				for (i = 0; i < numeroTextos + 1; ++i) {
-
-					free(arregloRutas[i]);
-					/* code */
-				
-				}
-				printf("El numero de archivos leidos es %d \n",archivosLeidos);
-				exit(99); // aqui hay que agregar lo de los archivos leidos
-
+			// Se limpia memoria
+			for (i = 0; i < archivosLeidos + 1; ++i) {
+				free(arregloRutas[i]);
 			}
+			exit(archivosLeidos); 
 
 		}
 
@@ -263,16 +235,16 @@ int main(int argc, char *argv[]) {
 	// Se espera que los proceso hijos terminen:
 	for(i = 0; i< numeroHijos;i++) {
 		wait(&status);
-
 		printf("El valor que recibi es: %d \n",status>>8);
 		
 	}
 
-	char rutaSalida[50];
+	char *rutaSalida = (char*)calloc(1,sizeof(char)*50);	
 	strcat(rutaSalida,"./");
 	strcat(rutaSalida,archivoSalida);
+
 	int descriptorSalida;
-	descriptorSalida = open(rutaSalida,O_WRONLY | O_CREAT,0600);
+	descriptorSalida = open(rutaSalida,O_WRONLY | O_CREAT,0755);
 	dup2(descriptorSalida,1);
 	close(descriptorSalida);
 
@@ -324,7 +296,7 @@ int main(int argc, char *argv[]) {
 	//	wait(&status);
 
 	//}
-
+	free(rutaSalida);
 	return(0);
 
 }
