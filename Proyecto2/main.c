@@ -220,7 +220,6 @@ int main(int argc, char *argv[]) {
 			close(pipePadre[0]);
 			dup2(pipePadre[1],1);
 			close(pipePadre[1]);
-			char arreglo[2];
 
 			if ((childpid = fork()) < 0) {
 				perror("Error en el fork");
@@ -242,6 +241,14 @@ int main(int argc, char *argv[]) {
 			else {
 
 				wait(&statusHijo);
+
+				for (i = 0; i < numeroTextos +2; ++i) {
+
+					free(arregloRutas[i]);
+					/* code */
+				
+				}
+
 				exit(0); // aqui hay que agregar lo de los archivos leidos
 
 			}
@@ -255,7 +262,7 @@ int main(int argc, char *argv[]) {
 	for(i = 0; i< numeroHijos;i++) {
 		wait(&status);
 
-		printf("El valor que recibi es: %d \n",status);
+		printf("El valor que recibi es: %d \n",status>>8);
 		
 	}
 
