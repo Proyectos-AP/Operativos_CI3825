@@ -15,8 +15,10 @@
 #ifndef FUNCIONES_H
 #define FUNCIONES_H
 
-void generarNumerosAleatorios(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaDirectorio);
+void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaDirectorio);
+void generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaArchivo);
 int verificarDirectorio(char *nombreDirectorio);
+int verificarArchivo(char *rutaArchivo);
 int contarDirectorios(char *rutaDirectorio);
 void leerDirectorio(char *rutaDirectorio,int *arregloAleatorios,int numeroElementos);
 
