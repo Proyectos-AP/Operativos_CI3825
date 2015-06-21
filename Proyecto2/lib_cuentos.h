@@ -6,9 +6,10 @@
 *	Alejandra Cordero / Carnet: 12-10645
 *	Pablo Maldonado   / Carnet: 12-10561
 *
-* Descripcion:
+* Descripcion: Encabezado del archivo 
+* lib_cuentos.c 
 *
-* Ultima modificacion: 07/06/2015
+* Ultima modificacion: 22/06/2015
 *
 */
 
@@ -21,6 +22,5 @@ int verificarDirectorio(char *nombreDirectorio);
 int verificarArchivo(char *rutaArchivo);
 int contarDirectorios(char *rutaDirectorio);
 void leerDirectorio(char *rutaDirectorio,int *arregloAleatorios,int numeroElementos);
-
 
 #endif

@@ -14,38 +14,6 @@ NOMBRE
 		   de texto regulares que se encuentran en un 
 		   directorio indicado.
 
-
-FUNCIONAMIENTO
-
-	El programa generará 
-
-	
-	
-	
-
-
-ARGUMENTOS NECESARIOS
-
-	Para el correcto funcionamiento se requiere los archivos de 
-	textos que leeran se encuentren en directorios 
-	de la siguiente forma:
-
-		- Los directorios que serán asignados a los hijos 
-		deberán tener por nombre un número entero que se
-		encuentre en el rango [1..10]. Ejemplos:
-			- 1/ 3/ 5/ 7/ 
-			- 1/ 2/ 3/ 4/ 5/ 6/ 7/ 8/ 9/ 10/
-				
-		y deben encontrarse en el directorio pasado como
-		argumento al momento de la ejecución del programa.
-
-
-		- Los archivos que leerán los hijos deben tener por 
-		nombre un número entero que se encuentre en el rango
-		[1..20] Ejemplos:
-			- 1, 2, 3, 5
-			- 1, 2, ..., 20
-
 COMPILACIÓN 
 
 	En primer lugar, es necesario compilar los archivos para luego 
@@ -92,25 +60,59 @@ EJECUCIÓN
 			nombre, y, a partir de allí, comenzar la escritura de la historia. Sin embargo, 
 			para evitar posibles pérdidas de datos de los usuarios que ejecuten el programa
 			se decidió indicar esta información en este archivo. 
-			
+		
+ARGUMENTOS NECESARIOS
+
+	Para el correcto funcionamiento se requiere que los archivos de 
+	textos que se leeran se encuentren en directorios 
+	de la siguiente forma:
+
+		- Los directorios que serán asignados a los hijos 
+		deberán tener por nombre un número entero que se
+		encuentre en el rango [1..10]. Ejemplos:
+			- 1/ 3/ 5/ 7/ 
+			- 1/ 2/ 3/ 4/ 5/ 6/ 7/ 8/ 9/ 10/
+				
+		y deben encontrarse en el directorio pasado como
+		argumento al momento de la ejecución del programa.
+
+
+		- Los archivos que leerán los hijos deben tener por 
+		nombre un número entero que se encuentre en el rango
+		[1..20] Ejemplos:
+			- 1, 2, 3, 5
+			- 1, 2, ..., 20
+	
+
+FUNCIONAMIENTO 
+
+		Con los argumentos mencionados en el punto anterior. El programa generara tantos hijos
+		como el valor de numeroHijos. Se generaran numeroHijos numeros aleatorios que indicaran
+		que directorio le toca revisar a cada hijo. Cada hijo a su vez, generara numeroTextos 
+		numeros aleatorios que le indicaran que archivos debe leer del directorio que le fue 
+		asignado.
+
+		Los detalles sobre la implementación de este programa se encuentran en el apartado 
+		DETALLES DE IMPLEMENTACIÓN Y FUNCIONAMIENTO
+
 SINOPSIS
 
-	./miCuento [flag] 
+	./miCuento [ruta] [numeroHijos] [numeroTextos] [archivoSalida]
 
 DESCRIPCIÓN 
 	
 	-d, 
 		Cuando este flag se encuentra presente, entonces
-		se debe indicar la ruta en la cual se encuentran los 
+		se debe indicar la ruta en la cual se encuentran los archivos.
 		
 	Status del exit():
 
 	0   	si no ocurrieron errores durante la ejecución del programa,
 
-	1 	si ocurrió algún error que obligó a la terminación inmediata
-		de la ejecución del programa para evitar la propagación de 
-		errores. En este caso, el programa imprime un mensaje por
-		pantalla al usuario indicando el error ocurrido.
+	1 		si ocurrió algún error que obligó a la terminación inmediata
+			de la ejecución del programa para evitar la propagación de 
+			errores. En este caso, el programa imprime un mensaje por
+			pantalla al usuario indicando el error ocurrido.
 	
 DETALLES DE IMPLEMENTACIÓN Y FUNCIONAMIENTO:
 
@@ -190,6 +192,12 @@ EJEMPLOS
 
 	Nota: Los ejemplos asumen que el usuario se encuentra en el directorio 
 	donde están los archivos de código fuente. 
+
+NOTA
+	
+	Para mayor información sobre las especificaciones del programa visitar:
+		http://ldc.usb.ve/~yudith/docencia/ci-3825/Proy22015Mayo.pdf
+
 
 AUTORES
 		Escrito por Alejandra Cordero (12-10645@usb.ve) y Pablo Maldonado (12-10561@usb.ve).
