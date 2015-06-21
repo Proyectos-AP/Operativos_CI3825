@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 	int numeroTextos;			// Numero de textos que deberan leer los hijos (si es posible)
 	int numeroArchivos;			// Indica el numero de archivos de un directorio
 	int descriptorSalida;		// Descriptor del archivo de salida
-	int archivosLeidos = 1;		// Numero de archivos leidos por cada hijo
+	int archivosLeidos = 1;		// Indice del arreglo de numeros aleatorios de archivos
 	char *aux;					// Variable auxiliar para constrir la ruta de los archivos a leer.
 	char *ruta;					// Ruta pasada como argumento donde se encuentran las carpetas.
 	char message[300];			// Se utiliza para la lectura de informacion del pipe.
