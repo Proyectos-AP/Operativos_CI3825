@@ -5,21 +5,195 @@ Nombres:
 	Alejandra Cordero / Carnet: 12-10645
 	Pablo Maldonado   / Carnet: 12-10561
 
+
+miCuento(1)							Proyecto II - CI3825							    micuento(1)
+
 NOMBRE
 
-	miCuento - 
+	miCuento - genera historias aleatorias a partir de archivos
+		   de texto regulares que se encuentran en un 
+		   directorio indicado.
+
+
+FUNCIONAMIENTO
+
+	El programa generará 
+
+	
+	
+	
+
+
+ARGUMENTOS NECESARIOS
+
+	Para el correcto funcionamiento se requiere los archivos de 
+	textos que leeran se encuentren en directorios 
+	de la siguiente forma:
+
+		- Los directorios que serán asignados a los hijos 
+		deberán tener por nombre un número entero que se
+		encuentre en el rango [1..10]. Ejemplos:
+			- 1/ 3/ 5/ 7/ 
+			- 1/ 2/ 3/ 4/ 5/ 6/ 7/ 8/ 9/ 10/
+				
+		y deben encontrarse en el directorio pasado como
+		argumento al momento de la ejecución del programa.
+
+
+		- Los archivos que leerán los hijos deben tener por 
+		nombre un número entero que se encuentre en el rango
+		[1..20] Ejemplos:
+			- 1, 2, 3, 5
+			- 1, 2, ..., 20
 
 COMPILACIÓN 
 
+	En primer lugar, es necesario compilar los archivos para luego 
+	ejecutar el programa. Para ello, deberá ubicarse  en el
+	directorio en el que se encuentran todos los archivos de 
+	la carpeta comprimida. Luego de esto, ejecute el comando 'make' 
+	y la compilación de hara de forma automática. Se generará el 
+	archivo ejecutable 'miCuento'
+
 EJECUCIÓN
 
+	Para ejecutar este programa luego de su compilación, 
+	existen dos opciones:
+
+	Si desea que los textos se lean de un directorio indicado:
+		./miCuento -d [ruta] [numeroHijos] [numeroTextos] [nombreSalida]
+
+	Si desea que los textos se busquen en el directorio actual:
+		./miCuento [numeroHijos] [numeroTextos] [nombreSalida]
+
+
+	Argumentos:
+
+		-ruta,
+			Ruta en donde se encuentra el directorio desde el cual se encuentran 
+			las carpetas que serán asignadas a los hijos al momento de la ejecución.
+			Este argumento deberá finalizar en '/'. Ejemplo: historias/
+
+		-numeroHijos,
+			Número de hijos que se van a generar para la lectura de los directorios.
+	
+		-numeroTextos,
+			Número de textos que leerá, si es posible, cada hijo de su directorio asignado. 
+
+		-nombreSalida,
+			Nombre del archivo en el cuál se escribirá el cuento aleatorio generado.
+
+			Se recomienda que este nombre corresponda a un archivo que no existe o se encuentre
+			vacío, ya que el programa sobreescribe la información del mismo, y se pueden 
+			obtener resultados inesperados al momento de imprimir en pantalla la información
+			ya que se mezclarán los datos escritos con los existentes. 
+
+			Existía la opción de eliminar el archivo indicado, crear uno nuevo con el mismo
+			nombre, y, a partir de allí, comenzar la escritura de la historia. Sin embargo, 
+			para evitar posibles pérdidas de datos de los usuarios que ejecuten el programa
+			se decidió indicar esta información en este archivo. 
+			
 SINOPSIS
+
+	./miCuento [flag] 
 
 DESCRIPCIÓN 
 	
-	-d,  
+	-d, 
+		Cuando este flag se encuentra presente, entonces
+		se debe indicar la ruta en la cual se encuentran los 
+		
+	Status del exit():
 
+	0   	si no ocurrieron errores durante la ejecución del programa,
+
+	1 	si ocurrió algún error que obligó a la terminación inmediata
+		de la ejecución del programa para evitar la propagación de 
+		errores. En este caso, el programa imprime un mensaje por
+		pantalla al usuario indicando el error ocurrido.
+	
+DETALLES DE IMPLEMENTACIÓN Y FUNCIONAMIENTO:
+
+	- No existirán dos hijos diferentes que lean los 
+	  textos del mismo directorio.
+
+	- Un hijo no leerá dos veces un mismo archivo de texto regular.
+
+	- En caso de que a un hijo se le asigne un número aleatorio
+	  que no corresponda a un directorio, este no realizará ningun
+	  trabajo y lo indicará con un mensaje impreso por pantalla.
+	  Bajo esta situación se considera a la vez el posible evento
+	  en el se generen más hijos que carpetas existentes.
+
+	- En caso de que un hijo intente leer un archivo que no sea 
+	  de tipo regular, lo ignorará y al finalizar su ejecución
+	  le indicará al padre que leyó menos archivos de los asignados.
+
+	- No se consideró que el pipe alcance su capacidad máxima 
+	  ya que, se preguntó acerca de ello y se aclaró que los 
+	  archivos de texto no alcancarían la dicha capacidad. 
+
+	- Si alguno de los argumentos al momento de la ejecución 
+	  no cumple con lo indicado en este arhchivo, el programa 
+	  finalizará su ejecución para evitar la propagación de 
+      	  errores. Por ejemplo, si se ejecuta lo siguiente:	
+		./miCuento -d ./Textos hola 4 Salida.txt
+
+	  se imprimirá un mensaje en pantalla indicando que el 
+	  número de hijos no fue pasado de forma correcta.
+
+	- Para la lectura de los archivos se obtuvieron las 
+	  rutas de los mismos y luego se creó otro hijo 
+	  que hizo exec() del comando cat cuya salida 
+	  estándar estaba dirigida al pipe que creó el padre. 
+	  Para ejecutar dicho comando, se requería la ruta 
+	  de cada uno de los archivos.
+		Ejemplo:
+			cat ./Textos/1/1 ./Textos/1/3
+	  
+	  Se pasaba dicho argumento con las rutas el momento
+	  del exec()
+
+
+	- En la implementación del programa no se utilizaron
+	  las llamadas al sistema readdir(), opendir() ya que 
+	  estas no aportaban ningún tipo de ventaja a la 
+	  implementación. Al contrario, la complicaban de forma
+	  innecesaria. Toda la información requerida se tenía 
+	  con la ruta dada y los números aleatorios generados.
+	  Sólo era necesario realizar concatenaciones de las 
+	  rutas  
+
+	  No obstante, se realizan todas las verificaciones
+	  de los directorios cuando es necesario con la llamada
+	  al sistema stat()
+
+	- Durante la verificación de que un nombre dado
+	  corresponde efectivamente a un directorio se 
+	  considera el caso en el que el mismo no exista. 
+
+ESCRITURA
+
+	Este programa fue escrito en lenguaje C y se utilizaron
+	las llamadas fork() para la creación de procesos hijos 
+	y pipes() para establecer la comunicación entre los 
+	procesos hijos y el padre.
+	 
 EJEMPLOS
 
+	- Para compilar y ejecutar con un directorio específico:
+		make
+		./miCuento -d ./Textos 3 4 Salida.txt
+		
+	- Para compilar y ejecutar con el directorio actual:
+		./miCuento 3 4 Salida.txt
+
+	Nota: Los ejemplos asumen que el usuario se encuentra en el directorio 
+	donde están los archivos de código fuente. 
+
 AUTORES
-		Escrito por Alejandra Cordero y Pablo Maldonado.
+		Escrito por Alejandra Cordero (12-10645@usb.ve) y Pablo Maldonado (12-10561@usb.ve).
+		Ultima fecha de modificación: 22 de junio de 2015.
+
+
+miCuento(1) 							Abril - Julio 2015							    miCuento(1)

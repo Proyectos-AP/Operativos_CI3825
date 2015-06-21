@@ -34,7 +34,6 @@
 //------------------------------------------------------------------------------------------------//
 
 
-
 int verificarArchivo(char *rutaArchivo){
 
 	/*
@@ -134,50 +133,53 @@ void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,
 
 	*/
 
+	printf("ENTRE A LA FUNCION\n");
+
 	// Declaracion de variables:
-	char numeroDirectorio[20];
+	//char numeroDirectorio[20];
 	int agregarNumero;
 	int numeroActual;
-	int esDirectorio;
+	//int esDirectorio;
 	int i = 0;
 	int j = 0;
 
 	while (i < numeroElementos) {
 
-		char *rutaAux;
-		rutaAux = (char*)calloc(1,sizeof(char)*100);
+		//char *rutaAux;
+		//rutaAux = (char*)calloc(1,sizeof(char)*100);
 		agregarNumero = 1;
 		numeroActual = (rand() % numeroMaximo) + 1;
 
 	
 		// Se convierte el numero del directorio en string:
-		sprintf(numeroDirectorio, "%d",numeroActual);
-		strcat(rutaAux,rutaDirectorio);
-		strcat(rutaAux,numeroDirectorio);
-		esDirectorio = verificarDirectorio(rutaAux);
-		printf("esDirectorio : %d  y la ruta es %s \n",esDirectorio,rutaAux);
+		//sprintf(numeroDirectorio, "%d",numeroActual);
+		//strcat(rutaAux,rutaDirectorio);
+		//strcat(rutaAux,numeroDirectorio);
+		//esDirectorio = verificarDirectorio(rutaAux);
+		//printf("esDirectorio : %d  y la ruta es %s \n",esDirectorio,rutaAux);
 
-		if (esDirectorio == 1) {
+		//if (esDirectorio == 1) {
 
-			for (j = 0; j < i; j++) {
+		for (j = 0; j < i; j++) {
 
-				if (numeroActual == arregloNumeros[j]) {
-					agregarNumero = 0;
-					break;
-				}
-
-			}
-
-			if (agregarNumero == 1){
-
-				arregloNumeros[i] = numeroActual;
-				i++;
-
-			}
-			
+			if (numeroActual == arregloNumeros[j]) {
+				agregarNumero = 0;
+				break;
 		}
 
-		free(rutaAux);
+		}
+//
+		if (agregarNumero == 1) {
+
+			printf("El numero actual es %d \n",numeroActual);
+			arregloNumeros[i] = numeroActual;
+			i++;
+
+		}
+		
+		//}
+
+		//free(rutaAux);
 	}
 
 }
