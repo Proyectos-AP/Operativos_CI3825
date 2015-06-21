@@ -448,7 +448,7 @@ int main(int argc, char *argv[]) {
 		strcat(rutaSalida,archivoSalida);
 
 		// Se abre o se crea el archivo de salida:
-		descriptorSalida = open(rutaSalida,O_WRONLY | O_CREAT,0755);
+		descriptorSalida = open(rutaSalida,O_WRONLY | O_CREAT,0666);
 		//dup2(descriptorSalida,1); (ESTO NO DEBE ESTAR EN LA ENTREGA FINAL)
 		//close(descriptorSalida);
 
