@@ -36,20 +36,28 @@
 
 
 int verificarArchivo(char *rutaArchivo){
+
 	/*
-	*
-	* Definicion de la funcion: 
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
+	
+		Definicion de la funcion: 
+
+		Esta funcion dada la ruta de un archivo verifica si el 
+	mismo es regular o no.
+
+		Parametros de entrada:
+		- rutaArchivo : Ruta del archivo
+
+		Parametros de salida:
+		
+		- Ninguno
+
 	*/
 
 	struct stat st_info;
 	
 	if (stat(rutaArchivo, &st_info) < 0) {
-		return 0;
+		printf("STAT %d - %s \n",stat(rutaArchivo, &st_info),rutaArchivo);
+		return -1;
 	}
  
 	return S_ISREG(st_info.st_mode);
@@ -60,22 +68,28 @@ int verificarArchivo(char *rutaArchivo){
 
 
 int verificarDirectorio(char *nombreDirectorio) {
-	/*
-	*
-	* Definicion de la funcion: 
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
-	*/
 
+	/*
+	
+		Definicion de la funcion: 
+
+		Esta funcion dada la ruta de un archivo verifica si el 
+	mismo es directorio o no.
+
+		Parametros de entrada:
+		- rutaArchivo : Ruta del archivo
+
+		Parametros de salida:
+		
+		- Ninguno
+
+	*/
 	struct stat statbuf;
 
 	printf("El nombreDirectorio es: %s\n",nombreDirectorio);
 
    	if (stat(nombreDirectorio,&statbuf) ==-1) {
-        fprintf(stderr,"No se puede obtener el stat del archivo %s:%s\n",nombreDirectorio, strerror(errno));
+        //fprintf(stderr,"No se puede obtener el stat del archivo %s:%s\n",nombreDirectorio, strerror(errno));
         // No es un directorio
         return(0);
         //exit(1);
@@ -94,23 +108,34 @@ int verificarDirectorio(char *nombreDirectorio) {
 
 }
 
-
 //------------------------------------------------------------------------------------------------//
 void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaDirectorio) {
+
 	/*
-	*
-	* Definicion de la funcion: La funcion 
-	*
-	* Parametros de entrada:
-	*	- arregloNumeros:
-	*	- numeroElementos:
-	*	- numeroMaximo:
-	* Parametros de salida: Ninguno
-	*
+	
+	Definicion de la funcion: 
+
+		Esta genera numeros random y los almacena en un arreglo.
+
+	Parametros de entrada:
+		- arregloNumeros: Arreglo que almacena todos los numeros random.
+
+		- numeroElementos: Numero de elementos del arreglo que almacena
+							los numeros random.
+
+		- numeroMaximo : Limite superior del rango de numeros de donde 
+						se escogeran los random.
+
+		- rutaDirectorio: Ruta de un directorio.
+
+	Parametros de salida:
+		
+		- Ninguno
+
 	*/
 
+	// Declaracion de variables:
 	char numeroDirectorio[20];
-	
 	int agregarNumero;
 	int numeroActual;
 	int esDirectorio;
@@ -161,36 +186,43 @@ void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,
 
 int generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int numeroMaximo, char *rutaArchivo) {
 	/*
-	*
-	* Definicion de la funcion: La funcion 
-	*
-	* Parametros de entrada:
-	*	- arregloNumeros:
-	*	- numeroElementos:
-	*	- numeroMaximo:
-	* Parametros de salida: Ninguno
-	*
+	
+	Definicion de la funcion: 
+
+		Esta genera numeros aleatorios y los almacena en un arreglo.
+
+	Parametros de entrada:
+		- arregloNumeros: Arreglo que almacena todos los numeros aleatorios.
+
+		- numeroElementos: Numero de elementos del arreglo que almacena
+							los numeros aleatorios.
+
+		- numeroMaximo : Limite superior del rango de numeros de donde 
+						se escogeran los aleatorios.
+
+		- rutaArchivo: Ruta.
+
+	Parametros de salida:
+		
+		- numeroArchivosRegulares : Numero de archivos regulares dentro
+									del arreglo de numeros aleatorios.
+
 	*/
 
+	// Declaracion de varia
 	char numeroArchivo[20];
-	int arregloNumerosIrregulares[numeroMaximo];
-	int agregarNumeroIrregular;
+	char *rutaAux2;
 	int agregarNumero;
 	int numeroActual;
+	int numeroArchivosRegulares = 0;
 	int esArchivo;
-	int esDirectorio;
-	int numAux = 0;
 	int i = 0;
 	int j = 0;
-	int k = 0;
-	int p = 0;
+
 
 	while (i < numeroElementos) {
 
 		agregarNumero = 1;
-		agregarNumeroIrregular = 1;
-
-		char *rutaAux2;
 		rutaAux2 = (char*)calloc(1,sizeof(char)*50);
 		numeroActual = (rand() % 20) + 1;
 
@@ -200,68 +232,35 @@ int generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int 
 		strcat(rutaAux2,"/");
 		strcat(rutaAux2,numeroArchivo);
 
-		if(numAux == numeroMaximo){
-
-			return(i);
-
-		}
-
 		// Se verifica si la ruta pasada por argumento corresponde a la de un
 		// archivo regular.
 		esArchivo = verificarArchivo(rutaAux2);
-		esDirectorio = verificarDirectorio(rutaAux2);
-		printf("esArchivo : %d  y la ruta es %s \n",esArchivo ,rutaAux2);
-		//printf("esDirectorio : %d  y la ruta es %s \n",esDirectorio,rutaDirectorio);
-		printf("AUX NUMBER ES : %d\n",numAux);
-		printf("LA p ES : %d\n",p );
-
-		if (esArchivo == 1) {
-
-			for (j = 0; j < i; j++) {
-
-				if (numeroActual == arregloNumeros[j]) {
-					agregarNumero = 0;
-					break;
-				}
-
-			}
-
-			if (agregarNumero == 1) {
-
-				arregloNumeros[i] = numeroActual;
-				i++;
-				numAux++;
-
-			}
-
-		}
-		else if(esDirectorio == 1){
-
-			for (k = 0; k < p; k++) {
-
-				if (numeroActual == arregloNumerosIrregulares[k]) {
-					agregarNumeroIrregular = 0;
-					break;
-				}
-
-			}
-
-			if (agregarNumeroIrregular == 1) {
-
-				arregloNumerosIrregulares[p] = numeroActual;
-				p++;
-				numAux++;
-
-			}
-
-		}
-		
-		free(rutaAux2);
 	
+		for (j = 0; j < i; j++) {
+
+			if (numeroActual == arregloNumeros[j]) {
+				agregarNumero = 0;
+				break;
+			}
+
+		}
+
+		if (agregarNumero == 1) {
+
+			arregloNumeros[i] = numeroActual;
+			i++;
+
+			if (esArchivo==1){
+
+				numeroArchivosRegulares++;
+			}
+
+		}
+		free(rutaAux2);
+
 	}
 
-	return(i);
-
+	return(numeroArchivosRegulares);
 
 }
 
@@ -270,13 +269,21 @@ int generarNumerosAleatoriosArchivo(int *arregloNumeros,int numeroElementos,int 
 
 int contarDirectorios(char *rutaDirectorio) {
 	/*
-	*
-	* Definicion de la funcion: 
-	*
-	* Parametros de entrada:
-	*
-	* Parametros de salida:
-	*
+	
+	Definicion de la funcion: 
+
+		Esta funcion dada la ruta de un directorio cuenta cuantos
+	archivos hay en el mismo.
+
+	Parametros de entrada:
+
+		- rutaDirectorio: Ruta de un directorio.
+
+	Parametros de salida:
+		
+		- contadorArchivos : Numero de archivos dentro del
+							directorio.
+						
 	*/
 
 	// Declaracion de variables:

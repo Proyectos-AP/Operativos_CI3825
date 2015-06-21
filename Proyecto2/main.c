@@ -13,7 +13,6 @@
 */
 
 // Directivas de Preprocesador:
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,12 +41,26 @@ int main(int argc, char *argv[]) {
 	*/
 
 	// Declaracion de variables:
-	int status;
+
 	int i;
+	int status;
+	int esArchivo;
+	//int esDirectorio;
 	int numeroHijos;
+	int countbytes;
+	int pipePadre[2]; // Se crea el pipe con el que los hijos enviaran informacion al padre
 	int numeroTextos;
+	int numeroArchivos;
+	int descriptorSalida;
+	int archivosLeidos = 1;
+	char* aux;
 	char *ruta;
+	char message[300];
 	char *archivoSalida;
+	char numeroArchivo[20];
+	char numeroDirectorio[3];
+	pipe(pipePadre);
+	time_t t;
 
 	if (argc == 6) {
 
@@ -94,37 +107,14 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
-	// Se crean los procesos hijos que leeran los directorios:
+	// Declaracion de variables
 	pid_t childpid[numeroHijos];
 	int numerosAleatorios[numeroHijos]; 
-	int numeroArchivos;
 
-	//int pipes[numeroHijos][2];
-
-	//for (i = 0; i < numeroHijos; i++) { 
-
-	//	pipe(pipes[i]);
-	//	printf("Se hizo un pipe\n");
-
-	//}
-
-	time_t t;
 	srand((unsigned) time(&t));
-
 	generarNumerosAleatoriosDirectorio(numerosAleatorios,numeroHijos,10,ruta);
 
-	//for (i = 0; i < numeroHijos; i++) {
-
-	//	printf("El numero aleatorio fuerda de la funcion es %d\n",numerosAleatorios[i]);		
-	//}
-
-	// Se crean los proceso hijos para que lean los archivos de cada directorio:
-	char numeroDirectorio[3];
-
-	// Se crea el pipe con el que los hijos enviaran informacion al padre:
-	int pipePadre[2];
-	pipe(pipePadre);
-
+	// Se crean los procesos hijos que leeran los directorios:
 	for (i = 0; i < numeroHijos;i++) {
 		
 		if ((childpid[i] = fork()) < 0) {
@@ -134,10 +124,10 @@ int main(int argc, char *argv[]) {
 
 		if (childpid[i] == 0) {
 
-			//char numeroPID[20];
-			//sprintf(numeroPID,"%d",getpid());
-			//strcat(numeroPID,"\n");
-			//write(pipePadre[1],numeroPID,strlen(numeroPID));
+			// Declaracion de variables
+			int statusHijo;
+			pid_t childpid;
+
 
 			//Se convierte el numero del Directorio en string:
 			sprintf(numeroDirectorio, "%d",numerosAleatorios[i]);
@@ -146,91 +136,98 @@ int main(int argc, char *argv[]) {
 			// para obtener el nombre del archivo de salida:
 			strcat(ruta,numeroDirectorio);
 
-			//printf("La ruta es: %s\n",ruta);
-
+			// Se cuenta el numero de elementos que existen dentro del 
+			// directorio
 			numeroArchivos = contarDirectorios(ruta);
-			
-			//printf("Soy el hijo %d y lei %d archivos\n",getpid(),numeroArchivos);
 
 			int numerosAleatoriosArchivos[numeroTextos];
-
 			struct timeval t2;
 			gettimeofday(&t2,NULL);
 			srand(t2.tv_usec * t2.tv_sec);
 
-			//printf("El valor de la semilla es: %d \n",t2.tv_usec * t2.tv_sec);
+			// Se generan numeros aleatorios correspondientes a los archivos regulares
+			int numeroArchivosLeidos = generarNumerosAleatoriosArchivo(numerosAleatoriosArchivos,\
+																numeroTextos,numeroArchivos,ruta);
 
-			int archivosLeidos = generarNumerosAleatoriosArchivo(numerosAleatoriosArchivos,numeroTextos,numeroArchivos,ruta);
-			//printf("El numero de archivos leidos es %d \n",archivosLeidos);
+			// Caso en el que existen archivos para leer
+			if (numeroArchivosLeidos!=0){
+				char* arregloRutas[numeroArchivosLeidos + 2];
+		
 
-			//for (i = 1; i < numeroTextos+1; i++) {
+				arregloRutas[0] = (char*)calloc(1,sizeof(char)*50);	
+				strcat(arregloRutas[0],"cat");
 
-					//printf("Soy el hijo %d  y el numero aleatorio del archivo es %d\n",getpid(),numerosAleatoriosArchivos[i-1]);		
-			//}	
 
-			//leerDirectorio(ruta,numerosAleatoriosArchivos,numeroTextos);
+				// Se almacenan las rutas de los archivos que se van leer en un arreglo
+				for (i = 1; i < numeroTextos + 1; ++i) {
 
-			//char frase = "Esto es un mensaje";
+					// Se construye la ruta del archivo que se va a leer.
+					aux = (char*)calloc(1,sizeof(char)*100);
+					sprintf(numeroArchivo,"%d",numerosAleatoriosArchivos[i-1]);
+					strcat(aux,ruta);
+					strcat(aux,"/");
+					strcat(aux,numeroArchivo);
 
-			//write(pipeOut,frase,strlen(frase) + 1);
+					esArchivo = verificarArchivo(aux);
 
-			//exit(0);
+					if (esArchivo==1){
 
-			char* arregloRutas[archivosLeidos + 2];
+						arregloRutas[archivosLeidos] = aux;
+						archivosLeidos++;
+						
+					}
+					else {
 
-			printf("El restulado es %d \n",archivosLeidos + 2);
-			char numeroArchivo[20];
+						free(aux);
+					}
 
-			arregloRutas[0] = (char*)calloc(1,sizeof(char)*50);	
-			strcat(arregloRutas[0],"cat");
+					//if (esArchivo!=-1){
+					//	archivosLeidos++;
+					//}
+					
+					
+				}
+
+				arregloRutas[numeroArchivosLeidos + 1] = NULL;
+
 			
-			for (i = 1; i < archivosLeidos + 1; ++i) {
+				close(pipePadre[0]);
+				dup2(pipePadre[1],1);
+				close(pipePadre[1]);
 
-				arregloRutas[i] = (char*)calloc(1,sizeof(char)*50);
-				sprintf(numeroArchivo,"%d",numerosAleatoriosArchivos[i-1]);
-				strcat(arregloRutas[i],ruta);
-				strcat(arregloRutas[i],"/");
-				strcat(arregloRutas[i],numeroArchivo);
-				
-			}
-
-			arregloRutas[archivosLeidos + 1] = NULL;
-
-			int statusHijo;
-			pid_t childpid;
-
-			close(pipePadre[0]);
-			dup2(pipePadre[1],1);
-			close(pipePadre[1]);
-
-			if ((childpid = fork()) < 0) {
-				perror("Error en el fork");
-				exit(0);
-
-			}
-
-			if (childpid == 0) {
-
-				if ( (execvp("cat",arregloRutas)) < 0) {
-
-					printf("Error en el EXEC\n");
+				if ((childpid = fork()) < 0) {
+					perror("Error en el fork");
 					exit(0);
+
+				}
+
+				if (childpid == 0) {
+
+					// Se concatenan todos los archivos
+					if ( (execvp("cat",arregloRutas)) < 0) {
+
+						printf("Error en el EXEC\n");
+						exit(0);
+					}
+
+				}
+
+				// Se espera por el hijo
+				wait(&statusHijo);
+
+				// Se limpia memoria
+				for (i = 0; i < numeroArchivosLeidos + 1; ++i) {
+					free(arregloRutas[i]);
 				}
 
 			}
 
-			wait(&statusHijo);
-
-			// Se limpia memoria
-			for (i = 0; i < archivosLeidos + 1; ++i) {
-				free(arregloRutas[i]);
-			}
-			exit(archivosLeidos); 
+			// Se envia al padre el numero de archivos leidos.
+			exit(numeroArchivosLeidos); 
 
 		}
 
 	}
-
 
 	// Se espera que los proceso hijos terminen:
 	for(i = 0; i< numeroHijos;i++) {
@@ -239,63 +236,27 @@ int main(int argc, char *argv[]) {
 		
 	}
 
+	// Se arma la ruta del archivo de salida del programa
 	char *rutaSalida = (char*)calloc(1,sizeof(char)*50);	
 	strcat(rutaSalida,"./");
 	strcat(rutaSalida,archivoSalida);
 
-	int descriptorSalida;
+	// Se crea el archivo de salida
 	descriptorSalida = open(rutaSalida,O_WRONLY | O_CREAT,0755);
 	dup2(descriptorSalida,1);
 	close(descriptorSalida);
 
-	char message[300];
-	int countbytes;
 	close(pipePadre[1]);
 
-
+	// Se lee todo el contenido del pipe y el mismo es escrito
+	// en el standar output del padre (el archivo de salida).
 	while ((countbytes = read(pipePadre[0],message,300)) > 0) {
     	
     	write(1,message,countbytes);
   
   	}
 
-
-	//countbytes = read(pipePadre[0],message,300);
-
-	//printf("El mensaje leido es %s",message);
-
-	//write(1,message,strlen(message));
-
-	//close(descriptorSalida);
 	close(pipePadre[0]);
-
-
-
-	//for (i = 0; i < numeroHijos; i++) {
-
-	//	char message[100];
-	//	int bytesleidos;
-	//	close(pipes[i][1]);
-
-	//	read(pipes[i][0],message,100);
-
-	//	printf("Lo que se recibio es: \n",message);
-
-	//}
-
-
-	//for (i = 0; i < numeroHijos; i++) {
-
-	//	printf("El numero aleatorio es %d\n",numerosAleatorios[i]);		
-
-	//}
-	
-	// Se espera que los proceso hijos terminen:
-	//for (i = 0; i < numeroHijos; i++) {
-
-	//	wait(&status);
-
-	//}
 	free(rutaSalida);
 	return(0);
 
