@@ -4,3 +4,22 @@ Sistemas de Operación I (CI3825)
 Nombres: 
 	Alejandra Cordero / Carnet: 12-10645
 	Pablo Maldonado   / Carnet: 12-10561
+
+NOMBRE
+
+	miCuento - 
+
+COMPILACIÓN 
+
+EJECUCIÓN
+
+SINOPSIS
+
+DESCRIPCIÓN 
+	
+	-d,  
+
+EJEMPLOS
+
+AUTORES
+		Escrito por Alejandra Cordero y Pablo Maldonado.
