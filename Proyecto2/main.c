@@ -96,8 +96,6 @@ int main(int argc, char *argv[]) {
 
 	if (argc == 6) {
 
-		//printf("6 Argumentos\n");  (NO DEBE ESTAR EN LA ENTREGA FINAL)
-
 		// Se considera la ruta dada para la lectura de los textos:
 		
 		if ( strcmp(argv[1],"-d") == 0) {
@@ -172,9 +170,6 @@ int main(int argc, char *argv[]) {
 
 			archivoSalida = argv[5];
 
-			// printf("La ruta dada es: %s\n",ruta); (ESTO NO DEBE ESTAR EN LA ENTREGA FINAL)
-
-
 		}
 
 		else {
@@ -189,8 +184,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	else if (argc == 4) {
-
-		// printf("4 Argumentos\n"); (NO DEBE ESTAR EN LA ENTREGA FINAL)
 
 		// Se considera la ruta actual para la lectura de los textos:
 		ruta = "./";
@@ -255,8 +248,6 @@ int main(int argc, char *argv[]) {
 		}
 
 		archivoSalida = argv[3];
-
-		// printf("La ruta dada: %s\n",ruta); (ESTO NO DEBEE ESTAR EN LA ENTREGA FINAL)
 
 	}
 
@@ -356,11 +347,6 @@ int main(int argc, char *argv[]) {
 
 							free(aux);
 						}
-
-						//if (esArchivo!=-1){   // ESTO NO DEBE ESTAR EN LA ENTREGA FINALL
-						//	archivosLeidos++;
-						//}
-							
 							
 					}
 
@@ -434,11 +420,8 @@ int main(int argc, char *argv[]) {
 
 		wait(&status);
 		archivosRecibidos = archivosRecibidos + (status>>8);
-		// printf("El valor que recibi es: %d \n",status>>8); (NO DEBE ESTAR EN LA ENTREGA FINAL)
 		
 	}
-
-	// printf("El numero de archivos leidos es %d\n",archivosRecibidos); (NO DEBE ESTAR EN LA ENTREGA FINAL)
 
 	if (archivosRecibidos > 0) {
 
@@ -449,8 +432,6 @@ int main(int argc, char *argv[]) {
 
 		// Se abre o se crea el archivo de salida:
 		descriptorSalida = open(rutaSalida,O_WRONLY | O_CREAT,0666);
-		//dup2(descriptorSalida,1); (ESTO NO DEBE ESTAR EN LA ENTREGA FINAL)
-		//close(descriptorSalida);
 
 		// Se cierra el descriptor de escritura del pipe del padre:
 		close(pipePadre[1]);
@@ -487,6 +468,7 @@ int main(int argc, char *argv[]) {
 
 	  	printf("\n-----------------------------\n");
 
+	  	close(descriptorSalida);
 		// Finaliza la ejecucion del programa:
 		return(0);
 

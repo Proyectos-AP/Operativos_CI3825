@@ -47,7 +47,6 @@ int verificarArchivo(char *rutaArchivo) {
 	
 	// Se verifica si es un archivo regular:
 	if (stat(rutaArchivo, &st_info) < 0) {
-		// printf("STAT %d - %s \n",stat(rutaArchivo, &st_info),rutaArchivo); (ESTO NO DEBE ESTAR EN LA ENTREGA FINAL)
 		return -1;
 
 	}
@@ -75,14 +74,10 @@ int verificarDirectorio(char *nombreDirectorio) {
 	// Definicion de variables:
 	struct stat statbuf; 	// Se utiliza para verificar si es un directorio 
 
-	// printf("El nombreDirectorio es: %s\n",nombreDirectorio); (ESTO NO DEBE ESTAR EN LA ENTREGA FINAL)
-
 	// Se verifica si es un directorio:
    	if (stat(nombreDirectorio,&statbuf) ==-1) {
-        //fprintf(stderr,"No se puede obtener el stat del archivo %s:%s\n",nombreDirectorio, strerror(errno));
         // No es un directorio
         return(0);
-        //exit(1);
     }
 
    	if (statbuf.st_mode & S_IFDIR) {
@@ -128,25 +123,10 @@ void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,
 	int i = 0; 			// Variable de iteracion.
 	int j = 0; 			// Variable de iteracion.
 
-	//char numeroDirectorio[20]; (NO DEBE ESTAR EN LA ENTREGA FINAL)
-	//int esDirectorio; (NO DEBE ESTAR EN LA ENTREGA FINAL)
-
 	while (i < numeroElementos) {
 
-		//char *rutaAux; (NO DEBE ESTAR EN LA ENTREGA FINAL)
-		//rutaAux = (char*)calloc(1,sizeof(char)*100); (NO DEBE ESTAR EN LA ENTREGA FINAL)
 		agregarNumero = 1;
 		numeroActual = (rand() % numeroMaximo) + 1;
-
-		// (NO DEBE ESTAR EN LA ENTREGA FINAL)	
-		// Se convierte el numero del directorio en string:
-		//sprintf(numeroDirectorio, "%d",numeroActual);
-		//strcat(rutaAux,rutaDirectorio);
-		//strcat(rutaAux,numeroDirectorio);
-		//esDirectorio = verificarDirectorio(rutaAux);
-		//printf("esDirectorio : %d  y la ruta es %s \n",esDirectorio,rutaAux);
-
-		//if (esDirectorio == 1) {
 
 		// Se verifica si el numero aleatorio generado ya se habia generado:
 		for (j = 0; j < i; j++) {
@@ -161,15 +141,11 @@ void generarNumerosAleatoriosDirectorio(int *arregloNumeros,int numeroElementos,
 		// Se agrega el nuevo numero aleatorio al arreglo:
 		if (agregarNumero == 1) {
 
-			//printf("El numero actual es %d \n",numeroActual); (ESTO NO DEBE ESTAR EN LA ENTREGA FINAL)
 			arregloNumeros[i] = numeroActual;
 			i++;
 
 		}
 		
-		//}
-
-		//free(rutaAux);
 	}
 
 }

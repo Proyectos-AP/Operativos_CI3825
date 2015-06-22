@@ -17,3 +17,4 @@ MiCuento.o: main.c lib_cuentos.h
 
 clean:
 	rm MiCuento
+	
